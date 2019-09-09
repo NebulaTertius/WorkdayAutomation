@@ -1,0 +1,1 @@
+2019/07/18 15:49:36 - ErrSource: DevExpress.Xpo.v17.2 - ErrMessage: Invalid connection string specified: 'Persist Security Info=False;server=SAGPTANBCDP0L72;user id=sa;password=***REMOVED***;database=PeopleUAT;'. 

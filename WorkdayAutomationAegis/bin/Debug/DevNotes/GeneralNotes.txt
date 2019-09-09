@@ -1,0 +1,29 @@
+﻿General Development Notes:
+
+
+
+
+
+Nice to Haves:
+Recon Assitance - identify issues such as multiple active employees
+Re-process historic records
+Option to keep history data when creating structures. (Do not do through SQL, as the EXEC sp_rename does not allow for the table to be dropped by a dynamic SQL afterwards.)
+
+
+
+Add levels of checks on new employee records to look at names, id numbers etc, to try warn about a duplicate employee with different emp codes
+Or
+Add a validation section that will add to warning/error message to supply additional information. Eg: Reinstated event, but including a termination date.
+This would most likely mean a change to an old termination, which could just be ignored.
+
+
+
+Terminations:
+Add an option to include leave for terminated employees, to show if all leave has been removed,
+And then add calcs or checks to pay this out.
+
+
+Not related to this project:
+Sage Reporting Tool: Create a query/report assistant. Give options to create a report, such as "Use employee or entity", "Consolidate or per payslip"
+As well as things such as a Summary or Detail view, to also assist in building the report layout itself.
+

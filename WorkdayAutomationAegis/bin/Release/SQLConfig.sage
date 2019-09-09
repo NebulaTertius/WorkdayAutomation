@@ -1,0 +1,7 @@
+[Application SQL Details]
+T0j3GdMVINLHGmi9kBkzAwGtRXmem/AkBWOQbCpg0QN6BCIPPecpXTUMX8joG8LM6DC3HekoSGvbLvsbi0pgfhoB/M8MU4sKTEbrn+HouIWMYmJCZioWzT01KyLVEe68tCrF3tUrllGERH8iC6pxaA==
+pBBl8kYYBzjGr9mgwlOIAg==
+n9kroBaklrQ=
+Zk657lWhGm0=
+TEbrn+HouIUARzyxNEFm6g==
+1lnxueeDSoMIfwQlR1rFpA==
