@@ -155,28 +155,39 @@ ELSE
 	INSERT INTO ##BatchInstanceDetails
 	SELECT DISTINCT t.ProductCode
 		,t.BatchTemplateCode
-		,ISNULL(t.Company,(SELECT TOP 1 c.CompanyCode FROM Company.Company c INNER JOIN Employee.Employee e ON e.CompanyID = c.CompanyID AND e.EmployeeCode = t.EmployeeCode AND t.StatusCode = 'New' ORDER BY e.TerminationDate, DateEngaged DESC))
-		,ISNULL(t.CompanyRule,(SELECT TOP 1 cr.CompanyRuleCode FROM Employee.EmployeeRule er INNER JOIN Employee.Employee e ON e.EmployeeCode = t.EmployeeCode AND e.EmployeeID = er.EmployeeID AND t.StatusCode = 'New' INNER JOIN Company.CompanyRule cr ON cr.CompanyRuleID = er.CompanyRuleID ORDER BY e.TerminationDate, DateEngaged DESC))
-		,ISNULL(t.PayRun,(SELECT Code FROM Company.PayRunDef prd WHERE prd.CompanyRuleID = er.CompanyRuleID AND prd.MainPayRunDef = 1))
+		,ISNULL(t.Company,c.CompanyCode)
+		,ISNULL(t.CompanyRule,cr.CompanyRuleCode)
+		,ISNULL(t.PayRun,pr.Code)
 	FROM AI.FinancialBatchHistory t
 		INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, TerminationDate ORDER BY TerminationDate) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+		INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 		INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 		INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleID = er.CompanyRuleID
-		LEFT JOIN Company.PayRunDef pr ON pr.Code = t.PayRun AND er.CompanyRuleID = pr.CompanyRuleID
+		INNER JOIN Company.PayRunDef pr ON er.CompanyRuleID = pr.CompanyRuleID AND MainPayRunDef = 1
 	WHERE t.StatusCode = 'New'
 
+
+	DECLARE @CurrentTemplateCode varchar(15)
+	,@CurrentCompany varchar(15)
+	,@CurrentProductCode varchar(15)
+
+
 	--Loop to create different batch instances based on product and batch templates
-	WHILE (SELECT TOP 1 BatchTemplateCode FROM ##BatchInstanceDetails) IS NOT NULL
+	WHILE (SELECT TOP 1 BatchTemplateCode FROM ##BatchInstanceDetails ORDER BY BatchTemplateCode, Company) IS NOT NULL
 		BEGIN
+	
+	SET @CurrentTemplateCode = (SELECT TOP 1 BatchTemplateCode FROM ##BatchInstanceDetails ORDER BY BatchTemplateCode, Company)
+	SET @CurrentCompany = (SELECT TOP 1 Company FROM ##BatchInstanceDetails ORDER BY BatchTemplateCode, Company)
+	SET @CurrentProductCode = (SELECT TOP 1 ProductCode FROM ##BatchInstanceDetails ORDER BY BatchTemplateCode, Company)
 	SET @BatchVersion = 1 + (SELECT ISNULL(COUNT(Code),0) FROM Batch.BatchInstance WHERE CONVERT(varchar,GETDATE(),112) = CASE LEN(Code) WHEN 14 THEN LEFT(RIGHT(Code,10),8) WHEN 15 THEN LEFT(RIGHT(Code,11),8) END)
 
-	IF NOT EXISTS (SELECT * FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate t ON t.BatchTemplateID = bi.BatchTemplateID LEFT JOIN (SELECT TOP 1 * FROM ##BatchInstanceDetails) d ON d.BatchTemplateCode = t.Code WHERE d.BatchTemplateCode IS NOT NULL AND bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = d.ProductCode)
-	BEGIN
+	--IF NOT EXISTS (SELECT * FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate t ON t.BatchTemplateID = bi.BatchTemplateID LEFT JOIN (SELECT TOP 1 * FROM ##BatchInstanceDetails WHERE BatchTemplateCode = @CurrentTemplateCode AND Company = @CurrentCompany) d ON d.BatchTemplateCode = t.Code WHERE d.BatchTemplateCode IS NOT NULL AND bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = d.ProductCode)
+	--BEGIN
 	INSERT INTO Batch.BatchInstance (Code,ShortDescription,LongDescription,Comment,CompanyRule,PayRunDef,ProcessPeriod,BatchTemplateID,BatchInstanceType,ExportOption,DisplayCodes,DisplayCodesOption,VerifyBatch,CreateLines,AllowDuplicate,SkipTerminated,AllowMultipleCompanies,ExcludeFromScheduler,ProcessingStatus,[Action],ErrorMsg,DateCaptured,CapturedBy,DateProcessed,ProcessedBy,[FileName],FileSize,LastChanged,UserID)
 	SELECT bid.ProductCode + '_' + CONVERT(varchar,GETDATE(),112) + '_' + CONVERT(varchar,@BatchVersion)
 		,bid.BatchTemplateCode + ' ' + bid.ProductCode + CONVERT(varchar,GETDATE(),112)
 		,bid.BatchTemplateCode + ' ' + bid.ProductCode + CONVERT(varchar,GETDATE(),112)
-		,'Automated batch from ' + bid.ProductCode
+		,@CurrentCompany
 		,bid.CompanyRule
 		,bid.PayRun
 		,CONVERT(varchar,EndDate,111)
@@ -202,14 +213,14 @@ ELSE
 		,NULL
 		,GETDATE()
 		,ProductCode
-	FROM (SELECT TOP 1 * FROM ##BatchInstanceDetails) bid
+	FROM (SELECT TOP 1 * FROM ##BatchInstanceDetails WHERE BatchTemplateCode = @CurrentTemplateCode AND Company = @CurrentCompany) bid
 		INNER JOIN Batch.BatchTemplate bt ON bt.Code = bid.BatchTemplateCode
 		INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleCode = bid.CompanyRule
 		INNER JOIN Company.PayRunDef pr ON pr.Code = bid.PayRun AND pr.CompanyRuleID = cr.CompanyRuleID
-	END
+	--END
 	
-	IF NOT EXISTS (SELECT * FROM Batch.BatchInstanceFilter bf INNER JOIN Batch.BatchInstance bi ON bi.BatchInstanceID = bf.BatchInstanceID INNER JOIN Batch.BatchTemplate t ON t.BatchTemplateID = bi.BatchTemplateID INNER JOIN Company.CompanyRule cr ON cr.CompanyRuleID = bf.CompanyRuleID LEFT JOIN (SELECT TOP 1 * FROM ##BatchInstanceDetails) d ON d.BatchTemplateCode = t.Code AND d.CompanyRule = cr.CompanyRuleCode WHERE d.CompanyRule IS NOT NULL AND bi.ProcessingStatus = 'V')
-	BEGIN
+	--IF NOT EXISTS (SELECT * FROM Batch.BatchInstanceFilter bf INNER JOIN Batch.BatchInstance bi ON bi.BatchInstanceID = bf.BatchInstanceID INNER JOIN Batch.BatchTemplate t ON t.BatchTemplateID = bi.BatchTemplateID INNER JOIN Company.CompanyRule cr ON cr.CompanyRuleID = bf.CompanyRuleID LEFT JOIN (SELECT TOP 1 * FROM ##BatchInstanceDetails WHERE BatchTemplateCode = @CurrentTemplateCode AND Company = @CurrentCompany) d ON d.BatchTemplateCode = t.Code AND d.CompanyRule = cr.CompanyRuleCode WHERE d.CompanyRule IS NOT NULL AND bi.ProcessingStatus = 'V')
+	--BEGIN
 	
 		INSERT INTO Batch.BatchInstanceFilter (BatchInstanceID,CompanyRuleID,PayslipTypeID,TaxYearID,ProcessPeriodID,PayRunDefID,LastChanged,UserID)
 		SELECT DISTINCT (SELECT MAX(BatchInstanceID) FROM Batch.BatchInstance) AS BatchInstanceID
@@ -220,22 +231,26 @@ ELSE
 			,pr.PayRunDefID
 			,GETDATE()
 			,bid.ProductCode
-		FROM (SELECT * FROM ##BatchInstanceDetails WHERE BatchTemplateCode IN (SELECT TOP 1 BatchTemplateCode FROM ##BatchInstanceDetails)) bid
+		FROM (SELECT * FROM ##BatchInstanceDetails WHERE BatchTemplateCode IN (SELECT TOP 1 BatchTemplateCode FROM ##BatchInstanceDetails WHERE BatchTemplateCode = @CurrentTemplateCode AND Company = @CurrentCompany)) bid
 			INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleCode = bid.CompanyRule
+			INNER JOIN Company.Company c ON c.CompanyID = cr.CompanyID AND c.CompanyCode = @CurrentCompany
 			INNER JOIN Company.PayRunDef pr ON pr.Code = bid.PayRun AND pr.CompanyRuleID = cr.CompanyRuleID
 			INNER JOIN Batch.BatchTemplate bt ON bt.Code = bid.BatchTemplateCode
 			INNER JOIN Batch.BatchInstance bi ON bi.BatchTemplateID = bt.BatchTemplateID AND bi.BatchInstanceID = (SELECT MAX(BatchInstanceID) FROM Batch.BatchInstance WHERE ProcessingStatus = 'V')
 
+	--END
 		
-	END
-		DELETE FROM ##BatchInstanceDetails WHERE BatchTemplateCode = (SELECT TOP 1 BatchTemplateCode FROM ##BatchInstanceDetails)
+		
+		DELETE FROM ##BatchInstanceDetails WHERE BatchTemplateCode = @CurrentTemplateCode AND Company = @CurrentCompany
 	END
 
 	--Insert employees and values to latest batch
-	IF EXISTS (SELECT DISTINCT t.EmployeeCode FROM AI.FinancialBatchHistory t LEFT JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode) WHERE be.BatchEmployeeID IS NULL AND t.StatusCode = 'New')
-	BEGIN
+	--IF EXISTS (SELECT DISTINCT t.EmployeeCode FROM AI.FinancialBatchHistory t LEFT JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode) WHERE be.BatchEmployeeID IS NULL AND t.StatusCode = 'New')
+	--BEGIN
 		INSERT INTO Batch.BatchEmployee (BatchInstanceID,EmployeeCode,DisplayName,EmployeeRuleID,CompanyID,CompanyRuleID,ProcessingStatus,LastChanged,UserID)
-		SELECT DISTINCT (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode) AS BatchInstanceID
+		SELECT DISTINCT (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode 
+		AND 
+		LEFT(bi.Comment,15) = c.CompanyCode) AS BatchInstanceID
 			,t.EmployeeCode
 			,ge.DisplayName
 			,er.EmployeeRuleID
@@ -246,15 +261,16 @@ ELSE
 			,t.ProductCode
 		FROM AI.FinancialBatchHistory t
 			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, TerminationDate ORDER BY TerminationDate) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+			INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 			INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 			INNER JOIN Entity.GenEntity ge ON ge.GenEntityID = e.GenEntityID
 			LEFT JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode)
 		WHERE be.BatchEmployeeID IS NULL
 			AND t.StatusCode = 'New'
-	END
+	--END
 
-	IF EXISTS (SELECT * FROM AI.FinancialBatchHistory t WHERE t.StatusCode = 'New')
-	BEGIN
+	--IF EXISTS (SELECT * FROM AI.FinancialBatchHistory t WHERE t.StatusCode = 'New')
+	--BEGIN
 		INSERT INTO Batch.BatchEmployeeField (BatchEmployeeID,PayRunDefID,ProcessPeriodID,PayslipTypeID,BatchItemID,Sequence,Value,RowIndex,ProcessingStatus,Included,Verified,LastChanged,UserID)
 		SELECT be.BatchEmployeeID
 			,pr.PayRunDefID
@@ -278,7 +294,7 @@ ELSE
 			INNER JOIN Batch.BatchItem bi ON bi.BatchTemplateID = bt.BatchTemplateID AND LEFT(RIGHT(bi.BatchHierarchy,(LEN(t.BatchItemCode) + LEN(t.BatchItemType) + 1)),(LEN(t.BatchItemCode))) = t.BatchItemCode
 			INNER JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode)
 		WHERE t.StatusCode = 'New'
-	END
+	--END
 	
 	UPDATE AI.FinancialBatchHistory
 	SET StatusCode = 'Success'

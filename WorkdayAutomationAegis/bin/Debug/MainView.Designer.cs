@@ -74,7 +74,7 @@
             this.bsiMapAndQueue = new DevExpress.XtraBars.BarSubItem();
             this.bbiMoveEmployeeToQueue = new DevExpress.XtraBars.BarButtonItem();
             this.bbiMoveAllowToQueue = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiMoveAbsencesToQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiMoveAbsencesToTransactionQueue = new DevExpress.XtraBars.BarButtonItem();
             this.bbiMoveAllToQueue = new DevExpress.XtraBars.BarButtonItem();
             this.bsiProcessQueue = new DevExpress.XtraBars.BarSubItem();
             this.bbiProcessEmployee = new DevExpress.XtraBars.BarButtonItem();
@@ -91,7 +91,7 @@
             this.bbiEmpIssues = new DevExpress.XtraBars.BarButtonItem();
             this.bbiPayslipIssues = new DevExpress.XtraBars.BarButtonItem();
             this.bbiLeaveIssues = new DevExpress.XtraBars.BarButtonItem();
-            this.bsiViewHistoricData = new DevExpress.XtraBars.BarSubItem();
+            this.bsiViewData = new DevExpress.XtraBars.BarSubItem();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.bbiEmpSourceHistory = new DevExpress.XtraBars.BarButtonItem();
             this.bbiAllAndOTPSourceHistory = new DevExpress.XtraBars.BarButtonItem();
@@ -204,6 +204,19 @@
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
+            this.barSubItem5 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem6 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem7 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem8 = new DevExpress.XtraBars.BarSubItem();
+            this.bbiViewEmpSource = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewAllAndOTPSource = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewAbsenceSource = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewEmpMasterQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewEmpSubQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewPayslipQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewLeaveTransQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiViewLeaveBalQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiMoveLveTransToBalQueue = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvwEditable)).BeginInit();
@@ -343,7 +356,7 @@
             this.barButtonItem6,
             this.bsiRunAllProcesses,
             this.bsiWarningsAndErrors,
-            this.bsiViewHistoricData,
+            this.bsiViewData,
             this.bbiImportCSVEmployee,
             this.bbiImportCSVAllAndOTP,
             this.bbiImportCSVAbsences,
@@ -374,7 +387,7 @@
             this.bbiAllAndOTPRunAll,
             this.bbiAbsenceRunAll,
             this.bbiMoveAllowToQueue,
-            this.bbiMoveAbsencesToQueue,
+            this.bbiMoveAbsencesToTransactionQueue,
             this.bbiLveTranQueue,
             this.bbiProcessFinancials,
             this.bbiProcessLeave,
@@ -396,10 +409,23 @@
             this.barSubItem4,
             this.bbiEmpSubQueueHistory,
             this.bbiLveTransQueueHistory,
-            this.bbiLveBalQueueHistory});
+            this.bbiLveBalQueueHistory,
+            this.barSubItem5,
+            this.barSubItem6,
+            this.barSubItem7,
+            this.barSubItem8,
+            this.bbiViewEmpSource,
+            this.bbiViewAllAndOTPSource,
+            this.bbiViewAbsenceSource,
+            this.bbiViewEmpMasterQueue,
+            this.bbiViewEmpSubQueue,
+            this.bbiViewPayslipQueue,
+            this.bbiViewLeaveTransQueue,
+            this.bbiViewLeaveBalQueue,
+            this.bbiMoveLveTransToBalQueue});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl.MaxItemId = 162;
+            this.ribbonControl.MaxItemId = 177;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpAutoRun,
@@ -702,7 +728,8 @@
             this.bsiMapAndQueue.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiMoveEmployeeToQueue),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiMoveAllowToQueue),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiMoveAbsencesToQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiMoveAbsencesToTransactionQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiMoveLveTransToBalQueue),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiMoveAllToQueue)});
             this.bsiMapAndQueue.Name = "bsiMapAndQueue";
             // 
@@ -720,12 +747,12 @@
             this.bbiMoveAllowToQueue.Name = "bbiMoveAllowToQueue";
             this.bbiMoveAllowToQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiMoveAllowToQueue_ItemClick);
             // 
-            // bbiMoveAbsencesToQueue
+            // bbiMoveAbsencesToTransactionQueue
             // 
-            this.bbiMoveAbsencesToQueue.Caption = "Absences";
-            this.bbiMoveAbsencesToQueue.Id = 137;
-            this.bbiMoveAbsencesToQueue.Name = "bbiMoveAbsencesToQueue";
-            this.bbiMoveAbsencesToQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiMoveAbsencesToQueue_ItemClick);
+            this.bbiMoveAbsencesToTransactionQueue.Caption = "Absences";
+            this.bbiMoveAbsencesToTransactionQueue.Id = 137;
+            this.bbiMoveAbsencesToTransactionQueue.Name = "bbiMoveAbsencesToTransactionQueue";
+            this.bbiMoveAbsencesToTransactionQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiMoveAbsencesToQueue_ItemClick);
             // 
             // bbiMoveAllToQueue
             // 
@@ -853,16 +880,16 @@
             this.bbiLeaveIssues.Name = "bbiLeaveIssues";
             this.bbiLeaveIssues.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiLeaveIssues_ItemClick);
             // 
-            // bsiViewHistoricData
+            // bsiViewData
             // 
-            this.bsiViewHistoricData.Caption = "View History Data";
-            this.bsiViewHistoricData.Id = 103;
-            this.bsiViewHistoricData.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiViewHistoricData.ImageOptions.Image")));
-            this.bsiViewHistoricData.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiViewHistoricData.ImageOptions.LargeImage")));
-            this.bsiViewHistoricData.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2)});
-            this.bsiViewHistoricData.Name = "bsiViewHistoricData";
+            this.bsiViewData.Caption = "View Data";
+            this.bsiViewData.Id = 103;
+            this.bsiViewData.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiViewHistoricData.ImageOptions.Image")));
+            this.bsiViewData.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiViewHistoricData.ImageOptions.LargeImage")));
+            this.bsiViewData.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem5),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem6)});
+            this.bsiViewData.Name = "bsiViewData";
             // 
             // barSubItem1
             // 
@@ -1126,7 +1153,7 @@
             // 
             // rpgHistory
             // 
-            this.rpgHistory.ItemLinks.Add(this.bsiViewHistoricData);
+            this.rpgHistory.ItemLinks.Add(this.bsiViewData);
             this.rpgHistory.Name = "rpgHistory";
             this.rpgHistory.Text = "History";
             // 
@@ -1881,6 +1908,109 @@
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "Transformation";
             // 
+            // barSubItem5
+            // 
+            this.barSubItem5.Caption = "Current";
+            this.barSubItem5.Id = 162;
+            this.barSubItem5.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem7),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem8)});
+            this.barSubItem5.Name = "barSubItem5";
+            // 
+            // barSubItem6
+            // 
+            this.barSubItem6.Caption = "History";
+            this.barSubItem6.Id = 163;
+            this.barSubItem6.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2)});
+            this.barSubItem6.Name = "barSubItem6";
+            // 
+            // barSubItem7
+            // 
+            this.barSubItem7.Caption = "Source Data";
+            this.barSubItem7.Id = 165;
+            this.barSubItem7.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewEmpSource),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewAllAndOTPSource),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewAbsenceSource)});
+            this.barSubItem7.Name = "barSubItem7";
+            // 
+            // barSubItem8
+            // 
+            this.barSubItem8.Caption = "Queue Data";
+            this.barSubItem8.Id = 166;
+            this.barSubItem8.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewEmpMasterQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewEmpSubQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewPayslipQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewLeaveTransQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiViewLeaveBalQueue)});
+            this.barSubItem8.Name = "barSubItem8";
+            // 
+            // bbiViewEmpSource
+            // 
+            this.bbiViewEmpSource.Caption = "Employee";
+            this.bbiViewEmpSource.Id = 167;
+            this.bbiViewEmpSource.Name = "bbiViewEmpSource";
+            this.bbiViewEmpSource.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewEmpSource_ItemClick);
+            // 
+            // bbiViewAllAndOTPSource
+            // 
+            this.bbiViewAllAndOTPSource.Caption = "Allowance And OTP";
+            this.bbiViewAllAndOTPSource.Id = 168;
+            this.bbiViewAllAndOTPSource.Name = "bbiViewAllAndOTPSource";
+            this.bbiViewAllAndOTPSource.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewAllAndOTPSource_ItemClick);
+            // 
+            // bbiViewAbsenceSource
+            // 
+            this.bbiViewAbsenceSource.Caption = "Absence";
+            this.bbiViewAbsenceSource.Id = 169;
+            this.bbiViewAbsenceSource.Name = "bbiViewAbsenceSource";
+            this.bbiViewAbsenceSource.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewAbsenceSource_ItemClick);
+            // 
+            // bbiViewEmpMasterQueue
+            // 
+            this.bbiViewEmpMasterQueue.Caption = "Employee Master Detail";
+            this.bbiViewEmpMasterQueue.Id = 170;
+            this.bbiViewEmpMasterQueue.Name = "bbiViewEmpMasterQueue";
+            this.bbiViewEmpMasterQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewEmpMasterQueue_ItemClick);
+            // 
+            // bbiViewEmpSubQueue
+            // 
+            this.bbiViewEmpSubQueue.Caption = "Employee Sub Detail";
+            this.bbiViewEmpSubQueue.Id = 171;
+            this.bbiViewEmpSubQueue.Name = "bbiViewEmpSubQueue";
+            this.bbiViewEmpSubQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewEmpSubQueue_ItemClick);
+            // 
+            // bbiViewPayslipQueue
+            // 
+            this.bbiViewPayslipQueue.Caption = "Payslip";
+            this.bbiViewPayslipQueue.Id = 172;
+            this.bbiViewPayslipQueue.Name = "bbiViewPayslipQueue";
+            this.bbiViewPayslipQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewPayslipQueue_ItemClick);
+            // 
+            // bbiViewLeaveTransQueue
+            // 
+            this.bbiViewLeaveTransQueue.Caption = "Leave (As Transactions)";
+            this.bbiViewLeaveTransQueue.Id = 173;
+            this.bbiViewLeaveTransQueue.Name = "bbiViewLeaveTransQueue";
+            this.bbiViewLeaveTransQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewLeaveTransQueue_ItemClick);
+            // 
+            // bbiViewLeaveBalQueue
+            // 
+            this.bbiViewLeaveBalQueue.Caption = "Leave (Balances)";
+            this.bbiViewLeaveBalQueue.Id = 174;
+            this.bbiViewLeaveBalQueue.Name = "bbiViewLeaveBalQueue";
+            this.bbiViewLeaveBalQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiViewLeaveBalQueue_ItemClick);
+            // 
+            // bbiMoveLveTransToBalQueue
+            // 
+            this.bbiMoveLveTransToBalQueue.Caption = "Leave Transaction To Balance";
+            this.bbiMoveLveTransToBalQueue.Id = 176;
+            this.bbiMoveLveTransToBalQueue.Name = "bbiMoveLveTransToBalQueue";
+            this.bbiMoveLveTransToBalQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiMoveLveTransToBalQueue_ItemClick);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -2051,7 +2181,7 @@
     private DevExpress.XtraBars.BarButtonItem barButtonItem6;
     private DevExpress.XtraBars.BarSubItem bsiRunAllProcesses;
     private DevExpress.XtraBars.BarSubItem bsiWarningsAndErrors;
-    private DevExpress.XtraBars.BarSubItem bsiViewHistoricData;
+    private DevExpress.XtraBars.BarSubItem bsiViewData;
     private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgHistory;
     private DevExpress.XtraBars.Navigation.NavigationPage navigationPage1;
     private DevExpress.XtraLayout.LayoutControl layoutControl2;
@@ -2105,7 +2235,7 @@
     private DevExpress.XtraBars.BarButtonItem bbiAbsenceRunAll;
     private DevExpress.XtraBars.Ribbon.RibbonPage rpIndividualSteps;
     private DevExpress.XtraBars.BarButtonItem bbiMoveAllowToQueue;
-    private DevExpress.XtraBars.BarButtonItem bbiMoveAbsencesToQueue;
+    private DevExpress.XtraBars.BarButtonItem bbiMoveAbsencesToTransactionQueue;
     private DevExpress.XtraBars.BarButtonItem bbiLveTranQueue;
     private DevExpress.XtraBars.BarButtonItem bbiProcessFinancials;
     private DevExpress.XtraBars.BarButtonItem bbiProcessLeave;
@@ -2132,5 +2262,18 @@
         private DevExpress.XtraBars.BarSubItem barSubItem4;
         private DevExpress.XtraBars.BarButtonItem bbiLveTransQueueHistory;
         private DevExpress.XtraBars.BarButtonItem bbiLveBalQueueHistory;
+        private DevExpress.XtraBars.BarSubItem barSubItem5;
+        private DevExpress.XtraBars.BarSubItem barSubItem7;
+        private DevExpress.XtraBars.BarButtonItem bbiViewEmpSource;
+        private DevExpress.XtraBars.BarButtonItem bbiViewAllAndOTPSource;
+        private DevExpress.XtraBars.BarButtonItem bbiViewAbsenceSource;
+        private DevExpress.XtraBars.BarSubItem barSubItem8;
+        private DevExpress.XtraBars.BarButtonItem bbiViewEmpMasterQueue;
+        private DevExpress.XtraBars.BarButtonItem bbiViewEmpSubQueue;
+        private DevExpress.XtraBars.BarButtonItem bbiViewPayslipQueue;
+        private DevExpress.XtraBars.BarButtonItem bbiViewLeaveTransQueue;
+        private DevExpress.XtraBars.BarButtonItem bbiViewLeaveBalQueue;
+        private DevExpress.XtraBars.BarSubItem barSubItem6;
+        private DevExpress.XtraBars.BarButtonItem bbiMoveLveTransToBalQueue;
     }
 }

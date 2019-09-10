@@ -1215,6 +1215,11 @@ namespace WorkdayAutomationAegis
             //focusGridToReadView(xpCol);
         }
 
+        private void BbiMoveLveTransToBalQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ExecuteSQLQuery("EXEC [AI].[LeaveTransactionToBalanceQueue]");
+        }
+
         private void bbiProcessLeave_ItemClick(object sender, ItemClickEventArgs e)
         {
             ExecuteSQLQuery("EXEC [AI].[ProcessLeaveQueue]");
@@ -1425,8 +1430,13 @@ namespace WorkdayAutomationAegis
         private void BbiAbsenceRunAll_ItemClick_1(object sender, ItemClickEventArgs e)
         {
             try { bbiImportCSVAbsences_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Import Done");
             try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Move to Trans");
+            try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Tran to Bal");
             try { bbiProcessLeave_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Process");
             try { BbiLeaveIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             MessageBox.Show("Process Finished" + Environment.NewLine + "Successful records will be available for processing in Sage", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -1554,7 +1564,7 @@ namespace WorkdayAutomationAegis
                 focusGridToReadView(xpCol);
 
                 int i = 0;
-                while (gvwEditable.VisibleColumns.Count() >= 0)
+                while (gvwEditable.VisibleColumns.Count() > 0)
                 {
                     gvwEditable.Columns[i].Visible = false;
                     i = i + 1;
@@ -1587,67 +1597,207 @@ namespace WorkdayAutomationAegis
             refreshValidations();
         }
 
-        private void BbiEmpSourceHistory_ItemClick(object sender, ItemClickEventArgs e)
+
+
+        private void focusGridToDTReadView(DataTable dt)
         {
-
-            DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.EmployeeSourceHistory");
-            
-
-
             gvwEditable.ClearGrouping();
             gvwEditable.ClearSorting();
+            gvwEditable.ClearColumnsFilter();
             navFrame.SelectedPageIndex = 1;
             gridControl.DataSource = null;
             gridControl.DataSource = dt;
-
             gridControl.MainView.PopulateColumns();
             gvwEditable.Columns[0].Visible = false;
-            gvwEditable.BestFitColumns(true);
+            //for (int c = 0; c <= gvwEditable.VisibleColumns.Count; c++)
+            //{
+            //    gvwEditable.Columns[c].MaxWidth = 175;
+            //}
+            gvwEditable.BestFitColumns();
             gvwEditable.OptionsView.NewItemRowPosition = NewItemRowPosition.None;
             gvwEditable.OptionsBehavior.Editable = false;
             gvwEditable.OptionsBehavior.ReadOnly = true;
             bsiRecordsCount.Caption = "RECORDS : " + gridControl.DefaultView.DataRowCount;
             gvwEditable.Focus();
+        }
 
-            gvwEditable.Columns.ColumnByFieldName("SourceFileName").Group();
-            gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortIndex = 0;
-            gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+        private void BbiEmpSourceHistory_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.EmployeeSourceHistory");
+                focusGridToDTReadView(dt);
+
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").Group();
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiAllAndOTPSourceHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.AllowanceAndOTPSourceHistory");
+                focusGridToDTReadView(dt);
 
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").Group();
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiAbsenceSourceHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.AbsenceSourceHistory");
+                focusGridToDTReadView(dt);
 
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").Group();
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("SourceFileName").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiEmpQueueHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.EmployeeQueueHistory");
+                focusGridToDTReadView(dt);
 
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").Group();
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiEmpSubQueueHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.EmployeeSubQueueHistory");
+                focusGridToDTReadView(dt);
 
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").Group();
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiPayslipQueueHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.FinancialQueueHistory");
+                focusGridToDTReadView(dt);
 
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").Group();
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiLveTransQueueHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.LeaveTransactionQueueHistory");
+                focusGridToDTReadView(dt);
 
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").Group();
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortIndex = 0;
+                gvwEditable.Columns.ColumnByFieldName("DateCreated").SortOrder = DevExpress.Data.ColumnSortOrder.Descending;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiLveBalQueueHistory_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            try
+            {
+                viewData("SELECT * FROM AI.LeaveBalanceQueueHistory", "DateCreated", "DateCreated", DevExpress.Data.ColumnSortOrder.Ascending);
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
+
+        private void viewData(string sqlSelect,string groupCol, string sortCol, DevExpress.Data.ColumnSortOrder sortOrder)
+        {
+            try
+            {
+                DataTable dt = SQLQueryToDataTable(sqlSelect);
+                focusGridToDTReadView(dt);
+                gvwEditable.Columns.ColumnByFieldName(groupCol).Group();
+                gvwEditable.Columns.ColumnByFieldName(sortCol).SortOrder = sortOrder;
+            }
+            catch (Exception myException)
+            { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewEmpSource_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.EmployeeSource", "SourceFileName", "SourceFileName",DevExpress.Data.ColumnSortOrder.Descending);}
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewAllAndOTPSource_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.AllowanceAndOTPSource", "SourceFileName", "SourceFileName", DevExpress.Data.ColumnSortOrder.Descending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewAbsenceSource_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.AbsenceSource", "SourceFileName", "SourceFileName", DevExpress.Data.ColumnSortOrder.Descending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewEmpMasterQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.EmployeeQueue", "DateCreated", "EmployeeCode", DevExpress.Data.ColumnSortOrder.Ascending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewEmpSubQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.EmployeeSubQueue", "DateCreated", "EmployeeCode", DevExpress.Data.ColumnSortOrder.Ascending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewPayslipQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.FinancialQueue", "DateCreated", "EmployeeCode", DevExpress.Data.ColumnSortOrder.Ascending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewLeaveTransQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.LeaveTransactionQueue", "DateCreated", "EmployeeCode", DevExpress.Data.ColumnSortOrder.Ascending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+        private void BbiViewLeaveBalQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { viewData("SELECT * FROM AI.LeaveBalanceQueue", "DateCreated", "EmployeeCode", DevExpress.Data.ColumnSortOrder.Ascending); }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+        }
+
+
     }
 }
 

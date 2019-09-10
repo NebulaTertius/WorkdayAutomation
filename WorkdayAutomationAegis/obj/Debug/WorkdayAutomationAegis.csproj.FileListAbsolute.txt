@@ -1185,7 +1185,6 @@ C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\es\DevExpress.XtraScheduler.v19.1.Core.resources.dll
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\ja\DevExpress.XtraScheduler.v19.1.Core.resources.dll
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\ru\DevExpress.XtraScheduler.v19.1.Core.resources.dll
-C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.csprojAssemblyReference.cache
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.MainView.resources
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.Properties.Resources.resources
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.csproj.GenerateResource.cache
@@ -1196,3 +1195,6 @@ C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.csproj.CopyComplete
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.exe
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.pdb
+C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\8_ProcessLeaveQueue.sql
+C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\7_LeaveTransactionToBalanceQueue.sql
+C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.csprojAssemblyReference.cache

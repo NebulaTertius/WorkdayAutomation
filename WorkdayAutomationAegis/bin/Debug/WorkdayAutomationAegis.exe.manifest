@@ -2059,14 +2059,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkdayAutomationAegis.exe" size="657368">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkdayAutomationAegis.exe" size="664024">
       <assemblyIdentity name="WorkdayAutomationAegis" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>egwV0M6819PPmIMa2zXtSCIGo1uajj2eDcf3TQoYqFo=</dsig:DigestValue>
+        <dsig:DigestValue>W68N8Ya3HKfqx0xYAm26sNIiZUNbRlYrDL6d/LbKoiM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -2358,13 +2358,13 @@
       <dsig:DigestValue>3ODHCZCOCSE6S2mJEsMnX2ZsML6uvY3paKB4gaHSGmQ=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\0_DropSPs.sql" size="590">
+  <file name="SQLScripts\Setup\5_StoredProcedures\0_DropSPs.sql" size="796">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>xcYWEyGTa697MnUve4CfjCegNVjNVFG8/dCGa6fX5Pk=</dsig:DigestValue>
+      <dsig:DigestValue>Tf6BpAB/4hj6+QeQNp0J/S0MSEMGaYh/2FUtwOnyUm8=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\5_StoredProcedures\1_MappingValidations.sql" size="88">
@@ -2394,13 +2394,13 @@
       <dsig:DigestValue>6xZgx0Is0QbxGY0/t009eRmAZVBizBG3tCEFm3ubNaM=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\4_FinancialBatchSP.sql" size="19944">
+  <file name="SQLScripts\Setup\5_StoredProcedures\4_FinancialBatchSP.sql" size="20431">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>RMU/BXWs3aD9LSPNLMQgqQgw7UVlIlancEN1T3fpQLw=</dsig:DigestValue>
+      <dsig:DigestValue>6J7FAcgjYYBdtzjFQeJmNJxszZdhKSIR4K1WCtS8tp4=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\5_StoredProcedures\5_ProcessFinancialQueue.sql" size="2017">
@@ -2419,6 +2419,24 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
       <dsig:DigestValue>FT6ZD9BNFY+mJs2CMHJxSz0a4Ao5D0P6E9M4ZUViBKs=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SQLScripts\Setup\5_StoredProcedures\7_LeaveTransactionToBalanceQueue.sql" size="8431">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>X5Xf3tpDJezKSenXyyj4rO1DodncA9cvHPrjoWIC04g=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SQLScripts\Setup\5_StoredProcedures\8_ProcessLeaveQueue.sql" size="2446">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>ykkqc7oWf2+RNPPD9zoIX7pGYHZh+kqkMzSYkTUf4OM=</dsig:DigestValue>
     </hash>
   </file>
   <file name="UserGuide\User Guide.docx" size="7471">
