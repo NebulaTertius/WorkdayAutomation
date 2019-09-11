@@ -1196,8 +1196,8 @@ namespace WorkdayAutomationAegis
         {
             ExecuteSQLQuery("EXEC [AI].[EmployeeBatchValidations]");
 
-            //XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
-            //focusGridToReadView(xpCol);
+            XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
+            focusGridToEditableView(xpCol);
         }
 
         private void bbiProcessEmployee_ItemClick(object sender, ItemClickEventArgs e)
