@@ -1,6 +1,7 @@
 ﻿General Development Notes:
 
-
+To Do:
+User Defined Batch template SP should check for new lines and add these to the same template when necessary
 
 
 

@@ -290,6 +290,9 @@
     <Content Include="SQLScripts\Setup\4_TableTypes\UserDefinedBatchType.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQLScripts\Setup\5_StoredProcedures\9_ValidateBatchTemplates.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQLScripts\Setup\5_StoredProcedures\4_FinancialBatchSP.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

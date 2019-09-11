@@ -2066,17 +2066,17 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>W68N8Ya3HKfqx0xYAm26sNIiZUNbRlYrDL6d/LbKoiM=</dsig:DigestValue>
+        <dsig:DigestValue>RH2fENL+3DA9iRvbaek6UVv8Yugx3UnN3iAaSANphWA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="DevNotes\GeneralNotes.txt" size="1186">
+  <file name="DevNotes\GeneralNotes.txt" size="1301">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>TI14ohhTbVu5Byp/ruTC6NIuXbPka9MD4GmdRzIjpXE=</dsig:DigestValue>
+      <dsig:DigestValue>8lmD+m5xRme8I9q/VlIihspMvhPsjpX5bJjNmEiL004=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Nebula_Logo_Square.ico" size="205420">
@@ -2331,13 +2331,13 @@
       <dsig:DigestValue>Oh8ywdleKnQM7vdfI8qAk8szOAjoa2a+1uvLUsV2gB8=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\3_FixedData\CatalogMapping.sql" size="228696">
+  <file name="SQLScripts\Setup\3_FixedData\CatalogMapping.sql" size="229801">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>vTaYuq15nzyjgTA/XhAOApq8dcK4ePVNRi96Jw8I4gA=</dsig:DigestValue>
+      <dsig:DigestValue>ysPvvHxZmhtD517S4eKgvPsuqxpNmzuPn5qo7do3+2U=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\3_FixedData\QueueMapping.sql" size="47113">
@@ -2358,13 +2358,13 @@
       <dsig:DigestValue>3ODHCZCOCSE6S2mJEsMnX2ZsML6uvY3paKB4gaHSGmQ=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\0_DropSPs.sql" size="796">
+  <file name="SQLScripts\Setup\5_StoredProcedures\0_DropSPs.sql" size="919">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>Tf6BpAB/4hj6+QeQNp0J/S0MSEMGaYh/2FUtwOnyUm8=</dsig:DigestValue>
+      <dsig:DigestValue>XjkMZ8hlPOTZRRIWvl8PPhxnJlYQDBmP5/ZpOvWrT10=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\5_StoredProcedures\1_MappingValidations.sql" size="88">
@@ -2437,6 +2437,15 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
       <dsig:DigestValue>ykkqc7oWf2+RNPPD9zoIX7pGYHZh+kqkMzSYkTUf4OM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SQLScripts\Setup\5_StoredProcedures\9_ValidateBatchTemplates.sql" size="9743">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>k9CmibR0GAfsqenYWWzJHjy14PvZeaXzw0MT1hvHZss=</dsig:DigestValue>
     </hash>
   </file>
   <file name="UserGuide\User Guide.docx" size="7471">

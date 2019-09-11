@@ -1422,6 +1422,7 @@ namespace WorkdayAutomationAegis
         {
             try { bbiImportCSVAllAndOTP_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiMoveAllowToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiProcessFinancials_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { BbiPayslipIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             MessageBox.Show("Process Finished" + Environment.NewLine + "Successful records will be available for processing in Sage", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1430,13 +1431,10 @@ namespace WorkdayAutomationAegis
         private void BbiAbsenceRunAll_ItemClick_1(object sender, ItemClickEventArgs e)
         {
             try { bbiImportCSVAbsences_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            MessageBox.Show("Import Done");
             try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            MessageBox.Show("Move to Trans");
             try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            MessageBox.Show("Tran to Bal");
+            try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiProcessLeave_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            MessageBox.Show("Process");
             try { BbiLeaveIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             MessageBox.Show("Process Finished" + Environment.NewLine + "Successful records will be available for processing in Sage", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
