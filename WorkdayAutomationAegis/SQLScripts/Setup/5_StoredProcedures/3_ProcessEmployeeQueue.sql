@@ -2,8 +2,8 @@ CREATE PROCEDURE [AI].[ProcessEmployeeQueue] @QueueFilter varchar(MAX) = ''
 AS
 
 --Remove previously run successful records
-INSERT INTO AI.EmployeeQueueHistory SELECT * FROM AI.EmployeeQueue WHERE StatusCode IN ('Success') AND ISNULL(QueueFilter,'') = @QueueFilter
-DELETE FROM AI.EmployeeQueue WHERE StatusCode IN ('Success') AND ISNULL(QueueFilter,'') = @QueueFilter
+INSERT INTO AI.EmployeeQueueHistory SELECT * FROM AI.EmployeeQueue WHERE StatusCode IN ('Success','Exclude') AND ISNULL(QueueFilter,'') = @QueueFilter
+DELETE FROM AI.EmployeeQueue WHERE StatusCode IN ('Success','Exclude') AND ISNULL(QueueFilter,'') = @QueueFilter
 
 
 --Instances

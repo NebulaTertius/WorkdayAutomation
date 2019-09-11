@@ -1,6 +1,10 @@
 CREATE PROCEDURE [AI].[EmployeeBatchValidations] @QueueFilter varchar(MAX) = ''
 AS
 
+BEGIN TRANSACTION
+UPDATE AI.EmployeeQueue SET EventCode = 'Exclude', EventDescription = 'Record manually excluded from automation run' WHERE StatusCode = 'Exclude'
+COMMIT
+
 --Create a CASH run per company if none exist
 IF EXISTS (SELECT c.CompanyID FROM Company.Company c LEFT JOIN Payroll.PaymentRunDef prd ON prd.CompanyID = c.CompanyID AND prd.PaymentTypeID = 1 WHERE prd.CompanyID IS NULL)
 BEGIN
@@ -21,27 +25,9 @@ BEGIN
 	WHERE prd.CompanyID IS NULL
 END
 
---Limit date ranges to prevent failure on smalldatetime data types
---Min and Max dates converted from varchar due to a user error on date formatting. This old version has been kept here to attempt to replicate the issue.
---UPDATE AI.EmployeeQueue SET DateJoinedGroup = CONVERT(datetime,'1900-01-01') WHERE ISNULL(DateJoinedGroup,CONVERT(datetime,'1900-01-01')) < CONVERT(datetime,'1900-01-01')
---UPDATE AI.EmployeeQueue SET DateJoinedGroup = CONVERT(datetime,'2079-06-06') WHERE ISNULL(DateJoinedGroup,'2079-06-06') > CONVERT(datetime,'2079-06-06')
---UPDATE AI.EmployeeQueue SET IDNumberExpiryDate = '1900-01-01' WHERE ISNULL(IDNumberExpiryDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET IDNumberExpiryDate = '2079-06-06' WHERE ISNULL(IDNumberExpiryDate,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET BirthDate = '1900-01-01' WHERE ISNULL(BirthDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET BirthDate = '2079-06-06' WHERE ISNULL(BirthDate,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET DateEngaged = '1900-01-01' WHERE ISNULL(DateEngaged,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET DateEngaged = '2079-06-06' WHERE ISNULL(DateEngaged,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET TerminationDate = '1900-01-01' WHERE ISNULL(TerminationDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET TerminationDate = '2079-06-06' WHERE ISNULL(TerminationDate,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET LeaveStartDate = '1900-01-01' WHERE ISNULL(LeaveStartDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET LeaveStartDate = '2079-06-06' WHERE ISNULL(LeaveStartDate,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET ProbationPeriodEndDate = '1900-01-01' WHERE ISNULL(ProbationPeriodEndDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET ProbationPeriodEndDate = '2079-06-06' WHERE ISNULL(ProbationPeriodEndDate,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET MedicalStartDate = '1900-01-01' WHERE ISNULL(MedicalStartDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET MedicalStartDate = '2079-06-06' WHERE ISNULL(MedicalStartDate,'2079-06-06') > '2079-06-06'
---UPDATE AI.EmployeeQueue SET TaxStartDate = '1900-01-01' WHERE ISNULL(TaxStartDate,'1900-01-01') < '1900-01-01'
---UPDATE AI.EmployeeQueue SET TaxStartDate = '2079-06-06' WHERE ISNULL(TaxStartDate,'2079-06-06') > '2079-06-06'
 
+
+--Limit date ranges to prevent failure on smalldatetime data types
 UPDATE AI.EmployeeQueue SET DateJoinedGroup = CONVERT(datetime,'1900-01-01') WHERE ISNULL(DateJoinedGroup,CONVERT(datetime,'1900-01-01')) < CONVERT(datetime,'1900-01-01')
 UPDATE AI.EmployeeQueue SET DateJoinedGroup = CONVERT(datetime,'2079-06-06') WHERE ISNULL(DateJoinedGroup,CONVERT(datetime,'2079-06-06')) > CONVERT(datetime,'2079-06-06')
 UPDATE AI.EmployeeQueue SET IDNumberExpiryDate = CONVERT(datetime,'1900-01-01') WHERE ISNULL(IDNumberExpiryDate,CONVERT(datetime,'1900-01-01')) < CONVERT(datetime,'1900-01-01')
@@ -61,42 +47,6 @@ UPDATE AI.EmployeeQueue SET MedicalStartDate = CONVERT(datetime,'2079-06-06') WH
 UPDATE AI.EmployeeQueue SET TaxStartDate = CONVERT(datetime,'1900-01-01') WHERE ISNULL(TaxStartDate,CONVERT(datetime,'1900-01-01')) < CONVERT(datetime,'1900-01-01')
 UPDATE AI.EmployeeQueue SET TaxStartDate = CONVERT(datetime,'2079-06-06') WHERE ISNULL(TaxStartDate,CONVERT(datetime,'2079-06-06')) > CONVERT(datetime,'2079-06-06')
 
---Default values if NULL
-UPDATE AI.EmployeeQueue
-SET AnnualSalary = 0.0000
-WHERE AnnualSalary IS NULL
-
-UPDATE AI.EmployeeQueue
-SET PeriodSalary = 0.0000
-WHERE PeriodSalary IS NULL
-
-UPDATE AI.EmployeeQueue
-SET HoursPerPeriod = 162.5300
-WHERE HoursPerPeriod IS NULL
-
-UPDATE AI.EmployeeQueue
-SET HoursPerDay = 8.0000
-WHERE HoursPerDay IS NULL
-
-UPDATE AI.EmployeeQueue
-SET [Disabled] = CASE WHEN [Disabled] = 'TRUE' THEN 1 ELSE 0 END
-WHERE [Disabled] IS NOT NULL
-
-UPDATE AI.EmployeeQueue
-SET ForeignIncome = CASE WHEN ForeignIncome = 'TRUE' THEN 1 ELSE 0 END
-WHERE ForeignIncome IS NOT NULL
-
-UPDATE AI.EmployeeQueue
-SET UseWork = CASE WHEN UseWork = 'TRUE' THEN 1 ELSE 0 END
-WHERE UseWork IS NOT NULL
-
-UPDATE AI.EmployeeQueue
-SET UsePhysical1 = CASE WHEN UsePhysical1 = 'TRUE' THEN 1 ELSE 0 END
-WHERE UsePhysical1 IS NOT NULL
-
-UPDATE AI.EmployeeQueue
-SET UsePostal2 = CASE WHEN UsePostal2 = 'TRUE' THEN 1 ELSE 0 END
-WHERE UsePostal2 IS NOT NULL
 
 --Change Master Queue table with a find and replace (Current value is AI.EmployeeQueue)
 --If the THROW statement does not work with your applicaton, this can be changed to select the error details based on each field required, or by using the RAISE_ERROR statement
@@ -163,6 +113,27 @@ BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'S', EventDe
 BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'T', EventDescription = 'Temporary Stop Event'  WHERE StatusCode = 'N' AND UIFStatusCode IN ('MAT','MATERNITY') AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
 
 
+
+--Default values for New Events if NULL
+UPDATE AI.EmployeeQueue SET AnnualSalary = 0.0000												WHERE EventCode IN ('N','X') AND AnnualSalary IS NULL
+UPDATE AI.EmployeeQueue SET PeriodSalary = 0.0000												WHERE EventCode IN ('N','X') AND PeriodSalary IS NULL
+UPDATE AI.EmployeeQueue SET HoursPerPeriod = 162.5300											WHERE EventCode IN ('N','X') AND HoursPerPeriod IS NULL
+UPDATE AI.EmployeeQueue SET HoursPerDay = 8.0000												WHERE EventCode IN ('N','X') AND HoursPerDay IS NULL
+UPDATE AI.EmployeeQueue SET [Disabled] = CASE WHEN [Disabled] = 'TRUE' THEN 1 ELSE 0 END		WHERE EventCode IN ('N','X') AND [Disabled] IS NOT NULL
+UPDATE AI.EmployeeQueue SET ForeignIncome = CASE WHEN ForeignIncome = 'TRUE' THEN 1 ELSE 0 END	WHERE EventCode IN ('N','X') AND ForeignIncome IS NOT NULL
+UPDATE AI.EmployeeQueue SET UseWork = CASE WHEN UseWork = 'TRUE' THEN 1 ELSE 0 END				WHERE EventCode IN ('N','X') AND UseWork IS NOT NULL
+UPDATE AI.EmployeeQueue SET UsePhysical1 = CASE WHEN UsePhysical1 = 'TRUE' THEN 1 ELSE 0 END	WHERE EventCode IN ('N','X') AND UsePhysical1 IS NOT NULL
+UPDATE AI.EmployeeQueue SET UsePostal2 = CASE WHEN UsePostal2 = 'TRUE' THEN 1 ELSE 0 END		WHERE EventCode IN ('N','X') AND UsePostal2 IS NOT NULL
+
+
+--Update termination reason for update events, if employee is already terminated in the system and no reason has been supplied from source
+UPDATE AI.EmployeeQueue SET TerminationReasonCode = tr.Code
+FROM AI.EmployeeQueue q 
+	INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode
+	INNER JOIN Employee.TerminationReason tr ON tr.TerminationReasonID = e.TerminationReasonID
+WHERE q.TerminationDate IS NOT NULL
+	AND q.TerminationReasonCode IS NULL
+	AND q.EventCode IN ('U','S','T')
 
 
 --Set the Mandatory Integration Field Default (These are typically set as a default because the external application cannot send or determine values for these)

@@ -110,6 +110,7 @@ namespace WorkdayAutomationAegis
 
         private void focusGridToReadView(DevExpress.Xpo.XPCollection xpCollection)
         {
+
             gvwEditable.ClearGrouping();
             gvwEditable.ClearSorting();
             gvwEditable.ClearColumnsFilter();
@@ -1203,8 +1204,8 @@ namespace WorkdayAutomationAegis
         {
             ExecuteSQLQuery("EXEC [AI].[ProcessEmployeeQueue]");
 
-            XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
-            focusGridToReadView(xpCol);
+            //XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
+            //focusGridToReadView(xpCol);
         }
 
         private void bbiProcessFinancials_ItemClick(object sender, ItemClickEventArgs e)
@@ -1471,7 +1472,7 @@ namespace WorkdayAutomationAegis
             {
                 ExecuteSQLQuery("EXEC AI.RefreshValidationWarnings");
                 XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.ValidationWarnings", typeof(AIValidationWarnings));
-                focusGridToReadView(xpCol);
+                focusGridToEditableView(xpCol);
 
                 gvwEditable.Columns.ColumnByFieldName("ValidationMessage").Group();
                 gvwEditable.Columns.ColumnByFieldName("CountryCode").SortIndex = 0;
@@ -1599,6 +1600,7 @@ namespace WorkdayAutomationAegis
 
         private void focusGridToDTReadView(DataTable dt)
         {
+            
             gvwEditable.ClearGrouping();
             gvwEditable.ClearSorting();
             gvwEditable.ClearColumnsFilter();
@@ -1794,7 +1796,6 @@ namespace WorkdayAutomationAegis
             try { viewData("SELECT * FROM AI.LeaveBalanceQueue", "DateCreated", "EmployeeCode", DevExpress.Data.ColumnSortOrder.Ascending); }
             catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
-
 
     }
 }

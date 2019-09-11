@@ -13,7 +13,7 @@ WHERE StatusCode IN ('New','Failed')
 DECLARE @UserDefinedBatchType AS AI.UserDefinedBatchType
 
 INSERT INTO @UserDefinedBatchType (ProductCode,EmployeeCode,Company,CompanyRule,PayRun,BatchTemplateCode,LineType,BatchItemCode,BatchItemType,Value,StatusCode,StatusComment,LastChanged,UserID)
-SELECT 'WKD' [ProductCode],EmployeeCode,NULL [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_' + CASE WHEN OneTimePayment = 'false' THEN 'RECUR' ELSE 'OTP' END [BatchTemplateCode],'Earning' [LineType],ISNULL(WageTypeCode,'None') [BatchItemCode],'Amount' [BatchItemType],Amount [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
+SELECT 'PAY' [ProductCode],EmployeeCode,NULL [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_' + CASE WHEN OneTimePayment = 'false' THEN 'RECUR' ELSE 'OTP' END [BatchTemplateCode],'Earning' [LineType],ISNULL(WageTypeCode,'None') [BatchItemCode],'Amount' [BatchItemType],Amount [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
 FROM AI.FinancialQueue
 WHERE StatusCode = 'New'
 
