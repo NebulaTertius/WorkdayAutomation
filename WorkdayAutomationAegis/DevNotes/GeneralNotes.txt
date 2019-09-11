@@ -3,6 +3,7 @@
 To Do On Prod:
 Create INCENTIVE Earning Line on FOX
 Create REFERRAL_PAY Earning line on AMCS
+Update employee codes of new hires where legacy id wasn't updated
 
 
 Nice to Haves:

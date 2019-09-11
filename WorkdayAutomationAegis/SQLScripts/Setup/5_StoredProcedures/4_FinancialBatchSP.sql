@@ -264,7 +264,7 @@ ELSE
 			INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 			INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 			INNER JOIN Entity.GenEntity ge ON ge.GenEntityID = e.GenEntityID
-			LEFT JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode)
+			LEFT JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode AND LEFT(bi.Comment,15) = c.CompanyCode)
 		WHERE be.BatchEmployeeID IS NULL
 			AND t.StatusCode = 'New'
 	--END
@@ -287,12 +287,13 @@ ELSE
 			,t.ProductCode
 		FROM AI.FinancialBatchHistory t
 			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, TerminationDate ORDER BY TerminationDate) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+			INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 			INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 			INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleID = er.CompanyRuleID
 			INNER JOIN Company.PayRunDef pr ON pr.CompanyRuleID = cr.CompanyRuleID AND pr.Code =  ISNULL(t.PayRun,'MAIN')
 			INNER JOIN Batch.BatchTemplate bt ON bt.Code = t.BatchTemplateCode
 			INNER JOIN Batch.BatchItem bi ON bi.BatchTemplateID = bt.BatchTemplateID AND LEFT(RIGHT(bi.BatchHierarchy,(LEN(t.BatchItemCode) + LEN(t.BatchItemType) + 1)),(LEN(t.BatchItemCode))) = t.BatchItemCode
-			INNER JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode)
+			INNER JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode AND LEFT(bi.Comment,15) = c.CompanyCode)
 		WHERE t.StatusCode = 'New'
 	--END
 	

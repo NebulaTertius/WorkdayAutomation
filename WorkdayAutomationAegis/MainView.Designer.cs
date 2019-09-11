@@ -902,7 +902,7 @@
             this.bsiViewData.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiViewData.ImageOptions.Image")));
             this.bsiViewData.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiViewData.ImageOptions.LargeImage")));
             this.bsiViewData.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem5),
+            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.barSubItem5, DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem6)});
             this.bsiViewData.Name = "bsiViewData";
             // 

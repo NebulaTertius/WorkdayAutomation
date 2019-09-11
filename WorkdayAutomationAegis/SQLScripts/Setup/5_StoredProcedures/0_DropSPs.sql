@@ -7,3 +7,4 @@ IF OBJECT_ID('AI.ProcessFinancialQueue', 'P') IS NOT NULL DROP PROCEDURE AI.Proc
 IF OBJECT_ID('AI.RefreshValidationWarnings', 'P') IS NOT NULL DROP PROCEDURE AI.RefreshValidationWarnings
 IF OBJECT_ID('AI.LeaveTransactionToBalanceQueue', 'P') IS NOT NULL DROP PROCEDURE AI.LeaveTransactionToBalanceQueue
 IF OBJECT_ID('AI.ProcessLeaveQueue', 'P') IS NOT NULL DROP PROCEDURE AI.ProcessLeaveQueue
+IF OBJECT_ID('AI.AutoCreateHierarchy', 'P') IS NOT NULL DROP PROCEDURE AI.AutoCreateHierarchy
