@@ -50,12 +50,12 @@
         <elementListCompartment Id="def481b1-586e-4354-8762-746aba9d3783" absoluteBounds="9.39, 5.9440136718749992, 1.4700000000000002, 0.2493896484375" name="Collections" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </xpObjectShape>
-    <xpObjectShape Id="6145b19b-71bb-4769-8862-92c021910662" absoluteBounds="12.875, 0.5, 1.5, 5.2164990234374988">
+    <xpObjectShape Id="6145b19b-71bb-4769-8862-92c021910662" absoluteBounds="12.875, 0.5, 1.5, 6.7549104817708319">
       <xpObjectMoniker Id="b0fb757a-88db-4fb4-9a3d-52e9fc8fa798" />
       <nestedChildShapes>
-        <elementListCompartment Id="5d0f4a7d-c359-4e6b-85ad-16d32f360ca5" absoluteBounds="12.89, 0.8100000000000005, 1.4700000000000002, 4.2877197265625" name="Fields" titleTextColor="Black" itemTextColor="Black" />
-        <elementListCompartment Id="fc9ae1c1-2e73-44e6-96af-c0f84a37cbc3" absoluteBounds="12.89, 5.1077197265624994, 1.4700000000000002, 0.2493896484375" name="Indexes" titleTextColor="Black" itemTextColor="Black" />
-        <elementListCompartment Id="8222360c-80a4-4a85-a708-df5ba919a401" absoluteBounds="12.89, 5.3671093749999992, 1.4700000000000002, 0.2493896484375" name="Collections" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="5d0f4a7d-c359-4e6b-85ad-16d32f360ca5" absoluteBounds="12.89, 0.8100000000000005, 1.4700000000000002, 5.826131184895833" name="Fields" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="fc9ae1c1-2e73-44e6-96af-c0f84a37cbc3" absoluteBounds="12.89, 6.6461311848958324, 1.4700000000000002, 0.2493896484375" name="Indexes" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="8222360c-80a4-4a85-a708-df5ba919a401" absoluteBounds="12.89, 6.9055208333333322, 1.4700000000000002, 0.2493896484375" name="Collections" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </xpObjectShape>
     <xpObjectShape Id="89b3961e-0744-4b81-9f02-1c360dce6aa6" absoluteBounds="5.875, 0.5, 1.5, 3.2934847005208328">

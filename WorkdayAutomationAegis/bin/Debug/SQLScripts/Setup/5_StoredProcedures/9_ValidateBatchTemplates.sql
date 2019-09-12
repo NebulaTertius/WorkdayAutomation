@@ -6,17 +6,12 @@ AS
 --Table versions must be updated at the end to force a cache refresh.
 --If the batch instance gives an Object Reference error for each line, this is due to the cache not refreshing, and therefore the system is not able to get the Batch Item
 
+DECLARE @BatchTemplateCode varchar(15)
+	,@OverrideIndicator int
+
 --===========================================================================================================================================================
 --Payslip Batch
 --===========================================================================================================================================================
-IF NOT EXISTS (SELECT TOP 1 * FROM Batch.BatchTemplate WHERE Code IN ('WORKDAY_RECUR','WORKDAY_OTP','WORKDAY_LEAVE'))
-BEGIN
-
-DECLARE @BatchTemplateCode varchar(15)
-	,@OverrideIndicator int
-	,@CacheRefreshIndicator bit = 0
-	
-
 SET @BatchTemplateCode = 'WORKDAY_RECUR'
 SET @OverrideIndicator = 1
 
@@ -25,7 +20,7 @@ BEGIN
 	INSERT INTO Batch.BatchTemplate (CompanyID,Code,ShortDescription,LongDescription,BatchTemplateType,BatchInstanceType,VerifyBatch,CreateLines,AllowDuplicate,SkipTerminated,AllowMultipleCompanies,[Status],ExportType,LastChanged,UserID)
 	VALUES (1,@BatchTemplateCode, @BatchTemplateCode + ' Template',@BatchTemplateCode + ' Template','U','I',1,1,'W',0,1,'A','U',GETDATE(),'Automation')
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 IF EXISTS (SELECT TOP 1 * FROM Company.CompanyRule WHERE [Status] = 'A' AND CompanyRuleID NOT IN (SELECT CompanyRuleID FROM Batch.BatchTemplateFilter btf INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = btf.BatchTemplateID WHERE bt.Code = @BatchTemplateCode))
@@ -41,7 +36,7 @@ BEGIN
 	WHERE [Status] = 'A'
 		AND CompanyRuleID NOT IN (SELECT CompanyRuleID FROM Batch.BatchTemplateFilter btf INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = btf.BatchTemplateID WHERE bt.Code = @BatchTemplateCode)
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 
@@ -87,7 +82,7 @@ BEGIN
 	) bt
 	WHERE bt.FieldName NOT IN (SELECT FieldName FROM Batch.BatchItem bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bt.Code = @BatchTemplateCode)
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 
@@ -101,7 +96,7 @@ BEGIN
 	INSERT INTO Batch.BatchTemplate (CompanyID,Code,ShortDescription,LongDescription,BatchTemplateType,BatchInstanceType,VerifyBatch,CreateLines,AllowDuplicate,SkipTerminated,AllowMultipleCompanies,[Status],ExportType,LastChanged,UserID)
 	VALUES (1,@BatchTemplateCode, @BatchTemplateCode + ' Template',@BatchTemplateCode + ' Template','U','I',1,1,'W',0,1,'A','U',GETDATE(),'Automation')
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 IF EXISTS (SELECT TOP 1 * FROM Company.CompanyRule WHERE [Status] = 'A' AND CompanyRuleID NOT IN (SELECT CompanyRuleID FROM Batch.BatchTemplateFilter btf INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = btf.BatchTemplateID WHERE bt.Code = @BatchTemplateCode))
@@ -117,7 +112,7 @@ BEGIN
 	WHERE [Status] = 'A'
 		AND CompanyRuleID NOT IN (SELECT CompanyRuleID FROM Batch.BatchTemplateFilter btf INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = btf.BatchTemplateID WHERE bt.Code = @BatchTemplateCode)
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 
@@ -163,7 +158,7 @@ BEGIN
 	) bt
 	WHERE bt.FieldName NOT IN (SELECT FieldName FROM Batch.BatchItem bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bt.Code = @BatchTemplateCode)
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 
@@ -181,7 +176,7 @@ BEGIN
 	INSERT INTO Batch.BatchTemplate (CompanyID,Code,ShortDescription,LongDescription,BatchTemplateType,BatchInstanceType,VerifyBatch,CreateLines,AllowDuplicate,SkipTerminated,AllowMultipleCompanies,[Status],ExportType,LastChanged,UserID)
 	VALUES (1,@BatchTemplateCode, @BatchTemplateCode + ' Template',@BatchTemplateCode + ' Template','U','I',1,1,'W',0,1,'A','U',GETDATE(),'Automation')
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 IF EXISTS (SELECT TOP 1 * FROM Company.CompanyRule WHERE [Status] = 'A' AND CompanyRuleID NOT IN (SELECT CompanyRuleID FROM Batch.BatchTemplateFilter btf INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = btf.BatchTemplateID WHERE bt.Code = @BatchTemplateCode))
@@ -197,7 +192,7 @@ BEGIN
 	WHERE [Status] = 'A'
 		AND CompanyRuleID NOT IN (SELECT CompanyRuleID FROM Batch.BatchTemplateFilter btf INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = btf.BatchTemplateID WHERE bt.Code = @BatchTemplateCode)
 	
-	SET @CacheRefreshIndicator = 1
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END
 
 
@@ -243,9 +238,5 @@ BEGIN
 	) bt
 	WHERE bt.FieldName NOT IN (SELECT FieldName FROM Batch.BatchItem bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bt.Code = @BatchTemplateCode)
 	
-	SET @CacheRefreshIndicator = 1
-END
-
-IF (@CacheRefreshIndicator = 1) BEGIN UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList') END
-
+	UPDATE dbo.TableVersion SET [Version] = [Version] + 1 WHERE [Name] IN ('BatchTemplateList','BatchItemList')
 END

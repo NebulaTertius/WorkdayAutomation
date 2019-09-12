@@ -10,10 +10,18 @@ CREATE TABLE [AI].[LeaveBalanceQueue](
 	[EmployeeCode] [nvarchar](100) NULL,
 	[LeaveTypeCode] [nvarchar](100) NULL,
 	[LeaveCode] [nvarchar](100) NULL,
-	[UnitAdjustment] [nvarchar](100) NULL,
-	[UnitOverride] [nvarchar](100) NULL,
-	[DateCreated] datetime NULL,
-	[LastChanged] datetime NULL,
+	[CurrentStartBalance] [decimal](18,4) NULL,
+	[CurrentAccrual] [decimal](18,4) NULL,
+	[CurrentTaken] [decimal](18,4) NULL,
+	[CurrentAdjustment] [decimal](18,4) NULL,
+	[CurrentEndBalance] [decimal](18,4) NULL,
+	[CurrentPlanned] [decimal](18,4) NULL,
+	[UnitAdjustment] [decimal](18,4) NULL,
+	[UnitOverride] [decimal](18,4) NULL,
+	[EndBalanceIncludingAdjustment] [decimal](18,4) NULL,
+	[Note] [nvarchar](max) NULL,
+	[DateCreated] [datetime] NULL,
+	[LastChanged] [datetime] NULL,
 	[QueueComment] [nvarchar](max) NULL,
 	[QueueFilter] [nvarchar](max) NULL,
 	[StatusCode] [nvarchar](100) NULL,
@@ -29,3 +37,4 @@ CREATE TABLE [AI].[LeaveBalanceQueue](
 	[OID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+

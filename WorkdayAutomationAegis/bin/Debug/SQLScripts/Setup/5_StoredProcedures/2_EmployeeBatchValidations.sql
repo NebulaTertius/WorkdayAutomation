@@ -540,7 +540,7 @@ END CATCH
 --Possible duplicate employee with different employee code
 BEGIN TRY 
 BEGIN TRANSACTION 
-UPDATE AI.EmployeeQueue SET StatusCode = 'Warning', StatusMessage = 'Possible duplicate employee', WarningCode = ISNULL(WarningCode,'')+'DUP|', WarningMessage = ISNULL(WarningMessage,'')+'Possible duplicate of Employee Code: ' + e.EmployeeCode
+UPDATE AI.EmployeeQueue SET StatusMessage = ISNULL(StatusMessage,'') + 'Possible duplicate employee|', WarningCode = ISNULL(WarningCode,'')+'DUP|', WarningMessage = ISNULL(WarningMessage,'')+'Possible duplicate of Employee Code: ' + e.EmployeeCode
 	 --  SELECT q.EmployeeCode
 		--,e.EmployeeCode [ExistingEmployeeCode]
 		--,q.CompanyCode
@@ -562,7 +562,6 @@ UPDATE AI.EmployeeQueue SET StatusCode = 'Warning', StatusMessage = 'Possible du
 						OR (e.FirstName = ISNULL(q.FirstName,'') AND e.LastName = ISNULL(q.LastName,''))
 						)
 	WHERE e.EmployeeCode IS NOT NULL
-		AND q.StatusCode = 'N'
 		AND q.EventCode IN ('N','X')
 		AND ISNULL(QueueFilter,'') = @QueueFilter
 COMMIT TRANSACTION 

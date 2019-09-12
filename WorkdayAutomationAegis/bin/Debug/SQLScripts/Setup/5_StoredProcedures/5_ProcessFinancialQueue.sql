@@ -32,3 +32,5 @@ SET StatusCode = res.StatusCode
 FROM AI.FinancialQueue q
 	INNER JOIN @OutputResult res ON res.EmployeeCode = q.EmployeeCode AND res.BatchItemCode = q.WageTypeCode AND res.[Value] = q.Amount
 
+INSERT INTO AI.AllowanceAndOTPSourceHistory SELECT * FROM AI.AllowanceAndOTPSource
+DELETE FROM AI.AllowanceAndOTPSource

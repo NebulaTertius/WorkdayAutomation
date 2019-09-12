@@ -40,3 +40,6 @@ SET StatusCode = res.StatusCode
 	,ErrorMessage = res.StatusComment
 FROM AI.LeaveBalanceQueue q
 	INNER JOIN @OutputResult res ON res.EmployeeCode = q.EmployeeCode AND res.BatchItemCode = q.LeaveCode AND res.[Value] = q.UnitOverride
+
+INSERT INTO AI.AbsenceSourceHistory SELECT * FROM AI.AbsenceSource
+DELETE FROM AI.AbsenceSource

@@ -30,6 +30,7 @@
     {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainView));
+            DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
             this.layoutView1 = new DevExpress.XtraGrid.Views.Layout.LayoutView();
             this.gridControl = new DevExpress.XtraGrid.GridControl();
             this.gvwEditable = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -220,6 +221,23 @@
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
+            this.bsiArchive = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem9 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem10 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem11 = new DevExpress.XtraBars.BarSubItem();
+            this.bbiArchiveEmpErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveEmpErrorAndOnHold = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveEmpAll = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchivePayErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchivePayAll = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveLveErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveLveAll = new DevExpress.XtraBars.BarButtonItem();
+            this.rpgGridActions = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
+            this.rpgLookAndFeel = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
+            this.bbiResetSelectedRows = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiRemoveSelectedRows = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvwEditable)).BeginInit();
@@ -428,10 +446,24 @@
             this.bbiViewLeaveTransQueue,
             this.bbiViewLeaveBalQueue,
             this.bbiMoveLveTransToBalQueue,
-            this.beiProgressBar});
+            this.beiProgressBar,
+            this.bsiArchive,
+            this.barSubItem9,
+            this.barSubItem10,
+            this.barSubItem11,
+            this.bbiArchiveEmpErrors,
+            this.bbiArchiveEmpErrorAndOnHold,
+            this.bbiArchiveEmpAll,
+            this.bbiArchivePayErrors,
+            this.bbiArchivePayAll,
+            this.bbiArchiveLveErrors,
+            this.bbiArchiveLveAll,
+            this.skinRibbonGalleryBarItem1,
+            this.bbiResetSelectedRows,
+            this.bbiRemoveSelectedRows});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl.MaxItemId = 179;
+            this.ribbonControl.MaxItemId = 197;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpAutoRun,
@@ -581,7 +613,6 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiLveTranQueue),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiEventTracker)});
             this.bsiCreateTables.Name = "bsiCreateTables";
-            this.bsiCreateTables.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             // 
             // bbiEmpMaster
             // 
@@ -1295,6 +1326,7 @@
             this.rpgIndividualProcesses.ItemLinks.Add(this.bsiValidateQueue);
             this.rpgIndividualProcesses.ItemLinks.Add(this.bsiProcessQueue);
             this.rpgIndividualProcesses.ItemLinks.Add(this.bsiUpdateTracker);
+            this.rpgIndividualProcesses.ItemLinks.Add(this.bsiArchive);
             this.rpgIndividualProcesses.Name = "rpgIndividualProcesses";
             this.rpgIndividualProcesses.Text = "Individual Process Steps";
             // 
@@ -1324,7 +1356,9 @@
             // 
             this.rpgTools.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup1,
-            this.ribbonPageGroup2});
+            this.ribbonPageGroup2,
+            this.rpgGridActions,
+            this.rpgLookAndFeel});
             this.rpgTools.MergeOrder = 0;
             this.rpgTools.Name = "rpgTools";
             this.rpgTools.Text = "Tools";
@@ -2037,6 +2071,130 @@
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "Transformation";
             // 
+            // bsiArchive
+            // 
+            this.bsiArchive.Caption = "Archive";
+            this.bsiArchive.Id = 179;
+            this.bsiArchive.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.Image")));
+            this.bsiArchive.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.LargeImage")));
+            this.bsiArchive.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem9),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem10),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem11)});
+            this.bsiArchive.Name = "bsiArchive";
+            // 
+            // barSubItem9
+            // 
+            this.barSubItem9.Caption = "Employee";
+            this.barSubItem9.Id = 181;
+            this.barSubItem9.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrors),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrorAndOnHold),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpAll)});
+            this.barSubItem9.Name = "barSubItem9";
+            // 
+            // barSubItem10
+            // 
+            this.barSubItem10.Caption = "Payslip";
+            this.barSubItem10.Id = 183;
+            this.barSubItem10.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayErrors),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayAll)});
+            this.barSubItem10.Name = "barSubItem10";
+            // 
+            // barSubItem11
+            // 
+            this.barSubItem11.Caption = "Leave";
+            this.barSubItem11.Id = 184;
+            this.barSubItem11.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveErrors),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveAll)});
+            this.barSubItem11.Name = "barSubItem11";
+            // 
+            // bbiArchiveEmpErrors
+            // 
+            this.bbiArchiveEmpErrors.Caption = "Errors";
+            this.bbiArchiveEmpErrors.Id = 185;
+            this.bbiArchiveEmpErrors.Name = "bbiArchiveEmpErrors";
+            // 
+            // bbiArchiveEmpErrorAndOnHold
+            // 
+            this.bbiArchiveEmpErrorAndOnHold.Caption = "Error and On-Hold";
+            this.bbiArchiveEmpErrorAndOnHold.Id = 186;
+            this.bbiArchiveEmpErrorAndOnHold.Name = "bbiArchiveEmpErrorAndOnHold";
+            // 
+            // bbiArchiveEmpAll
+            // 
+            this.bbiArchiveEmpAll.Caption = "All";
+            this.bbiArchiveEmpAll.Id = 187;
+            this.bbiArchiveEmpAll.Name = "bbiArchiveEmpAll";
+            // 
+            // bbiArchivePayErrors
+            // 
+            this.bbiArchivePayErrors.Caption = "Errors";
+            this.bbiArchivePayErrors.Id = 188;
+            this.bbiArchivePayErrors.Name = "bbiArchivePayErrors";
+            // 
+            // bbiArchivePayAll
+            // 
+            this.bbiArchivePayAll.Caption = "All";
+            this.bbiArchivePayAll.Id = 189;
+            this.bbiArchivePayAll.Name = "bbiArchivePayAll";
+            // 
+            // bbiArchiveLveErrors
+            // 
+            this.bbiArchiveLveErrors.Caption = "Errors";
+            this.bbiArchiveLveErrors.Id = 190;
+            this.bbiArchiveLveErrors.Name = "bbiArchiveLveErrors";
+            // 
+            // bbiArchiveLveAll
+            // 
+            this.bbiArchiveLveAll.Caption = "All";
+            this.bbiArchiveLveAll.Id = 191;
+            this.bbiArchiveLveAll.Name = "bbiArchiveLveAll";
+            // 
+            // rpgGridActions
+            // 
+            this.rpgGridActions.ItemLinks.Add(this.bbiResetSelectedRows);
+            this.rpgGridActions.ItemLinks.Add(this.bbiRemoveSelectedRows);
+            this.rpgGridActions.Name = "rpgGridActions";
+            this.rpgGridActions.Text = "Grid Actions";
+            // 
+            // workspaceManager1
+            // 
+            this.workspaceManager1.TargetControl = this;
+            this.workspaceManager1.TransitionType = pushTransition1;
+            // 
+            // rpgLookAndFeel
+            // 
+            this.rpgLookAndFeel.ItemLinks.Add(this.skinRibbonGalleryBarItem1);
+            this.rpgLookAndFeel.Name = "rpgLookAndFeel";
+            this.rpgLookAndFeel.Text = "Look and Feel";
+            // 
+            // skinRibbonGalleryBarItem1
+            // 
+            this.skinRibbonGalleryBarItem1.Caption = "skinRibbonGalleryBarItem1";
+            this.skinRibbonGalleryBarItem1.Id = 193;
+            this.skinRibbonGalleryBarItem1.Name = "skinRibbonGalleryBarItem1";
+            // 
+            // bbiResetSelectedRows
+            // 
+            this.bbiResetSelectedRows.Caption = "Reset Selected Rows";
+            this.bbiResetSelectedRows.Id = 194;
+            this.bbiResetSelectedRows.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.Image")));
+            this.bbiResetSelectedRows.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.LargeImage")));
+            this.bbiResetSelectedRows.Name = "bbiResetSelectedRows";
+            this.bbiResetSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiResetSelectedRows_ItemClick);
+            // 
+            // bbiRemoveSelectedRows
+            // 
+            this.bbiRemoveSelectedRows.Caption = "Remove Selected Rows";
+            this.bbiRemoveSelectedRows.Id = 195;
+            this.bbiRemoveSelectedRows.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem3.ImageOptions.Image")));
+            this.bbiRemoveSelectedRows.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem3.ImageOptions.LargeImage")));
+            this.bbiRemoveSelectedRows.Name = "bbiRemoveSelectedRows";
+            this.bbiRemoveSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRemoveSelectedRows_ItemClick);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -2306,5 +2464,22 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private DevExpress.XtraBars.BarEditItem beiProgressBar;
         private DevExpress.XtraEditors.Repository.RepositoryItemMarqueeProgressBar repositoryItemMarqueeProgressBar1;
+        private DevExpress.XtraBars.BarSubItem bsiArchive;
+        private DevExpress.XtraBars.BarSubItem barSubItem9;
+        private DevExpress.XtraBars.BarButtonItem bbiArchiveEmpErrors;
+        private DevExpress.XtraBars.BarButtonItem bbiArchiveEmpErrorAndOnHold;
+        private DevExpress.XtraBars.BarButtonItem bbiArchiveEmpAll;
+        private DevExpress.XtraBars.BarSubItem barSubItem10;
+        private DevExpress.XtraBars.BarButtonItem bbiArchivePayErrors;
+        private DevExpress.XtraBars.BarButtonItem bbiArchivePayAll;
+        private DevExpress.XtraBars.BarSubItem barSubItem11;
+        private DevExpress.XtraBars.BarButtonItem bbiArchiveLveErrors;
+        private DevExpress.XtraBars.BarButtonItem bbiArchiveLveAll;
+        private DevExpress.XtraBars.SkinRibbonGalleryBarItem skinRibbonGalleryBarItem1;
+        private DevExpress.XtraBars.BarButtonItem bbiResetSelectedRows;
+        private DevExpress.XtraBars.BarButtonItem bbiRemoveSelectedRows;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgGridActions;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgLookAndFeel;
+        private DevExpress.Utils.WorkspaceManager workspaceManager1;
     }
 }

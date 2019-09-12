@@ -287,6 +287,9 @@
     <Content Include="SQLScripts\Setup\1_Tables\FinancialBatchHistory.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQLScripts\Setup\2_Views\3_EmployeeContractSequence.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQLScripts\Setup\4_TableTypes\UserDefinedBatchType.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

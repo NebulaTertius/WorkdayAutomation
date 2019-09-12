@@ -73,17 +73,75 @@ namespace AI.Automation
             get { return fLeaveCode; }
             set { SetPropertyValue<string>(nameof(LeaveCode), ref fLeaveCode, value); }
         }
-        string fUnitAdjustment;
-        public string UnitAdjustment
+        decimal fCurrentStartBalance;
+        [DbType("decimal(18,4)")]
+        public decimal CurrentStartBalance
+        {
+            get { return fCurrentStartBalance; }
+            set { SetPropertyValue<decimal>(nameof(CurrentStartBalance), ref fCurrentStartBalance, value); }
+        }
+        decimal fCurrentAccrual;
+        [DbType("decimal(18,4)")]
+        public decimal CurrentAccrual
+        {
+            get { return fCurrentAccrual; }
+            set { SetPropertyValue<decimal>(nameof(CurrentAccrual), ref fCurrentAccrual, value); }
+        }
+        decimal fCurrentTaken;
+        [DbType("decimal(18,4)")]
+        public decimal CurrentTaken
+        {
+            get { return fCurrentTaken; }
+            set { SetPropertyValue<decimal>(nameof(CurrentTaken), ref fCurrentTaken, value); }
+        }
+        decimal fCurrentAdjustment;
+        [DbType("decimal(18,4)")]
+        public decimal CurrentAdjustment
+        {
+            get { return fCurrentAdjustment; }
+            set { SetPropertyValue<decimal>(nameof(CurrentAdjustment), ref fCurrentAdjustment, value); }
+        }
+        decimal fCurrentEndBalance;
+        [DbType("decimal(18,4)")]
+        public decimal CurrentEndBalance
+        {
+            get { return fCurrentEndBalance; }
+            set { SetPropertyValue<decimal>(nameof(CurrentEndBalance), ref fCurrentEndBalance, value); }
+        }
+        decimal fCurrentPlanned;
+        [DbType("decimal(18,4)")]
+        public decimal CurrentPlanned
+        {
+            get { return fCurrentPlanned; }
+            set { SetPropertyValue<decimal>(nameof(CurrentPlanned), ref fCurrentPlanned, value); }
+        }
+        decimal fUnitAdjustment;
+        [DbType("decimal(18,4)")]
+        public decimal UnitAdjustment
         {
             get { return fUnitAdjustment; }
-            set { SetPropertyValue<string>(nameof(UnitAdjustment), ref fUnitAdjustment, value); }
+            set { SetPropertyValue<decimal>(nameof(UnitAdjustment), ref fUnitAdjustment, value); }
         }
-        string fUnitOverride;
-        public string UnitOverride
+        decimal fUnitOverride;
+        [DbType("decimal(18,4)")]
+        public decimal UnitOverride
         {
             get { return fUnitOverride; }
-            set { SetPropertyValue<string>(nameof(UnitOverride), ref fUnitOverride, value); }
+            set { SetPropertyValue<decimal>(nameof(UnitOverride), ref fUnitOverride, value); }
+        }
+        decimal fEndBalanceIncludingAdjustment;
+        [DbType("decimal(18,4)")]
+        public decimal EndBalanceIncludingAdjustment
+        {
+            get { return fEndBalanceIncludingAdjustment; }
+            set { SetPropertyValue<decimal>(nameof(EndBalanceIncludingAdjustment), ref fEndBalanceIncludingAdjustment, value); }
+        }
+        string fNote;
+        [Size(SizeAttribute.Unlimited)]
+        public string Note
+        {
+            get { return fNote; }
+            set { SetPropertyValue<string>(nameof(Note), ref fNote, value); }
         }
         DateTime fDateCreated;
         public DateTime DateCreated

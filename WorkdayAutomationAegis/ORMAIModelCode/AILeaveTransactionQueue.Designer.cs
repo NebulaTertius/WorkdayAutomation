@@ -90,11 +90,11 @@ namespace AI.Automation
             get { return fUnitsTaken; }
             set { SetPropertyValue<string>(nameof(UnitsTaken), ref fUnitsTaken, value); }
         }
-        string fUnit;
-        public string Unit
+        string fUnitType;
+        public string UnitType
         {
-            get { return fUnit; }
-            set { SetPropertyValue<string>(nameof(Unit), ref fUnit, value); }
+            get { return fUnitType; }
+            set { SetPropertyValue<string>(nameof(UnitType), ref fUnitType, value); }
         }
         DateTime fDateCreated;
         public DateTime DateCreated

@@ -2059,24 +2059,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkdayAutomationAegis.exe" size="664536">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WorkdayAutomationAegis.exe" size="679896">
       <assemblyIdentity name="WorkdayAutomationAegis" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6MbQVlAmnoC5B8V9fuS1UUNC/KirNN95hqSrqVM+CrA=</dsig:DigestValue>
+        <dsig:DigestValue>ol8JxSeI9eGFEZPLJKJE+Zs67ZSP0aFxURocLCQ1nXg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="DevNotes\GeneralNotes.txt" size="1345">
+  <file name="DevNotes\GeneralNotes.txt" size="2086">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>79WMA8m0eojklPPG1NhgpwjdDq6WPLVH5j3MT1U3znM=</dsig:DigestValue>
+      <dsig:DigestValue>IcWxi61Qn3JLfZX85Mxvj/mKNc3X99n6u9bsOY7lx1Q=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Nebula_Logo_Square.ico" size="205420">
@@ -2250,22 +2250,22 @@
       <dsig:DigestValue>RJ7bqVcUVU0LylluQpQXHAosd+tZIMK0Bft64Bvpgh0=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\1_Tables\LeaveBalanceQueue.sql" size="1307">
+  <file name="SQLScripts\Setup\1_Tables\LeaveBalanceQueue.sql" size="1662">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>y/jxhUr3D3Mp2j9RYoFKgc4Y1luK7VGdVn3X14Mf++w=</dsig:DigestValue>
+      <dsig:DigestValue>yQmff6zMpuu3c0NWfbxZuhIsS7I239WWGmsZxnulu/g=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\1_Tables\LeaveBalanceQueueHistory.sql" size="1038">
+  <file name="SQLScripts\Setup\1_Tables\LeaveBalanceQueueHistory.sql" size="1391">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>d4OtksNrL/NN9rpBannfKiP1RopnWjtr5bNgO7Dmxj8=</dsig:DigestValue>
+      <dsig:DigestValue>tcuzf+5L/szebdqXT/AzB6WT4LC8gvPZEFheiIFaA98=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\1_Tables\LeaveTransactionQueue.sql" size="1366">
@@ -2304,13 +2304,13 @@
       <dsig:DigestValue>ZfZ4tQ5rx+KtstYN7nX9Dv6MYQ5bg0J0We0SKVDC1rM=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\2_Views\0_DropViews.sql" size="196">
+  <file name="SQLScripts\Setup\2_Views\0_DropViews.sql" size="298">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>TqszRo8xFVq3oTLytSl50pNi/cPEQMlZpazYd4k/QZE=</dsig:DigestValue>
+      <dsig:DigestValue>VaRjfMX8qGjDhIz/DvkgbyKU2zUlcVTmDbY2TlEjCNs=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\2_Views\1_EmployeeDetailSnapshot.sql" size="9226">
@@ -2331,13 +2331,22 @@
       <dsig:DigestValue>Oh8ywdleKnQM7vdfI8qAk8szOAjoa2a+1uvLUsV2gB8=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\3_FixedData\CatalogMapping.sql" size="229801">
+  <file name="SQLScripts\Setup\2_Views\3_EmployeeContractSequence.sql" size="856">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>ysPvvHxZmhtD517S4eKgvPsuqxpNmzuPn5qo7do3+2U=</dsig:DigestValue>
+      <dsig:DigestValue>DH3Qb8qu2dhXVLBhi1Os6dsfKa+kNJkQTjs3MndhbQQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="SQLScripts\Setup\3_FixedData\CatalogMapping.sql" size="230790">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>emPkU3iKhc0JF4dnpDBkNSgoayaN+6SG6fwz671t6AU=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\3_FixedData\QueueMapping.sql" size="47106">
@@ -2385,13 +2394,13 @@
       <dsig:DigestValue>p53cwr9CBKVBfdNL/b6OXA473RkLLQCJeVfr9WOCo8U=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\2_EmployeeBatchValidations.sql" size="46849">
+  <file name="SQLScripts\Setup\5_StoredProcedures\2_EmployeeBatchValidations.sql" size="46827">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>bg433yK7yHW0LAp/DRvIN6ZJ06e2pJZCWF0DiN8uTDo=</dsig:DigestValue>
+      <dsig:DigestValue>gJZnux3XmClh2hUX/brEI2eMlSuTHl/fdtfIWItUcNo=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\5_StoredProcedures\3_ProcessEmployeeQueue.sql" size="14418">
@@ -2412,13 +2421,13 @@
       <dsig:DigestValue>Sndq+PKYX4++wXqkrg3RLnnrX26iOKRTvI7+S4D5juU=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\5_ProcessFinancialQueue.sql" size="2017">
+  <file name="SQLScripts\Setup\5_StoredProcedures\5_ProcessFinancialQueue.sql" size="2139">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>qI6k0pJHjgCniqGW69UHwjvWH80zdGNe9XE6dFWu4fA=</dsig:DigestValue>
+      <dsig:DigestValue>Zh5fqSHBdNOsJNj1rbFpo4+3hgPwcuCMGNWdLHYoUH0=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\5_StoredProcedures\6_RefreshValidationWarnings.sql" size="7870">
@@ -2430,31 +2439,31 @@
       <dsig:DigestValue>FT6ZD9BNFY+mJs2CMHJxSz0a4Ao5D0P6E9M4ZUViBKs=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\7_LeaveTransactionToBalanceQueue.sql" size="8431">
+  <file name="SQLScripts\Setup\5_StoredProcedures\7_LeaveTransactionToBalanceQueue.sql" size="8819">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>X5Xf3tpDJezKSenXyyj4rO1DodncA9cvHPrjoWIC04g=</dsig:DigestValue>
+      <dsig:DigestValue>nqk3R23f4naOZX/Q4vPDuboa+73V391FewBOn4TchWo=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\8_ProcessLeaveQueue.sql" size="2446">
+  <file name="SQLScripts\Setup\5_StoredProcedures\8_ProcessLeaveQueue.sql" size="2548">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>DwaCrN4J1fPNDIdGapDw9TVQN6Gx04AanmJIYoc11Ho=</dsig:DigestValue>
+      <dsig:DigestValue>8e0eG9CdMRF1Z8mEi6WSvt0XG8BODHoPj09YNW0kRa8=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\9_ValidateBatchTemplates.sql" size="13788">
+  <file name="SQLScripts\Setup\5_StoredProcedures\9_ValidateBatchTemplates.sql" size="14156">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>PlqoHzgJ/bcpu6lW6shbf+m9+AGeVzjeM6IXatlntpI=</dsig:DigestValue>
+      <dsig:DigestValue>7PaVUfrkPgWLyEZG++aQWJJQEwoGrv4r9IriAPFseiI=</dsig:DigestValue>
     </hash>
   </file>
   <file name="UserGuide\User Guide.docx" size="7471">

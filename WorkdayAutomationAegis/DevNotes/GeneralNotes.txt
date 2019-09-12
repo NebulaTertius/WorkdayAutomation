@@ -1,9 +1,17 @@
 ﻿General Development Notes:
 
+***Important To Know***
+*************************
+The source files do not have any type of indication if a field is removed.
+Therefore if a value needs to be removed, a space must be sent in order to be able to remove a historic value in a sequence of files
+*************************
+
 To Do On Prod:
+Check leave of employee 240005 - This is a very old termination who is pulling through with 199 days leave adjust
 Create INCENTIVE Earning Line on FOX
 Create REFERRAL_PAY Earning line on AMCS
 Update employee codes of new hires where legacy id wasn't updated
+
 
 
 Nice to Haves:
@@ -28,4 +36,14 @@ And then add calcs or checks to pay this out.
 Not related to this project:
 Sage Reporting Tool: Create a query/report assistant. Give options to create a report, such as "Use employee or entity", "Consolidate or per payslip"
 As well as things such as a Summary or Detail view, to also assist in building the report layout itself.
+
+Check if Nebula Schemas would make dev easier:
+CREATE SCHEMA NTbl --Nebula Tables or Types
+CREATE SCHEMA NVws --Nebula Views
+CREATE SCHEMA NFun --Nebula Function
+CREATE SCHEMA NGrp --Nebula Grouping Option
+CREATE SCHEMA NPrc --Nebula Procedures
+CREATE SCHEMA NGen --Nebula Generic
+CREATE SCHEMA NRep --Nebula Reports
+etc.
 

@@ -696,13 +696,14 @@ namespace WorkdayAutomationAegis
         private void bbiImportCSVAllAndOTP_ItemClick(object sender, ItemClickEventArgs e)
         {
             string[] inputFiles = Directory.GetFiles(csvFolderLoc, "*PAY*.csv");
+
             if (inputFiles.Length == 0) { MessageBox.Show("No import files containing key word PAY found in " + csvFolderLoc + ": The process will continue to refresh existing data.", "No New Files Found", MessageBoxButtons.OK, MessageBoxIcon.Information); }
             {
                 try
                 {
                     string sqlConn = GetSQLConnString();
 
-                    foreach (string inputpath in inputFiles)
+                    foreach (string inputpath in Directory.GetFiles(csvFolderLoc, "*PAY*.csv"))
                     {
                         CSVToSQL(inputpath, sqlConn, "AI.AllowanceAndOTPSource");
                         MoveOrDeleteImportFile(inputpath, csvCompletedLoc + "\\" + Path.GetFileName(inputpath));
@@ -1797,6 +1798,47 @@ namespace WorkdayAutomationAegis
             catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
+        private void BbiResetSelectedRows_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+            
+            var senderCh1 = sender.ToString(); //"DevExpress.XtraBars.Ribbon.RibbonBarManager"
+            var senderCh2 = sender.GetType(); //{Name = "RibbonBarManager" FullName = "DevExpress.XtraBars.Ribbon.RibbonBarManager"}
+            var senderch3 = sender.GetHashCode(); //17911681
+            var eCh1 = e.ToString(); //"DevExpress.XtraBars.ItemClickEventArgs"
+            var eCh2 = e.GetType(); //{Name = "ItemClickEventArgs" FullName = "DevExpress.XtraBars.ItemClickEventArgs"}
+            var eCh3 = e.GetHashCode(); //65300541
+            var eCh4 = e.Item; //{Reset Selected Rows}
+            var eCh5 = e.Link; //{DevExpress.XtraBars.BarButtonItemLink}
+
+            var gridSourceCheck = gvwEditable.DataSource.ToString(); //"DevExpress.Xpo.XPCollection(2) Count(57)"
+            var gridSourceCheck2 = gvwEditable.DataSource; //Check the Object Type for the full name of data source.
+
+            var ds = gvwEditable.Name.ToString();
+            var ds2 = gvwEditable.DataSource;
+
+            var ln = gvwEditable.LevelName;
+            var ln2 = gvwEditable.LevelName.ToString();
+
+            var gch = gridControl.MainView.Name.ToString();
+
+
+
+            foreach (int selectedRow in gvwEditable.GetSelectedRows())
+            {
+
+                var pkID = gvwEditable.GetRowCellValue(selectedRow, gvwEditable.Columns[0]);
+
+                ExecuteSQLQuery("UPDATE AI.EmployeeQueue SET StatusCode = 'New' WHERE OID = ISNULL(" + pkID.ToString() + ",0)");
+                
+            }
+
+        }
+
+        private void BbiRemoveSelectedRows_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
     }
 }
 
