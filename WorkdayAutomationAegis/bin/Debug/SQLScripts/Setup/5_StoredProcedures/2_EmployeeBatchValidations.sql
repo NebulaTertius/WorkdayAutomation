@@ -551,7 +551,7 @@ FROM (SELECT q.EmployeeCode
 		,e.TerminationDate [ExistingTerminationDate]
 		,q.IDNumber
 		,e.IDNumber [ExistingIDNumber]
-		,q.FirstName + ' ' + q.LastName
+		,q.FirstName + ' ' + q.LastName [FullName]
 		,e.FirstName + ' ' + e.LastName [ExistingFullName]
 	FROM AI.EmployeeQueue q 
 		LEFT JOIN (SELECT * FROM 
