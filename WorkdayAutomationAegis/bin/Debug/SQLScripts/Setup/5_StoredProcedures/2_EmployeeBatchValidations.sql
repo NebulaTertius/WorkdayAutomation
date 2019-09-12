@@ -565,6 +565,7 @@ FROM (SELECT q.EmployeeCode
 		AND q.StatusCode = 'N'
 		AND q.EventCode IN ('N','X')
 		AND ISNULL(QueueFilter,'') = @QueueFilter
+		) dup
 COMMIT TRANSACTION 
 END TRY 
 BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
