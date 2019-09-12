@@ -536,6 +536,40 @@ END CATCH
 
 
 
+--Warning Validations
+--Possible duplicate employee with different employee code
+BEGIN TRY 
+BEGIN TRANSACTION 
+UPDATE AI.EmployeeQueue SET StatusCode = 'Warning', StatusMessage = 'Possible duplicate employee', WarningCode = ISNULL(WarningCode,'')+'DUP|', WarningMessage = ISNULL(WarningMessage,'')+'Possible duplicate of Employee Code: ' + ExistingEmployeeCode
+FROM (SELECT q.EmployeeCode
+		,e.EmployeeCode [ExistingEmployeeCode]
+		,q.CompanyCode
+		,(SELECT CompanyCode FROM Company.Company WHERE CompanyID = e.CompanyID) [ExistingCompanyCode]
+		,q.DateEngaged
+		,e.DateEngaged [ExistingDateEngaged]
+		,q.TerminationDate
+		,e.TerminationDate [ExistingTerminationDate]
+		,q.IDNumber
+		,e.IDNumber [ExistingIDNumber]
+		,q.FirstName + ' ' + q.LastName
+		,e.FirstName + ' ' + e.LastName [ExistingFullName]
+	FROM AI.EmployeeQueue q 
+		LEFT JOIN (SELECT * FROM 
+			(SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.EmployeeCode, emr.DateEngaged, emr.TerminationDate, emr.CompanyID, ge.* 
+			FROM Employee.Employee emr INNER JOIN Entity.GenEntity ge ON ge.GenEntityID = emr.GenEntityID) em 
+			WHERE em.RwNo = 1) e ON e.EmployeeCode <> q.EmployeeCode 
+					AND (e.IDNumber = ISNULL(q.IDNumber,'')
+						OR (e.FirstName = ISNULL(q.FirstName,'') AND e.LastName = ISNULL(q.LastName,''))
+						)
+	WHERE e.EmployeeCode IS NOT NULL
+		AND q.StatusCode = 'N'
+		AND q.EventCode IN ('N','X')
+		AND ISNULL(QueueFilter,'') = @QueueFilter
+COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
+END CATCH
+
 
 --Other validations
 --Entity Code and ID Number do not match

@@ -2385,13 +2385,13 @@
       <dsig:DigestValue>p53cwr9CBKVBfdNL/b6OXA473RkLLQCJeVfr9WOCo8U=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SQLScripts\Setup\5_StoredProcedures\2_EmployeeBatchValidations.sql" size="45149">
+  <file name="SQLScripts\Setup\5_StoredProcedures\2_EmployeeBatchValidations.sql" size="46822">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>Dcb0Oqna2ng7iaSTjUGFb4i1jIZyPSH0rxv3LwaJMbg=</dsig:DigestValue>
+      <dsig:DigestValue>Mw+ecZ7XKdx+y705bkQfefn5SpLud70oYmsMzUyr614=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SQLScripts\Setup\5_StoredProcedures\3_ProcessEmployeeQueue.sql" size="14418">
