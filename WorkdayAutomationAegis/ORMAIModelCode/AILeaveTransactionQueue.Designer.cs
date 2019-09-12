@@ -54,6 +54,12 @@ namespace AI.Automation
             get { return fCountryCodeIndicator; }
             set { SetPropertyValue<string>(nameof(CountryCodeIndicator), ref fCountryCodeIndicator, value); }
         }
+        string fCompanyCode;
+        public string CompanyCode
+        {
+            get { return fCompanyCode; }
+            set { SetPropertyValue<string>(nameof(CompanyCode), ref fCompanyCode, value); }
+        }
         string fEmployeeCode;
         public string EmployeeCode
         {
@@ -90,11 +96,11 @@ namespace AI.Automation
             get { return fUnitsTaken; }
             set { SetPropertyValue<string>(nameof(UnitsTaken), ref fUnitsTaken, value); }
         }
-        string fUnitType;
-        public string UnitType
+        string fUnit;
+        public string Unit
         {
-            get { return fUnitType; }
-            set { SetPropertyValue<string>(nameof(UnitType), ref fUnitType, value); }
+            get { return fUnit; }
+            set { SetPropertyValue<string>(nameof(Unit), ref fUnit, value); }
         }
         DateTime fDateCreated;
         public DateTime DateCreated

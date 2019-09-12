@@ -55,6 +55,12 @@ namespace AI.Automation
             get { return fCountryCodeIndicator; }
             set { SetPropertyValue<string>(nameof(CountryCodeIndicator), ref fCountryCodeIndicator, value); }
         }
+        string fCompanyCode;
+        public string CompanyCode
+        {
+            get { return fCompanyCode; }
+            set { SetPropertyValue<string>(nameof(CompanyCode), ref fCompanyCode, value); }
+        }
         string fEmployeeCode;
         public string EmployeeCode
         {

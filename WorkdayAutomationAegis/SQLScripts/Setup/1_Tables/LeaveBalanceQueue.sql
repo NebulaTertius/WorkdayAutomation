@@ -7,6 +7,7 @@ CREATE TABLE [AI].[LeaveBalanceQueue](
 	[EffectiveStartDate] [datetime] NULL,
 	[EffectiveEndDate] [datetime] NULL,
 	[CountryCodeIndicator] [nvarchar](100) NULL,
+	[CompanyCode] [nvarchar](100) NULL,
 	[EmployeeCode] [nvarchar](100) NULL,
 	[LeaveTypeCode] [nvarchar](100) NULL,
 	[LeaveCode] [nvarchar](100) NULL,

@@ -7,6 +7,7 @@ CREATE TABLE [AI].[FinancialQueue](
 	[EffectiveStartDate] [datetime] NULL,
 	[EffectiveEndDate] [datetime] NULL,
 	[CountryCodeIndicator] [nvarchar](100) NULL,
+	[CompanyCode] [nvarchar](100) NULL,
 	[EmployeeCode] [nvarchar](100) NULL,
 	[WageTypeCode] [nvarchar](100) NULL,
 	[Amount] [nvarchar](100) NULL,

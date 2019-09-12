@@ -24,7 +24,7 @@ FROM (SELECT EmployeeCode
 			FOR XML PATH('')
 			),1,1,''
 			) [LeaveCode]
-	,SUM(CONVERT(decimal(18,2),UnitsTaken)) TotalUnits
+	,SUM(CONVERT(decimal(18,4),UnitsTaken)) TotalUnits
 FROM AI.LeaveTransactionQueue q
 GROUP BY EmployeeCode
 	,LeaveTypeCode
@@ -55,7 +55,11 @@ SELECT ROW_NUMBER() OVER (PARTITION BY e.EmployeeID, ld.LeaveTypeID ORDER BY ld.
 	,ld.Code LeaveDefCode
 	,ld.LongDescription LeaveDefinition
 	,SUM(el.BalanceBroughtForward) BalanceBroughtForward
+	,SUM(el.AccruedThisPeriod) AccruedThisPeriod
+	,SUM(el.TakenThisPeriod) TakenThisPeriod
 	,SUM(ISNULL(el.Adjustment,0)) Adjustment
+	,SUM(el.BalanceCarriedForward) BalanceCarriedForward
+	,SUM(el.PlannedLeave) PlannedLeave
 	,SUM(el.BalanceIncludingPlanned) BalanceIncludingPlanned
 INTO ##DefOrderPerEmployee
 FROM (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, CompanyID ORDER BY TerminationDate, DateEngaged DESC) [RwNumb], * FROM Employee.Employee) e WHERE RwNumb = 1) e
@@ -88,14 +92,9 @@ ORDER BY e.EmployeeCode, ld.LeaveTypeID
 
 
 
-
---Apply tracking to leave transactions with the current balances at the time.
---IF OBJECT_ID('AI.LeaveTransToBalSessionTracking','U') IS NOT NULL DROP TABLE AI.LeaveTransToBalSessionTracking
---SELECT * INTO AI.LeaveTransToBalSessionTracking FROM ##LeaveTypesPerEmployee
-
-
 DECLARE @EmployeeCode varchar(15), @LeaveTypeCode varchar(15)
 	,@TotalRunningUnits decimal(18,2),@CurrentUnitAdjust decimal(18,2),@CurrentSequence int
+	,@CombinedLeaveCodeRef varchar(max)
 
 WHILE EXISTS (SELECT TOP 1 * FROM ##LeaveTypesPerEmployee ORDER BY EmployeeCode, LeaveTypeCode)
 BEGIN	
@@ -103,6 +102,7 @@ BEGIN
 	SET @EmployeeCode = (SELECT TOP 1 EmployeeCode FROM ##LeaveTypesPerEmployee ORDER BY EmployeeCode, LeaveTypeCode)
 	SET @LeaveTypeCode = (SELECT TOP 1 LeaveTypeCode FROM ##LeaveTypesPerEmployee ORDER BY EmployeeCode, LeaveTypeCode)
 	SET @TotalRunningUnits = (SELECT TOP 1 TotalUnits FROM ##LeaveTypesPerEmployee ORDER BY EmployeeCode, LeaveTypeCode)
+	SET @CombinedLeaveCodeRef = (SELECT TOP 1 LeaveCode FROM ##LeaveTypesPerEmployee ORDER BY EmployeeCode, LeaveTypeCode)
 	
 
 	--For each Definition within the Leave Type
@@ -124,30 +124,38 @@ BEGIN
 			--Check if the @CurrentSequence is the final line
 			IF ((SELECT TOP 1 LveDefCount FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode ORDER BY [Sequence]) <> @CurrentSequence)
 			BEGIN
-				INSERT INTO AI.LeaveBalanceQueue (EventCode,EventDescription,EventSequenceID,CountryCodeIndicator,EmployeeCode,LeaveTypeCode,LeaveCode,UnitAdjustment,UnitOverride
-				,StatusMessage,WarningMessage,ErrorMessage
-				,DateCreated,StatusCode)
+				INSERT INTO AI.LeaveBalanceQueue (EventCode,EventDescription,EventSequenceID,CompanyCode,EmployeeCode,LeaveTypeCode,LeaveCode,CurrentStartBalance,CurrentAccrual,CurrentTaken
+						,CurrentAdjustment,CurrentEndBalance,CurrentPlanned,UnitAdjustment,UnitOverride,EndBalanceIncludingAdjustment,Note,DateCreated,StatusCode)
 						SELECT 'New','New Leave Balance Adjustment',l.[Sequence],l.CompanyCode,l.EmployeeCode,l.LeaveTypeCode,l.LeaveDefCode
+							,BalanceBroughtForward [CurrentStartBalance]
+							,AccruedThisPeriod [CurrentAccrual]
+							,TakenThisPeriod [CurrentTaken]
+							,Adjustment [CurrentAdjustment]
+							,BalanceCarriedForward [CurrentEndBalance]
+							,PlannedLeave [CurrentPlanned]
 							,@CurrentUnitAdjust [UnitAdjustment]
-							,@CurrentUnitAdjust + l.Adjustment [UnitOverride]
-							,BalanceBroughtForward
-							,Adjustment
-							,BalanceIncludingPlanned
+							,@CurrentUnitAdjust + ISNULL(l.Adjustment,0) [UnitOverride]
+							,BalanceCarriedForward + @TotalRunningUnits + ISNULL(l.Adjustment,0) [EndBalanceIncludingAdjustment]
+							,@CombinedLeaveCodeRef [Note]
 							,GETDATE(),'New'
 						FROM (SELECT TOP 1 * FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode) l
 					SET @TotalRunningUnits = @TotalRunningUnits - @CurrentUnitAdjust
 			END
 			ELSE
 				BEGIN
-					INSERT INTO AI.LeaveBalanceQueue (EventCode,EventDescription,EventSequenceID,CountryCodeIndicator,EmployeeCode,LeaveTypeCode,LeaveCode,UnitAdjustment,UnitOverride
-					,StatusMessage,WarningMessage,ErrorMessage
-					,DateCreated,StatusCode)
+					INSERT INTO AI.LeaveBalanceQueue (EventCode,EventDescription,EventSequenceID,CompanyCode,EmployeeCode,LeaveTypeCode,LeaveCode,CurrentStartBalance,CurrentAccrual,CurrentTaken
+						,CurrentAdjustment,CurrentEndBalance,CurrentPlanned,UnitAdjustment,UnitOverride,EndBalanceIncludingAdjustment,Note,DateCreated,StatusCode)
 						SELECT 'New','New Leave Balance Adjustment',l.[Sequence],l.CompanyCode,l.EmployeeCode,l.LeaveTypeCode,l.LeaveDefCode
+							,BalanceBroughtForward [CurrentStartBalance]
+							,AccruedThisPeriod [CurrentAccrual]
+							,TakenThisPeriod [CurrentTaken]
+							,Adjustment [CurrentAdjustment]
+							,BalanceCarriedForward [CurrentEndBalance]
+							,PlannedLeave [CurrentPlanned]
 							,@TotalRunningUnits [UnitAdjustment]
-							,@TotalRunningUnits + l.Adjustment [UnitOverride]
-							,BalanceBroughtForward
-							,Adjustment
-							,BalanceIncludingPlanned
+							,@TotalRunningUnits + ISNULL(l.Adjustment,0) [UnitOverride]
+							,BalanceCarriedForward + @TotalRunningUnits + ISNULL(l.Adjustment,0) [EndBalanceIncludingAdjustment]
+							,@CombinedLeaveCodeRef [Note]
 							,GETDATE(),'New'
 						FROM (SELECT TOP 1 * FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode) l
 					SET @TotalRunningUnits = 0
@@ -156,15 +164,19 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-			INSERT INTO AI.LeaveBalanceQueue (EventCode,EventDescription,EventSequenceID,CountryCodeIndicator,EmployeeCode,LeaveTypeCode,LeaveCode,UnitAdjustment,UnitOverride
-			,StatusMessage,WarningMessage,ErrorMessage
-			,DateCreated,StatusCode)
+			INSERT INTO AI.LeaveBalanceQueue (EventCode,EventDescription,EventSequenceID,CompanyCode,EmployeeCode,LeaveTypeCode,LeaveCode,CurrentStartBalance,CurrentAccrual,CurrentTaken
+				,CurrentAdjustment,CurrentEndBalance,CurrentPlanned,UnitAdjustment,UnitOverride,EndBalanceIncludingAdjustment,Note,DateCreated,StatusCode)
 				SELECT 'New','New Leave Balance Adjustment',l.[Sequence],l.CompanyCode,l.EmployeeCode,l.LeaveTypeCode,l.LeaveDefCode
+					,BalanceBroughtForward [CurrentStartBalance]
+					,AccruedThisPeriod [CurrentAccrual]
+					,TakenThisPeriod [CurrentTaken]
+					,Adjustment [CurrentAdjustment]
+					,BalanceCarriedForward [CurrentEndBalance]
+					,PlannedLeave [CurrentPlanned]
 					,@TotalRunningUnits [UnitAdjustment]
-					,@TotalRunningUnits + l.Adjustment [UnitOverride]
-					,BalanceBroughtForward
-					,Adjustment
-					,BalanceIncludingPlanned
+					,@TotalRunningUnits + ISNULL(l.Adjustment,0) [UnitOverride]
+					,BalanceCarriedForward + @TotalRunningUnits + ISNULL(l.Adjustment,0) [EndBalanceIncludingAdjustment]
+					,@CombinedLeaveCodeRef [Note]
 					,GETDATE(),'New'
 				FROM (SELECT TOP 1 * FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode) l
 			SET @TotalRunningUnits = 0
@@ -179,9 +191,19 @@ UPDATE AI.LeaveTransactionQueue SET StatusCode = 'Moved' WHERE StatusCode = 'New
 
 --Validations on BalanceQueue after transactions have been moved
 --Old Termination is included.
+UPDATE AI.LeaveBalanceQueue SET StatusCode = 'Warning', StatusMessage = ISNULL(StatusMessage,'')+'Employee terminated in previous period|', WarningCode = ISNULL(WarningCode,'')+'Terminated|', WarningMessage = ISNULL(WarningMessage,'')+'Terminated employee ('+q.EmployeeCode+') in company ('+q.CompanyCode+') is included for processing|'
+FROM AI.LeaveBalanceQueue q
+	INNER JOIN AI.EmployeeContractSequence i ON i.EmployeeCode = q.EmployeeCode AND i.ContractSequenceByEmployeeCode = 1 
+	INNER JOIN Company.Company c ON c.CompanyID = i.CompanyID
+WHERE i.EmployeeStatusID IN (3)
+	AND StatusCode = 'New'
 
 
-
+--Result will be a negative balance
+UPDATE AI.LeaveBalanceQueue SET StatusCode = 'Warning', StatusMessage = ISNULL(StatusMessage,'')+'Balance will result in a negative|', WarningCode = ISNULL(WarningCode,'')+'Negative|', WarningMessage = ISNULL(WarningMessage,'')+'Value for Employee ('+q.EmployeeCode+') in company ('+q.CompanyCode+') will result in a negative|'
+FROM AI.LeaveBalanceQueue q
+WHERE q.UnitOverride < 0
+	AND StatusCode = 'New'
 
 
 END
