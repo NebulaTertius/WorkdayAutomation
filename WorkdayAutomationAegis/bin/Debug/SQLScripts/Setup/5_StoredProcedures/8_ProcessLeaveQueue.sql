@@ -14,6 +14,11 @@ COMMIT
 INSERT INTO AI.LeaveBalanceQueueHistory SELECT * FROM AI.LeaveBalanceQueue WHERE StatusCode IN ('Success','Ignore')
 DELETE FROM AI.LeaveBalanceQueue WHERE StatusCode IN ('Success','Ignore')
 
+--Update warning record status for processing
+UPDATE AI.LeaveBalanceQueue
+SET StatusCode = 'New'
+WHERE StatusCode IN ('Warning')
+
 --Update previous failures to be reset and processed again
 UPDATE AI.LeaveBalanceQueue
 SET StatusCode = 'New', StatusMessage = NULL, ErrorCode = NULL, ErrorMessage = NULL
@@ -24,7 +29,7 @@ DECLARE @UserDefinedBatchType AS AI.UserDefinedBatchType
 INSERT INTO @UserDefinedBatchType (ProductCode,EmployeeCode,Company,CompanyRule,PayRun,BatchTemplateCode,LineType,BatchItemCode,BatchItemType,Value,StatusCode,StatusComment,LastChanged,UserID)
 SELECT 'LVE' [ProductCode],EmployeeCode,NULL [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_LEAVE' [BatchTemplateCode],'Leave' [LineType],ISNULL(LeaveCode,'None') [BatchItemCode],'Adjustment' [BatchItemType],UnitOverride [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
 FROM AI.LeaveBalanceQueue
-WHERE StatusCode = 'New'
+WHERE StatusCode IN ('New')
 
 DECLARE @OutputResult Table([ProductCode] [varchar](3),[EmployeeCode] [varchar](15),[FirstName] [varchar](50),[LastName] [varchar](50),[Company] [varchar](15),
 	[CompanyRule] [varchar](15),[PayRun] [varchar](15),[BatchTemplateCode] [varchar](15),[LineType] [varchar](15),[BatchItemCode] [varchar](15),

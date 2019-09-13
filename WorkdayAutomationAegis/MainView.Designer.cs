@@ -238,6 +238,7 @@
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
             this.bbiResetSelectedRows = new DevExpress.XtraBars.BarButtonItem();
             this.bbiRemoveSelectedRows = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiValidateLveBalQueue = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvwEditable)).BeginInit();
@@ -460,10 +461,11 @@
             this.bbiArchiveLveAll,
             this.skinRibbonGalleryBarItem1,
             this.bbiResetSelectedRows,
-            this.bbiRemoveSelectedRows});
+            this.bbiRemoveSelectedRows,
+            this.bbiValidateLveBalQueue});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl.MaxItemId = 197;
+            this.ribbonControl.MaxItemId = 198;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpAutoRun,
@@ -613,6 +615,7 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiLveTranQueue),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiEventTracker)});
             this.bsiCreateTables.Name = "bsiCreateTables";
+            this.bsiCreateTables.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             // 
             // bbiEmpMaster
             // 
@@ -1173,7 +1176,8 @@
             this.bsiValidateQueue.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiValidateQueue.ImageOptions.Image")));
             this.bsiValidateQueue.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiValidateQueue.ImageOptions.LargeImage")));
             this.bsiValidateQueue.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiValidateEmployeeQueue)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiValidateEmployeeQueue),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiValidateLveBalQueue)});
             this.bsiValidateQueue.Name = "bsiValidateQueue";
             // 
             // bbiValidateEmployeeQueue
@@ -2195,6 +2199,13 @@
             this.bbiRemoveSelectedRows.Name = "bbiRemoveSelectedRows";
             this.bbiRemoveSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRemoveSelectedRows_ItemClick);
             // 
+            // bbiValidateLveBalQueue
+            // 
+            this.bbiValidateLveBalQueue.Caption = "Leave Balances";
+            this.bbiValidateLveBalQueue.Id = 197;
+            this.bbiValidateLveBalQueue.Name = "bbiValidateLveBalQueue";
+            this.bbiValidateLveBalQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiValidateLveBalQueue_ItemClick);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -2481,5 +2492,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgGridActions;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgLookAndFeel;
         private DevExpress.Utils.WorkspaceManager workspaceManager1;
+        private DevExpress.XtraBars.BarButtonItem bbiValidateLveBalQueue;
     }
 }

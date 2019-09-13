@@ -1196,8 +1196,9 @@ C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.exe
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.pdb
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\8_ProcessLeaveQueue.sql
-C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\7_LeaveTransactionToBalanceQueue.sql
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\obj\Debug\WorkdayAutomationAegis.csprojAssemblyReference.cache
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\9_ValidateBatchTemplates.sql
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\10_AutoCreateHierarchy.sql
 C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\2_Views\3_EmployeeContractSequence.sql
+C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\7_LeaveTrnToBalQueue.sql
+C:\Users\DrStrange\Documents\GitHub\WorkdayAutomation\WorkdayAutomationAegis\bin\Debug\SQLScripts\Setup\5_StoredProcedures\11_LeaveBalanceValidations.sql

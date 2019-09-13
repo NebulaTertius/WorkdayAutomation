@@ -1201,6 +1201,14 @@ namespace WorkdayAutomationAegis
             focusGridToEditableView(xpCol);
         }
 
+        private void BbiValidateLveBalQueue_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ExecuteSQLQuery("EXEC [AI].[LeaveBalanceValidations]");
+
+            XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.LeaveBalanceQueue", typeof(AILeaveBalanceQueue));
+            focusGridToEditableView(xpCol);
+        }
+
         private void bbiProcessEmployee_ItemClick(object sender, ItemClickEventArgs e)
         {
             ExecuteSQLQuery("EXEC [AI].[ProcessEmployeeQueue]");
@@ -1435,6 +1443,7 @@ namespace WorkdayAutomationAegis
             try { bbiImportCSVAbsences_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { BbiValidateLveBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiProcessLeave_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { BbiLeaveIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
@@ -1800,45 +1809,50 @@ namespace WorkdayAutomationAegis
 
         private void BbiResetSelectedRows_ItemClick(object sender, ItemClickEventArgs e)
         {
-
-            
-            var senderCh1 = sender.ToString(); //"DevExpress.XtraBars.Ribbon.RibbonBarManager"
-            var senderCh2 = sender.GetType(); //{Name = "RibbonBarManager" FullName = "DevExpress.XtraBars.Ribbon.RibbonBarManager"}
-            var senderch3 = sender.GetHashCode(); //17911681
-            var eCh1 = e.ToString(); //"DevExpress.XtraBars.ItemClickEventArgs"
-            var eCh2 = e.GetType(); //{Name = "ItemClickEventArgs" FullName = "DevExpress.XtraBars.ItemClickEventArgs"}
-            var eCh3 = e.GetHashCode(); //65300541
-            var eCh4 = e.Item; //{Reset Selected Rows}
-            var eCh5 = e.Link; //{DevExpress.XtraBars.BarButtonItemLink}
-
-            var gridSourceCheck = gvwEditable.DataSource.ToString(); //"DevExpress.Xpo.XPCollection(2) Count(57)"
-            var gridSourceCheck2 = gvwEditable.DataSource; //Check the Object Type for the full name of data source.
-
-            var ds = gvwEditable.Name.ToString();
-            var ds2 = gvwEditable.DataSource;
-
-            var ln = gvwEditable.LevelName;
-            var ln2 = gvwEditable.LevelName.ToString();
-
-            var gch = gridControl.MainView.Name.ToString();
-
-
-
-            foreach (int selectedRow in gvwEditable.GetSelectedRows())
+            try
             {
+                //string sourceTableName;
 
-                var pkID = gvwEditable.GetRowCellValue(selectedRow, gvwEditable.Columns[0]);
+                //if (gvwEditable.DataSource.GetType().Name == "XPCollection")
+                //{ sourceTableName = ((XPCollection)gvwEditable.DataSource).GetObjectClassInfo().TableName; }
+                //else { sourceTableName = ((DataView)gvwEditable.DataSource).Table.TableName;
+                //    sourceTableName = 
+                //}
 
-                ExecuteSQLQuery("UPDATE AI.EmployeeQueue SET StatusCode = 'New' WHERE OID = ISNULL(" + pkID.ToString() + ",0)");
-                
+                //foreach (int selectedRow in gvwEditable.GetSelectedRows())
+                //{
+                //    var pkID = gvwEditable.GetRowCellValue(selectedRow, gvwEditable.Columns[0]);
+                //    ExecuteSQLQuery("UPDATE " + sourceTableName + " SET StatusCode = 'New' WHERE OID = ISNULL(" + pkID.ToString() + ",0)");
+                //}
+                gvwEditable.RefreshData();
             }
-
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
         }
 
         private void BbiRemoveSelectedRows_ItemClick(object sender, ItemClickEventArgs e)
         {
+            try
+            {
+                string sourceTableName;
 
-        }
+                if (gvwEditable.DataSource.GetType().IsClass == true)
+                { sourceTableName = ((XPCollection)gvwEditable.DataSource).GetObjectClassInfo().TableName; }
+                else { sourceTableName = ((DataTable)gvwEditable.DataSource).TableName; }
+
+                foreach (int selectedRow in gvwEditable.GetSelectedRows())
+                {
+                    var pkID = gvwEditable.GetRowCellValue(selectedRow, gvwEditable.Columns[0]);
+                    ExecuteSQLQuery(
+                            "INSERT INTO " + sourceTableName + "History SELECT * FROM " + sourceTableName + " WHERE OID = ISNULL(" + pkID.ToString() + ",0)"
+                            + "DELETE FROM " + sourceTableName + " WHERE OID = ISNULL(" + pkID.ToString() + ",0)"
+                            );
+                }
+                gvwEditable.RefreshData();
+            }
+            catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
+}
+
+        
     }
 }
 

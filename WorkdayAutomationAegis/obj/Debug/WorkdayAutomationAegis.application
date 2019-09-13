@@ -7,14 +7,14 @@
     <framework targetVersion="4.5.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="WorkdayAutomationAegis.exe.manifest" size="145409">
+    <dependentAssembly dependencyType="install" codebase="WorkdayAutomationAegis.exe.manifest" size="145842">
       <assemblyIdentity name="WorkdayAutomationAegis.exe" version="1.0.0.3" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>78E5VCuDRds9HG6P8qYj+diErlAaVAtdVdW41St0Ubs=</dsig:DigestValue>
+        <dsig:DigestValue>OXvEzgg3qgfk3Bztv7gONokLg97++I/au/mgYP0TId4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
