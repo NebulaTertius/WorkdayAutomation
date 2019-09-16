@@ -27,7 +27,7 @@ WHERE StatusCode IN ('New','Failed')
 DECLARE @UserDefinedBatchType AS AI.UserDefinedBatchType
 
 INSERT INTO @UserDefinedBatchType (ProductCode,EmployeeCode,Company,CompanyRule,PayRun,BatchTemplateCode,LineType,BatchItemCode,BatchItemType,Value,StatusCode,StatusComment,LastChanged,UserID)
-SELECT 'LVE' [ProductCode],EmployeeCode,NULL [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_LEAVE' [BatchTemplateCode],'Leave' [LineType],ISNULL(LeaveCode,'None') [BatchItemCode],'Adjustment' [BatchItemType],UnitOverride [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
+SELECT 'LVE' [ProductCode],EmployeeCode,CompanyCode [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_LEAVE' [BatchTemplateCode],'Leave' [LineType],ISNULL(LeaveCode,'None') [BatchItemCode],'Adjustment' [BatchItemType],(UnitOverride * -1) [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
 FROM AI.LeaveBalanceQueue
 WHERE StatusCode IN ('New')
 

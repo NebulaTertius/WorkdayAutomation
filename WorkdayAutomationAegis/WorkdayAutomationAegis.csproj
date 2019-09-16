@@ -30,7 +30,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>WorkdayToSageAutomation</ProductName>
     <PublisherName>Nebula HR</PublisherName>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -261,6 +261,10 @@
     <Compile Include="ORMAIModelCode\AIQueueMapping.Designer.cs">
       <DependentUpon>AIQueueMapping.cs</DependentUpon>
     </Compile>
+    <Compile Include="ORMAIModelCode\AISourceValueOverride.cs" />
+    <Compile Include="ORMAIModelCode\AISourceValueOverride.Designer.cs">
+      <DependentUpon>AISourceValueOverride.cs</DependentUpon>
+    </Compile>
     <Compile Include="ORMAIModelCode\AIValidationWarnings.cs" />
     <Compile Include="ORMAIModelCode\AIValidationWarnings.Designer.cs">
       <DependentUpon>AIValidationWarnings.cs</DependentUpon>
@@ -278,6 +282,9 @@
     <Content Include="DevNotes\GeneralNotes.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQLScripts\Setup\1_Tables\SourceValueOverride.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQLScripts\Setup\1_Tables\ValidationWarnings.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -290,10 +297,16 @@
     <Content Include="SQLScripts\Setup\2_Views\3_EmployeeContractSequence.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQLScripts\Setup\3_FixedData\SourceValueOverride.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQLScripts\Setup\4_TableTypes\UserDefinedBatchType.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQLScripts\Setup\5_StoredProcedures\10_AutoCreateHierarchy.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SQLScripts\Setup\5_StoredProcedures\12_RevertUserDefinedBatch.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SQLScripts\Setup\5_StoredProcedures\7_LeaveTrnToBalQueue.sql">

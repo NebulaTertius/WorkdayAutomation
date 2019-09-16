@@ -239,6 +239,9 @@
             this.bbiResetSelectedRows = new DevExpress.XtraBars.BarButtonItem();
             this.bbiRemoveSelectedRows = new DevExpress.XtraBars.BarButtonItem();
             this.bbiValidateLveBalQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiSourceValueOverride = new DevExpress.XtraBars.BarButtonItem();
+            this.bsiRevertBatches = new DevExpress.XtraBars.BarSubItem();
+            this.bbiRevertProcessedLeaveBatches = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvwEditable)).BeginInit();
@@ -462,10 +465,13 @@
             this.skinRibbonGalleryBarItem1,
             this.bbiResetSelectedRows,
             this.bbiRemoveSelectedRows,
-            this.bbiValidateLveBalQueue});
+            this.bbiValidateLveBalQueue,
+            this.bbiSourceValueOverride,
+            this.bsiRevertBatches,
+            this.bbiRevertProcessedLeaveBatches});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl.MaxItemId = 198;
+            this.ribbonControl.MaxItemId = 201;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpAutoRun,
@@ -1203,7 +1209,6 @@
             // bsiUpdateTracker
             // 
             this.bsiUpdateTracker.Caption = "Update Tracker";
-            this.bsiUpdateTracker.Enabled = false;
             this.bsiUpdateTracker.Id = 126;
             this.bsiUpdateTracker.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiUpdateTracker.ImageOptions.Image")));
             this.bsiUpdateTracker.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiUpdateTracker.ImageOptions.LargeImage")));
@@ -1352,7 +1357,9 @@
             // 
             this.Structures.ItemLinks.Add(this.bsiStructures);
             this.Structures.ItemLinks.Add(this.bbiQueueMapping);
+            this.Structures.ItemLinks.Add(this.bbiSourceValueOverride);
             this.Structures.ItemLinks.Add(this.bsiCreateTables);
+            this.Structures.ItemLinks.Add(this.bsiRevertBatches);
             this.Structures.Name = "Structures";
             this.Structures.Text = "Structures";
             // 
@@ -2086,6 +2093,7 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem10),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem11)});
             this.bsiArchive.Name = "bsiArchive";
+            this.bsiArchive.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             // 
             // barSubItem9
             // 
@@ -2205,6 +2213,32 @@
             this.bbiValidateLveBalQueue.Id = 197;
             this.bbiValidateLveBalQueue.Name = "bbiValidateLveBalQueue";
             this.bbiValidateLveBalQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiValidateLveBalQueue_ItemClick);
+            // 
+            // bbiSourceValueOverride
+            // 
+            this.bbiSourceValueOverride.Caption = "Manual Override Setup";
+            this.bbiSourceValueOverride.Id = 198;
+            this.bbiSourceValueOverride.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.Image1")));
+            this.bbiSourceValueOverride.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.LargeImage1")));
+            this.bbiSourceValueOverride.Name = "bbiSourceValueOverride";
+            this.bbiSourceValueOverride.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiSourceValueOverride_ItemClick);
+            // 
+            // bsiRevertBatches
+            // 
+            this.bsiRevertBatches.Caption = "Revert Processed Batches";
+            this.bsiRevertBatches.Id = 199;
+            this.bsiRevertBatches.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barSubItem12.ImageOptions.Image")));
+            this.bsiRevertBatches.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barSubItem12.ImageOptions.LargeImage")));
+            this.bsiRevertBatches.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRevertProcessedLeaveBatches)});
+            this.bsiRevertBatches.Name = "bsiRevertBatches";
+            // 
+            // bbiRevertProcessedLeaveBatches
+            // 
+            this.bbiRevertProcessedLeaveBatches.Caption = "Leave";
+            this.bbiRevertProcessedLeaveBatches.Id = 200;
+            this.bbiRevertProcessedLeaveBatches.Name = "bbiRevertProcessedLeaveBatches";
+            this.bbiRevertProcessedLeaveBatches.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRevertProcessedLeaveBatches_ItemClick);
             // 
             // MainView
             // 
@@ -2493,5 +2527,8 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgLookAndFeel;
         private DevExpress.Utils.WorkspaceManager workspaceManager1;
         private DevExpress.XtraBars.BarButtonItem bbiValidateLveBalQueue;
+        private DevExpress.XtraBars.BarButtonItem bbiSourceValueOverride;
+        private DevExpress.XtraBars.BarSubItem bsiRevertBatches;
+        private DevExpress.XtraBars.BarButtonItem bbiRevertProcessedLeaveBatches;
     }
 }

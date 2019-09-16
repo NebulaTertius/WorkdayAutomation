@@ -1852,7 +1852,23 @@ namespace WorkdayAutomationAegis
             catch (Exception myException) { MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop); }
 }
 
-        
+        private void BbiSourceValueOverride_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.SourceValueOverride", typeof(AISourceValueOverride));
+                focusGridToEditableView(xpCol);
+            }
+            catch (Exception myException)
+            {
+                MessageBox.Show("Application Error:" + myException.Message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
+
+        private void BbiRevertProcessedLeaveBatches_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            ExecuteSQLQuery("EXEC AI.RevertUserDefinedBatch");
+        }
     }
 }
 

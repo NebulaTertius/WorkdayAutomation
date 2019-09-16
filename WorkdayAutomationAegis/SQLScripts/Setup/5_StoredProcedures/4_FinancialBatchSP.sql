@@ -159,7 +159,7 @@ ELSE
 		,ISNULL(t.CompanyRule,cr.CompanyRuleCode)
 		,ISNULL(t.PayRun,pr.Code)
 	FROM AI.FinancialBatchHistory t
-		INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, TerminationDate ORDER BY TerminationDate) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+		INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY TerminationDate, DateEngaged DESC) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
 		INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 		INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 		INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleID = er.CompanyRuleID
@@ -260,7 +260,7 @@ ELSE
 			,GETDATE()
 			,t.ProductCode
 		FROM AI.FinancialBatchHistory t
-			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, TerminationDate ORDER BY TerminationDate) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY TerminationDate, DateEngaged DESC) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
 			INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 			INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 			INNER JOIN Entity.GenEntity ge ON ge.GenEntityID = e.GenEntityID
@@ -286,7 +286,7 @@ ELSE
 			,GETDATE()
 			,t.ProductCode
 		FROM AI.FinancialBatchHistory t
-			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode, TerminationDate ORDER BY TerminationDate) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY TerminationDate, DateEngaged DESC) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
 			INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
 			INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
 			INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleID = er.CompanyRuleID
