@@ -20,9 +20,9 @@ namespace WorkdayAutomationAegis
 {
     public partial class MainView : DevExpress.XtraBars.Ribbon.RibbonForm
     {
-        public static string fileName = Directory.GetCurrentDirectory() + "\\SQLConfig.sage";
-        public static string connFile = Directory.GetCurrentDirectory() + "\\SQLConnString.sage";
-        public static string csvConfigFile = Directory.GetCurrentDirectory() + "\\FileConfig.sage";
+        public static string fileName = Directory.GetCurrentDirectory() + "\\ConnFiles\\SQLConfig.sage";
+        public static string connFile = Directory.GetCurrentDirectory() + "\\ConnFiles\\SQLConnString.sage";
+        public static string csvConfigFile = Directory.GetCurrentDirectory() + "\\ConnFiles\\FileConfig.sage";
         public static string csvFolderLoc;
         public static string csvCompletedLoc;
         public static string csvStringIdentifier;
@@ -33,19 +33,19 @@ namespace WorkdayAutomationAegis
         {
             InitializeComponent();
 
-            if (File.Exists(Directory.GetCurrentDirectory() + "\\SQLConnString.sage") == true)
+            if (File.Exists(Directory.GetCurrentDirectory() + "\\ConnFiles\\SQLConnString.sage") == true)
             {
-                ConnectionString = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\SQLConnString.sage").First(), "SAGE");
+                ConnectionString = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ConnFiles\\SQLConnString.sage").First(), "SAGE");
                 refreshValidations();
             }
             else { ConnectionString = @"XpoProvider=MSSqlServer;data source=NotDefined;integrated security=SSPI;initial catalog=NotDefined"; }
 
-            if (File.Exists(Directory.GetCurrentDirectory() + "\\FileConfig.sage") == true)
+            if (File.Exists(Directory.GetCurrentDirectory() + "\\ConnFiles\\FileConfig.sage") == true)
             {
-                csvFolderLoc = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\FileConfig.sage").Skip(1).Take(1).First(), "SAGE");
-                csvCompletedLoc = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\FileConfig.sage").Skip(3).Take(1).First(), "SAGE");
-                csvStringIdentifier = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\FileConfig.sage").Skip(4).Take(1).First(), "SAGE");
-                csvColSeparator = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\FileConfig.sage").Skip(5).Take(1).First(), "SAGE").ToCharArray();
+                csvFolderLoc = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ConnFiles\\FileConfig.sage").Skip(1).Take(1).First(), "SAGE");
+                csvCompletedLoc = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ConnFiles\\FileConfig.sage").Skip(3).Take(1).First(), "SAGE");
+                csvStringIdentifier = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ConnFiles\\FileConfig.sage").Skip(4).Take(1).First(), "SAGE");
+                csvColSeparator = Crypto.Decrypt(File.ReadAllLines(Directory.GetCurrentDirectory() + "\\ConnFiles\\FileConfig.sage").Skip(5).Take(1).First(), "SAGE").ToCharArray();
             }
             else
             {
@@ -786,6 +786,7 @@ namespace WorkdayAutomationAegis
                 sqlConn.Open();
                 using (SqlCommand cmd = new SqlCommand(sqlStatement, sqlConn))
                 {
+                    cmd.CommandTimeout = 3000;
                     cmd.ExecuteNonQuery();
                 }
                 sqlConn.Close();
@@ -1868,6 +1869,84 @@ namespace WorkdayAutomationAegis
         private void BbiRevertProcessedLeaveBatches_ItemClick(object sender, ItemClickEventArgs e)
         {
             ExecuteSQLQuery("EXEC AI.RevertUserDefinedBatch");
+        }
+
+        private void bbiArchiveAll_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                ExecuteSQLQuery("SELECT * INTO AI.AbsenceSourceArchive FROM AI.AbsenceSource");
+                ExecuteSQLQuery("SELECT * INTO AI.AbsenceSourceHistoryArchive FROM AI.AbsenceSourceHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.AllowanceAndOTPSourceArchive FROM AI.AllowanceAndOTPSource");
+                ExecuteSQLQuery("SELECT * INTO AI.AllowanceAndOTPSourceHistoryArchive FROM AI.AllowanceAndOTPSourceHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.EmployeeQueueArchive FROM AI.EmployeeQueue");
+                ExecuteSQLQuery("SELECT * INTO AI.EmployeeQueueHistoryArchive FROM AI.EmployeeQueueHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSourceArchive FROM AI.EmployeeSource");
+                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSourceHistoryArchive FROM AI.EmployeeSourceHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSubQueueArchive FROM AI.EmployeeSubQueue");
+                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSubQueueHistoryArchive FROM AI.EmployeeSubQueueHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.FinancialBatchHistoryArchive FROM AI.FinancialBatchHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.FinancialQueueArchive FROM AI.FinancialQueue");
+                ExecuteSQLQuery("SELECT * INTO AI.FinancialQueueHistoryArchive FROM AI.FinancialQueueHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.LeaveBalanceQueueArchive FROM AI.LeaveBalanceQueue");
+                ExecuteSQLQuery("SELECT * INTO AI.LeaveBalanceQueueHistoryArchive FROM AI.LeaveBalanceQueueHistory");
+                ExecuteSQLQuery("SELECT * INTO AI.LeaveTransactionQueueArchive FROM AI.LeaveTransactionQueue");
+                ExecuteSQLQuery("SELECT * INTO AI.LeaveTransactionQueueHistoryArchive FROM AI.LeaveTransactionQueueHistory");
+
+                MessageBox.Show("Records Archived");
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Message); }
+        }
+
+        private void bbiEmpValidationRun_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { bbiImportCSVEmployee_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { bbiMoveEmployeeToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { bbiValidateEmployeeQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { BbiEmpIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Process Finished" + Environment.NewLine + "Validation process completed", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void bbiAllAndOTPValidationRun_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { bbiImportCSVAllAndOTP_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { bbiMoveAllowToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { BbiPayslipIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Process Finished" + Environment.NewLine + "Validation process completed", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void bbiLveValidationRun_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try { bbiImportCSVAbsences_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { BbiValidateLveBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            try { BbiLeaveIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            MessageBox.Show("Process Finished" + Environment.NewLine + "Validation process completed", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        }
+
+        private void bbiAutomationSummary_ItemClick(object sender, ItemClickEventArgs e)
+        {
+                    
+        }
+
+        private void bbiRefreshSPs_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+                    {
+                        string[] files = Directory.GetFiles(@".\SQLScripts\Setup\5_StoredProcedures\");
+                        foreach (string file in files)
+                        {
+                            ExecuteSQLQuery(File.ReadAllText(file));
+                        }
+                    }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Source + " - " + ex.Message); }
+            MessageBox.Show("Process Completed", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

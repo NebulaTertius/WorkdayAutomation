@@ -1,6 +1,34 @@
 CREATE PROCEDURE AI.RefreshValidationWarnings
 AS
 
+
+--##########################
+--Company Rule Month Different to computer date
+--##########################
+SELECT cr.CompanyRuleCode
+	,pp.*
+FROM Company.CompanyRule cr
+	INNER JOIN Company.PayPeriodGen pp ON pp.CompanyRuleID = cr.CompanyRuleID
+WHERE pp.PeriodStatus = 'L'
+	AND cr.[Status] = 'A'
+	AND cr.CompanyRuleCode IN (SELECT DISTINCT TargetValue FROM AI.CatalogMapping WHERE SourceField = 'CompanyRuleID')
+	AND CONVERT(varchar,CalendarYear) + RIGHT('00' + CONVERT(varchar,CalendarMonth),2) <> LEFT(CONVERT(varchar,GETDATE(),112),6)
+
+
+--##########################
+--Stop Further Entry On
+--##########################
+SELECT cr.CompanyRuleCode
+	,pp.*
+FROM Company.CompanyRule cr
+	INNER JOIN Company.PayPeriodGen pp ON pp.CompanyRuleID = cr.CompanyRuleID
+WHERE pp.PeriodStatus = 'L'
+	AND cr.[Status] = 'A'
+	AND pp.CaptureStatus <> 'O'
+	AND cr.CompanyRuleCode IN (SELECT DISTINCT TargetValue FROM AI.CatalogMapping WHERE SourceField = 'CompanyRuleID')
+
+
+
 --##########################
 --New Source Mapping Values
 --##########################

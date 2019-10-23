@@ -93,7 +93,7 @@ ORDER BY e.EmployeeCode, ld.LeaveTypeID
 
 
 DECLARE @EmployeeCode varchar(15), @LeaveTypeCode varchar(15)
-	,@TotalRunningUnits decimal(18,2),@CurrentUnitAdjust decimal(18,2),@CurrentSequence int
+	,@TotalRunningUnits decimal(18,4),@CurrentUnitAdjust decimal(18,4),@CurrentSequence int
 	,@CombinedLeaveCodeRef varchar(max)
 
 WHILE EXISTS (SELECT TOP 1 * FROM ##LeaveTypesPerEmployee ORDER BY EmployeeCode, LeaveTypeCode)
@@ -133,9 +133,9 @@ BEGIN
 							,Adjustment [CurrentAdjustment]
 							,BalanceCarriedForward [CurrentEndBalance]
 							,PlannedLeave [CurrentPlanned]
-							,@CurrentUnitAdjust [UnitAdjustment]
-							,@CurrentUnitAdjust + ISNULL(l.Adjustment,0) [UnitOverride]
-							,@TotalRunningUnits + ISNULL(l.Adjustment,0) - BalanceCarriedForward [EndBalanceIncludingAdjustment]
+							,(@CurrentUnitAdjust) * -1 [UnitAdjustment]
+							,(@CurrentUnitAdjust) * -1 + CONVERT(decimal(18,4),ISNULL(l.Adjustment,0)) [UnitOverride]
+							,(@TotalRunningUnits) * -1 + CONVERT(decimal(18,4),ISNULL(l.Adjustment,0)) - BalanceCarriedForward [EndBalanceIncludingAdjustment]
 							,@CombinedLeaveCodeRef [Note]
 							,GETDATE(),'New'
 						FROM (SELECT TOP 1 * FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode) l
@@ -152,9 +152,9 @@ BEGIN
 							,Adjustment [CurrentAdjustment]
 							,BalanceCarriedForward [CurrentEndBalance]
 							,PlannedLeave [CurrentPlanned]
-							,@TotalRunningUnits [UnitAdjustment]
-							,@TotalRunningUnits + ISNULL(l.Adjustment,0) [UnitOverride]
-							,@TotalRunningUnits + ISNULL(l.Adjustment,0) - BalanceCarriedForward [EndBalanceIncludingAdjustment]
+							,(@TotalRunningUnits) * -1 [UnitAdjustment]
+							,(@TotalRunningUnits) * -1 + CONVERT(decimal(18,4),ISNULL(l.Adjustment,0)) [UnitOverride]
+							,(@TotalRunningUnits) * -1 + CONVERT(decimal(18,4),ISNULL(l.Adjustment,0)) - BalanceCarriedForward [EndBalanceIncludingAdjustment]
 							,@CombinedLeaveCodeRef [Note]
 							,GETDATE(),'New'
 						FROM (SELECT TOP 1 * FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode) l
@@ -173,9 +173,9 @@ BEGIN
 					,Adjustment [CurrentAdjustment]
 					,BalanceCarriedForward [CurrentEndBalance]
 					,PlannedLeave [CurrentPlanned]
-					,@TotalRunningUnits [UnitAdjustment]
-					,@TotalRunningUnits + ISNULL(l.Adjustment,0) [UnitOverride]
-					,@TotalRunningUnits + ISNULL(l.Adjustment,0) - BalanceCarriedForward [EndBalanceIncludingAdjustment]
+					,(@TotalRunningUnits) * -1 [UnitAdjustment]
+					,(@TotalRunningUnits) * -1 + CONVERT(decimal(18,4),ISNULL(l.Adjustment,0)) [UnitOverride]
+					,(@TotalRunningUnits) * -1 + CONVERT(decimal(18,4),ISNULL(l.Adjustment,0)) - BalanceCarriedForward [EndBalanceIncludingAdjustment]
 					,@CombinedLeaveCodeRef [Note]
 					,GETDATE(),'New'
 				FROM (SELECT TOP 1 * FROM ##DefOrderPerEmployee WHERE EmployeeCode = @EmployeeCode AND LeaveTypeCode = @LeaveTypeCode) l

@@ -120,10 +120,12 @@
             this.bbiLveBalQueueHistory = new DevExpress.XtraBars.BarButtonItem();
             this.bsiStructures = new DevExpress.XtraBars.BarSubItem();
             this.bbiBuildAIStructures = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiRefreshSPs = new DevExpress.XtraBars.BarButtonItem();
             this.bbiQueueMapping = new DevExpress.XtraBars.BarButtonItem();
             this.bbiVal = new DevExpress.XtraBars.BarButtonItem();
             this.bsiValidateQueue = new DevExpress.XtraBars.BarSubItem();
             this.bbiValidateEmployeeQueue = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiValidateLveBalQueue = new DevExpress.XtraBars.BarButtonItem();
             this.bbiCreateTestingFolders = new DevExpress.XtraBars.BarButtonItem();
             this.bbid = new DevExpress.XtraBars.BarButtonItem();
             this.bsiUpdateTracker = new DevExpress.XtraBars.BarSubItem();
@@ -136,6 +138,28 @@
             this.bbiAutomationSummary = new DevExpress.XtraBars.BarButtonItem();
             this.beiProgressBar = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemMarqueeProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemMarqueeProgressBar();
+            this.bsiArchive = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem9 = new DevExpress.XtraBars.BarSubItem();
+            this.bbiArchiveEmpErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveEmpErrorAndOnHold = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveEmpAll = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem10 = new DevExpress.XtraBars.BarSubItem();
+            this.bbiArchivePayErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchivePayAll = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem11 = new DevExpress.XtraBars.BarSubItem();
+            this.bbiArchiveLveErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveLveAll = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiArchiveAll = new DevExpress.XtraBars.BarButtonItem();
+            this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
+            this.bbiResetSelectedRows = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiRemoveSelectedRows = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiSourceValueOverride = new DevExpress.XtraBars.BarButtonItem();
+            this.bsiRevertBatches = new DevExpress.XtraBars.BarSubItem();
+            this.bbiRevertProcessedLeaveBatches = new DevExpress.XtraBars.BarButtonItem();
+            this.bsiRunValidationOnly = new DevExpress.XtraBars.BarSubItem();
+            this.bbiEmpValidationRun = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiAllAndOTPValidationRun = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiLveValidationRun = new DevExpress.XtraBars.BarButtonItem();
             this.rpAutoRun = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.rpgRunAll = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpgReports = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -149,6 +173,8 @@
             this.rpgTools = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.rpgGridActions = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.rpgLookAndFeel = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpHelp = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.rpgHelpNotes = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
@@ -221,27 +247,7 @@
             this.layoutControlItem9 = new DevExpress.XtraLayout.LayoutControlItem();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
-            this.bsiArchive = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem9 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem10 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem11 = new DevExpress.XtraBars.BarSubItem();
-            this.bbiArchiveEmpErrors = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchiveEmpErrorAndOnHold = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchiveEmpAll = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchivePayErrors = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchivePayAll = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchiveLveErrors = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchiveLveAll = new DevExpress.XtraBars.BarButtonItem();
-            this.rpgGridActions = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
-            this.rpgLookAndFeel = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
-            this.bbiResetSelectedRows = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiRemoveSelectedRows = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiValidateLveBalQueue = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiSourceValueOverride = new DevExpress.XtraBars.BarButtonItem();
-            this.bsiRevertBatches = new DevExpress.XtraBars.BarSubItem();
-            this.bbiRevertProcessedLeaveBatches = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvwEditable)).BeginInit();
@@ -468,10 +474,16 @@
             this.bbiValidateLveBalQueue,
             this.bbiSourceValueOverride,
             this.bsiRevertBatches,
-            this.bbiRevertProcessedLeaveBatches});
+            this.bbiRevertProcessedLeaveBatches,
+            this.bbiArchiveAll,
+            this.bsiRunValidationOnly,
+            this.bbiEmpValidationRun,
+            this.bbiAllAndOTPValidationRun,
+            this.bbiLveValidationRun,
+            this.bbiRefreshSPs});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl.MaxItemId = 201;
+            this.ribbonControl.MaxItemId = 207;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpAutoRun,
@@ -1150,7 +1162,8 @@
             this.bsiStructures.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiStructures.ImageOptions.Image")));
             this.bsiStructures.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiStructures.ImageOptions.LargeImage")));
             this.bsiStructures.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiBuildAIStructures)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiBuildAIStructures),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRefreshSPs)});
             this.bsiStructures.Name = "bsiStructures";
             // 
             // bbiBuildAIStructures
@@ -1159,6 +1172,13 @@
             this.bbiBuildAIStructures.Id = 110;
             this.bbiBuildAIStructures.Name = "bbiBuildAIStructures";
             this.bbiBuildAIStructures.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiBuildAIStructures_ItemClick);
+            // 
+            // bbiRefreshSPs
+            // 
+            this.bbiRefreshSPs.Caption = "Refresh Stored Procedures";
+            this.bbiRefreshSPs.Id = 206;
+            this.bbiRefreshSPs.Name = "bbiRefreshSPs";
+            this.bbiRefreshSPs.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiRefreshSPs_ItemClick);
             // 
             // bbiQueueMapping
             // 
@@ -1192,6 +1212,13 @@
             this.bbiValidateEmployeeQueue.Id = 121;
             this.bbiValidateEmployeeQueue.Name = "bbiValidateEmployeeQueue";
             this.bbiValidateEmployeeQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiValidateEmployeeQueue_ItemClick);
+            // 
+            // bbiValidateLveBalQueue
+            // 
+            this.bbiValidateLveBalQueue.Caption = "Leave Balances";
+            this.bbiValidateLveBalQueue.Id = 197;
+            this.bbiValidateLveBalQueue.Name = "bbiValidateLveBalQueue";
+            this.bbiValidateLveBalQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiValidateLveBalQueue_ItemClick);
             // 
             // bbiCreateTestingFolders
             // 
@@ -1271,6 +1298,7 @@
             this.bbiAutomationSummary.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbiAutomationSummary.ImageOptions.LargeImage")));
             this.bbiAutomationSummary.Name = "bbiAutomationSummary";
             this.bbiAutomationSummary.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            this.bbiAutomationSummary.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiAutomationSummary_ItemClick);
             // 
             // beiProgressBar
             // 
@@ -1285,6 +1313,180 @@
             // 
             this.repositoryItemMarqueeProgressBar1.Name = "repositoryItemMarqueeProgressBar1";
             // 
+            // bsiArchive
+            // 
+            this.bsiArchive.Caption = "Archive";
+            this.bsiArchive.Id = 179;
+            this.bsiArchive.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.Image")));
+            this.bsiArchive.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.LargeImage")));
+            this.bsiArchive.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem9),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem10),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem11),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveAll)});
+            this.bsiArchive.Name = "bsiArchive";
+            // 
+            // barSubItem9
+            // 
+            this.barSubItem9.Caption = "Employee";
+            this.barSubItem9.Id = 181;
+            this.barSubItem9.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrors),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrorAndOnHold),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpAll)});
+            this.barSubItem9.Name = "barSubItem9";
+            // 
+            // bbiArchiveEmpErrors
+            // 
+            this.bbiArchiveEmpErrors.Caption = "Errors";
+            this.bbiArchiveEmpErrors.Id = 185;
+            this.bbiArchiveEmpErrors.Name = "bbiArchiveEmpErrors";
+            // 
+            // bbiArchiveEmpErrorAndOnHold
+            // 
+            this.bbiArchiveEmpErrorAndOnHold.Caption = "Error and On-Hold";
+            this.bbiArchiveEmpErrorAndOnHold.Id = 186;
+            this.bbiArchiveEmpErrorAndOnHold.Name = "bbiArchiveEmpErrorAndOnHold";
+            // 
+            // bbiArchiveEmpAll
+            // 
+            this.bbiArchiveEmpAll.Caption = "All";
+            this.bbiArchiveEmpAll.Id = 187;
+            this.bbiArchiveEmpAll.Name = "bbiArchiveEmpAll";
+            // 
+            // barSubItem10
+            // 
+            this.barSubItem10.Caption = "Payslip";
+            this.barSubItem10.Id = 183;
+            this.barSubItem10.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayErrors),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayAll)});
+            this.barSubItem10.Name = "barSubItem10";
+            // 
+            // bbiArchivePayErrors
+            // 
+            this.bbiArchivePayErrors.Caption = "Errors";
+            this.bbiArchivePayErrors.Id = 188;
+            this.bbiArchivePayErrors.Name = "bbiArchivePayErrors";
+            // 
+            // bbiArchivePayAll
+            // 
+            this.bbiArchivePayAll.Caption = "All";
+            this.bbiArchivePayAll.Id = 189;
+            this.bbiArchivePayAll.Name = "bbiArchivePayAll";
+            // 
+            // barSubItem11
+            // 
+            this.barSubItem11.Caption = "Leave";
+            this.barSubItem11.Id = 184;
+            this.barSubItem11.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveErrors),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveAll)});
+            this.barSubItem11.Name = "barSubItem11";
+            // 
+            // bbiArchiveLveErrors
+            // 
+            this.bbiArchiveLveErrors.Caption = "Errors";
+            this.bbiArchiveLveErrors.Id = 190;
+            this.bbiArchiveLveErrors.Name = "bbiArchiveLveErrors";
+            // 
+            // bbiArchiveLveAll
+            // 
+            this.bbiArchiveLveAll.Caption = "All";
+            this.bbiArchiveLveAll.Id = 191;
+            this.bbiArchiveLveAll.Name = "bbiArchiveLveAll";
+            // 
+            // bbiArchiveAll
+            // 
+            this.bbiArchiveAll.Caption = "All";
+            this.bbiArchiveAll.Id = 201;
+            this.bbiArchiveAll.Name = "bbiArchiveAll";
+            this.bbiArchiveAll.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiArchiveAll_ItemClick);
+            // 
+            // skinRibbonGalleryBarItem1
+            // 
+            this.skinRibbonGalleryBarItem1.Caption = "skinRibbonGalleryBarItem1";
+            this.skinRibbonGalleryBarItem1.Id = 193;
+            this.skinRibbonGalleryBarItem1.Name = "skinRibbonGalleryBarItem1";
+            // 
+            // bbiResetSelectedRows
+            // 
+            this.bbiResetSelectedRows.Caption = "Reset Selected Rows";
+            this.bbiResetSelectedRows.Id = 194;
+            this.bbiResetSelectedRows.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbiResetSelectedRows.ImageOptions.Image")));
+            this.bbiResetSelectedRows.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbiResetSelectedRows.ImageOptions.LargeImage")));
+            this.bbiResetSelectedRows.Name = "bbiResetSelectedRows";
+            this.bbiResetSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiResetSelectedRows_ItemClick);
+            // 
+            // bbiRemoveSelectedRows
+            // 
+            this.bbiRemoveSelectedRows.Caption = "Remove Selected Rows";
+            this.bbiRemoveSelectedRows.Id = 195;
+            this.bbiRemoveSelectedRows.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbiRemoveSelectedRows.ImageOptions.Image")));
+            this.bbiRemoveSelectedRows.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbiRemoveSelectedRows.ImageOptions.LargeImage")));
+            this.bbiRemoveSelectedRows.Name = "bbiRemoveSelectedRows";
+            this.bbiRemoveSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRemoveSelectedRows_ItemClick);
+            // 
+            // bbiSourceValueOverride
+            // 
+            this.bbiSourceValueOverride.Caption = "Manual Override Setup";
+            this.bbiSourceValueOverride.Id = 198;
+            this.bbiSourceValueOverride.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbiSourceValueOverride.ImageOptions.Image")));
+            this.bbiSourceValueOverride.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbiSourceValueOverride.ImageOptions.LargeImage")));
+            this.bbiSourceValueOverride.Name = "bbiSourceValueOverride";
+            this.bbiSourceValueOverride.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiSourceValueOverride_ItemClick);
+            // 
+            // bsiRevertBatches
+            // 
+            this.bsiRevertBatches.Caption = "Revert Processed Batches";
+            this.bsiRevertBatches.Id = 199;
+            this.bsiRevertBatches.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiRevertBatches.ImageOptions.Image")));
+            this.bsiRevertBatches.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiRevertBatches.ImageOptions.LargeImage")));
+            this.bsiRevertBatches.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRevertProcessedLeaveBatches)});
+            this.bsiRevertBatches.Name = "bsiRevertBatches";
+            // 
+            // bbiRevertProcessedLeaveBatches
+            // 
+            this.bbiRevertProcessedLeaveBatches.Caption = "Leave";
+            this.bbiRevertProcessedLeaveBatches.Id = 200;
+            this.bbiRevertProcessedLeaveBatches.Name = "bbiRevertProcessedLeaveBatches";
+            this.bbiRevertProcessedLeaveBatches.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRevertProcessedLeaveBatches_ItemClick);
+            // 
+            // bsiRunValidationOnly
+            // 
+            this.bsiRunValidationOnly.Caption = "Run Validation Only";
+            this.bsiRunValidationOnly.Id = 202;
+            this.bsiRunValidationOnly.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiRunValidationOnly.ImageOptions.Image")));
+            this.bsiRunValidationOnly.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiRunValidationOnly.ImageOptions.LargeImage")));
+            this.bsiRunValidationOnly.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiEmpValidationRun),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiAllAndOTPValidationRun),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiLveValidationRun)});
+            this.bsiRunValidationOnly.Name = "bsiRunValidationOnly";
+            this.bsiRunValidationOnly.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            // 
+            // bbiEmpValidationRun
+            // 
+            this.bbiEmpValidationRun.Caption = "Employee";
+            this.bbiEmpValidationRun.Id = 203;
+            this.bbiEmpValidationRun.Name = "bbiEmpValidationRun";
+            this.bbiEmpValidationRun.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiEmpValidationRun_ItemClick);
+            // 
+            // bbiAllAndOTPValidationRun
+            // 
+            this.bbiAllAndOTPValidationRun.Caption = "Allowance And OTP";
+            this.bbiAllAndOTPValidationRun.Id = 204;
+            this.bbiAllAndOTPValidationRun.Name = "bbiAllAndOTPValidationRun";
+            this.bbiAllAndOTPValidationRun.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiAllAndOTPValidationRun_ItemClick);
+            // 
+            // bbiLveValidationRun
+            // 
+            this.bbiLveValidationRun.Caption = "Absences";
+            this.bbiLveValidationRun.Id = 205;
+            this.bbiLveValidationRun.Name = "bbiLveValidationRun";
+            this.bbiLveValidationRun.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiLveValidationRun_ItemClick);
+            // 
             // rpAutoRun
             // 
             this.rpAutoRun.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -1298,6 +1500,7 @@
             // rpgRunAll
             // 
             this.rpgRunAll.ItemLinks.Add(this.bbiRefreshValidations);
+            this.rpgRunAll.ItemLinks.Add(this.bsiRunValidationOnly);
             this.rpgRunAll.ItemLinks.Add(this.bsiRunAllProcesses);
             this.rpgRunAll.Name = "rpgRunAll";
             this.rpgRunAll.Text = "Run Processes";
@@ -1390,6 +1593,19 @@
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             this.ribbonPageGroup2.ShowCaptionButton = false;
             this.ribbonPageGroup2.Text = "Print and Export";
+            // 
+            // rpgGridActions
+            // 
+            this.rpgGridActions.ItemLinks.Add(this.bbiResetSelectedRows);
+            this.rpgGridActions.ItemLinks.Add(this.bbiRemoveSelectedRows);
+            this.rpgGridActions.Name = "rpgGridActions";
+            this.rpgGridActions.Text = "Grid Actions";
+            // 
+            // rpgLookAndFeel
+            // 
+            this.rpgLookAndFeel.ItemLinks.Add(this.skinRibbonGalleryBarItem1);
+            this.rpgLookAndFeel.Name = "rpgLookAndFeel";
+            this.rpgLookAndFeel.Text = "Look and Feel";
             // 
             // rpHelp
             // 
@@ -2082,163 +2298,10 @@
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "Transformation";
             // 
-            // bsiArchive
-            // 
-            this.bsiArchive.Caption = "Archive";
-            this.bsiArchive.Id = 179;
-            this.bsiArchive.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.Image")));
-            this.bsiArchive.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.LargeImage")));
-            this.bsiArchive.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem9),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem10),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem11)});
-            this.bsiArchive.Name = "bsiArchive";
-            this.bsiArchive.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
-            // 
-            // barSubItem9
-            // 
-            this.barSubItem9.Caption = "Employee";
-            this.barSubItem9.Id = 181;
-            this.barSubItem9.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrors),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrorAndOnHold),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpAll)});
-            this.barSubItem9.Name = "barSubItem9";
-            // 
-            // barSubItem10
-            // 
-            this.barSubItem10.Caption = "Payslip";
-            this.barSubItem10.Id = 183;
-            this.barSubItem10.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayErrors),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayAll)});
-            this.barSubItem10.Name = "barSubItem10";
-            // 
-            // barSubItem11
-            // 
-            this.barSubItem11.Caption = "Leave";
-            this.barSubItem11.Id = 184;
-            this.barSubItem11.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveErrors),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveAll)});
-            this.barSubItem11.Name = "barSubItem11";
-            // 
-            // bbiArchiveEmpErrors
-            // 
-            this.bbiArchiveEmpErrors.Caption = "Errors";
-            this.bbiArchiveEmpErrors.Id = 185;
-            this.bbiArchiveEmpErrors.Name = "bbiArchiveEmpErrors";
-            // 
-            // bbiArchiveEmpErrorAndOnHold
-            // 
-            this.bbiArchiveEmpErrorAndOnHold.Caption = "Error and On-Hold";
-            this.bbiArchiveEmpErrorAndOnHold.Id = 186;
-            this.bbiArchiveEmpErrorAndOnHold.Name = "bbiArchiveEmpErrorAndOnHold";
-            // 
-            // bbiArchiveEmpAll
-            // 
-            this.bbiArchiveEmpAll.Caption = "All";
-            this.bbiArchiveEmpAll.Id = 187;
-            this.bbiArchiveEmpAll.Name = "bbiArchiveEmpAll";
-            // 
-            // bbiArchivePayErrors
-            // 
-            this.bbiArchivePayErrors.Caption = "Errors";
-            this.bbiArchivePayErrors.Id = 188;
-            this.bbiArchivePayErrors.Name = "bbiArchivePayErrors";
-            // 
-            // bbiArchivePayAll
-            // 
-            this.bbiArchivePayAll.Caption = "All";
-            this.bbiArchivePayAll.Id = 189;
-            this.bbiArchivePayAll.Name = "bbiArchivePayAll";
-            // 
-            // bbiArchiveLveErrors
-            // 
-            this.bbiArchiveLveErrors.Caption = "Errors";
-            this.bbiArchiveLveErrors.Id = 190;
-            this.bbiArchiveLveErrors.Name = "bbiArchiveLveErrors";
-            // 
-            // bbiArchiveLveAll
-            // 
-            this.bbiArchiveLveAll.Caption = "All";
-            this.bbiArchiveLveAll.Id = 191;
-            this.bbiArchiveLveAll.Name = "bbiArchiveLveAll";
-            // 
-            // rpgGridActions
-            // 
-            this.rpgGridActions.ItemLinks.Add(this.bbiResetSelectedRows);
-            this.rpgGridActions.ItemLinks.Add(this.bbiRemoveSelectedRows);
-            this.rpgGridActions.Name = "rpgGridActions";
-            this.rpgGridActions.Text = "Grid Actions";
-            // 
             // workspaceManager1
             // 
             this.workspaceManager1.TargetControl = this;
             this.workspaceManager1.TransitionType = pushTransition1;
-            // 
-            // rpgLookAndFeel
-            // 
-            this.rpgLookAndFeel.ItemLinks.Add(this.skinRibbonGalleryBarItem1);
-            this.rpgLookAndFeel.Name = "rpgLookAndFeel";
-            this.rpgLookAndFeel.Text = "Look and Feel";
-            // 
-            // skinRibbonGalleryBarItem1
-            // 
-            this.skinRibbonGalleryBarItem1.Caption = "skinRibbonGalleryBarItem1";
-            this.skinRibbonGalleryBarItem1.Id = 193;
-            this.skinRibbonGalleryBarItem1.Name = "skinRibbonGalleryBarItem1";
-            // 
-            // bbiResetSelectedRows
-            // 
-            this.bbiResetSelectedRows.Caption = "Reset Selected Rows";
-            this.bbiResetSelectedRows.Id = 194;
-            this.bbiResetSelectedRows.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.Image")));
-            this.bbiResetSelectedRows.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.LargeImage")));
-            this.bbiResetSelectedRows.Name = "bbiResetSelectedRows";
-            this.bbiResetSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiResetSelectedRows_ItemClick);
-            // 
-            // bbiRemoveSelectedRows
-            // 
-            this.bbiRemoveSelectedRows.Caption = "Remove Selected Rows";
-            this.bbiRemoveSelectedRows.Id = 195;
-            this.bbiRemoveSelectedRows.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem3.ImageOptions.Image")));
-            this.bbiRemoveSelectedRows.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem3.ImageOptions.LargeImage")));
-            this.bbiRemoveSelectedRows.Name = "bbiRemoveSelectedRows";
-            this.bbiRemoveSelectedRows.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRemoveSelectedRows_ItemClick);
-            // 
-            // bbiValidateLveBalQueue
-            // 
-            this.bbiValidateLveBalQueue.Caption = "Leave Balances";
-            this.bbiValidateLveBalQueue.Id = 197;
-            this.bbiValidateLveBalQueue.Name = "bbiValidateLveBalQueue";
-            this.bbiValidateLveBalQueue.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiValidateLveBalQueue_ItemClick);
-            // 
-            // bbiSourceValueOverride
-            // 
-            this.bbiSourceValueOverride.Caption = "Manual Override Setup";
-            this.bbiSourceValueOverride.Id = 198;
-            this.bbiSourceValueOverride.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.Image1")));
-            this.bbiSourceValueOverride.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.LargeImage1")));
-            this.bbiSourceValueOverride.Name = "bbiSourceValueOverride";
-            this.bbiSourceValueOverride.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiSourceValueOverride_ItemClick);
-            // 
-            // bsiRevertBatches
-            // 
-            this.bsiRevertBatches.Caption = "Revert Processed Batches";
-            this.bsiRevertBatches.Id = 199;
-            this.bsiRevertBatches.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barSubItem12.ImageOptions.Image")));
-            this.bsiRevertBatches.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barSubItem12.ImageOptions.LargeImage")));
-            this.bsiRevertBatches.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRevertProcessedLeaveBatches)});
-            this.bsiRevertBatches.Name = "bsiRevertBatches";
-            // 
-            // bbiRevertProcessedLeaveBatches
-            // 
-            this.bbiRevertProcessedLeaveBatches.Caption = "Leave";
-            this.bbiRevertProcessedLeaveBatches.Id = 200;
-            this.bbiRevertProcessedLeaveBatches.Name = "bbiRevertProcessedLeaveBatches";
-            this.bbiRevertProcessedLeaveBatches.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BbiRevertProcessedLeaveBatches_ItemClick);
             // 
             // MainView
             // 
@@ -2530,5 +2593,11 @@
         private DevExpress.XtraBars.BarButtonItem bbiSourceValueOverride;
         private DevExpress.XtraBars.BarSubItem bsiRevertBatches;
         private DevExpress.XtraBars.BarButtonItem bbiRevertProcessedLeaveBatches;
+        private DevExpress.XtraBars.BarButtonItem bbiArchiveAll;
+        private DevExpress.XtraBars.BarSubItem bsiRunValidationOnly;
+        private DevExpress.XtraBars.BarButtonItem bbiEmpValidationRun;
+        private DevExpress.XtraBars.BarButtonItem bbiAllAndOTPValidationRun;
+        private DevExpress.XtraBars.BarButtonItem bbiLveValidationRun;
+        private DevExpress.XtraBars.BarButtonItem bbiRefreshSPs;
     }
 }
