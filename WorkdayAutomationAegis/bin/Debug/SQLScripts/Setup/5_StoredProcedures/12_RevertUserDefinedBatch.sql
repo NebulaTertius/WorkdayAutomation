@@ -1,7 +1,7 @@
 CREATE PROCEDURE AI.RevertUserDefinedBatch @BatchInstanceID int
 AS
 
-BEGIN TRANSACTION
+BEGIN TRY BEGIN TRANSACTION
 INSERT INTO Batch.BatchInstance 
 (Code,ShortDescription,LongDescription,Comment,CompanyRule,PayRunDef,ProcessPeriod,BatchTemplateID,BatchInstanceType,ExportOption,DisplayCodes,DisplayCodesOption,VerifyBatch,CreateLines,AllowDuplicate,SkipTerminated,AllowMultipleCompanies
 ,ExcludeFromScheduler,ProcessingStatus,DateCaptured,CapturedBy,LastChanged,UserID
@@ -12,11 +12,12 @@ SELECT 'UNDO_' + LEFT(Code,3) + '_' + RIGHT(CONVERT(varchar,@BatchInstanceID),6)
 	,Comment,CompanyRule,PayRunDef,ProcessPeriod,BatchTemplateID,BatchInstanceType,ExportOption,DisplayCodes,DisplayCodesOption,VerifyBatch,CreateLines,AllowDuplicate,SkipTerminated,AllowMultipleCompanies
 ,ExcludeFromScheduler,'V' [ProcessingStatus],GETDATE() DateCaptured,CapturedBy,GETDATE() LastChanged,UserID 
 FROM Batch.BatchInstance WHERE BatchInstanceID = @BatchInstanceID
-COMMIT
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
-BEGIN TRANSACTION
+BEGIN TRY BEGIN TRANSACTION
 		INSERT INTO Batch.BatchInstanceFilter (BatchInstanceID,CompanyRuleID,PayslipTypeID,TaxYearID,ProcessPeriodID,PayRunDefID,LastChanged,UserID)
 		SELECT (SELECT MAX(BatchInstanceID) FROM Batch.BatchInstance) AS BatchInstanceID
 			,CompanyRuleID
@@ -28,11 +29,12 @@ BEGIN TRANSACTION
 			,UserID
 		FROM Batch.BatchInstanceFilter
 		WHERE BatchInstanceID = @BatchInstanceID
-COMMIT
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 		
 		
-BEGIN TRANSACTION
+BEGIN TRY BEGIN TRANSACTION
 		INSERT INTO Batch.BatchEmployee (BatchInstanceID,EmployeeCode,DisplayName,EmployeeRuleID,CompanyID,CompanyRuleID,ProcessingStatus,LastChanged,UserID)
 		SELECT (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi)
 			,EmployeeCode
@@ -45,11 +47,12 @@ BEGIN TRANSACTION
 			,UserID
 		FROM Batch.BatchEmployee 
 		WHERE BatchInstanceID = @BatchInstanceID
-COMMIT
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
-BEGIN TRANSACTION
+BEGIN TRY BEGIN TRANSACTION
 		INSERT INTO Batch.BatchEmployeeField (BatchEmployeeID,PayRunDefID,ProcessPeriodID,PayslipTypeID,BatchItemID,Sequence,Value,RowIndex,ProcessingStatus,Included,Verified,LastChanged,UserID)
 		SELECT 
 			(SELECT BatchEmployeeID FROM Batch.BatchEmployee WHERE BatchInstanceID = (SELECT MAX(BatchInstanceID) FROM Batch.BatchInstance) AND EmployeeCode = be.EmployeeCode)
@@ -69,4 +72,5 @@ BEGIN TRANSACTION
 			INNER JOIN Batch.BatchEmployee be ON be.BatchEmployeeID = bf.BatchEmployeeID
 			INNER JOIN Batch.BatchItem bi ON bi.BatchItemID = bf.BatchItemID
 		WHERE be.BatchInstanceID = @BatchInstanceID
-COMMIT
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH

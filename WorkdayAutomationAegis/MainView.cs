@@ -15,6 +15,7 @@ using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.UserSkins;
 using DevExpress.Skins;
 using DevExpress.Mvvm.DataAnnotations;
+using DevExpress.XtraGrid.Columns;
 
 namespace WorkdayAutomationAegis
 {
@@ -125,8 +126,10 @@ namespace WorkdayAutomationAegis
             //}
             gvwEditable.BestFitColumns();
             gvwEditable.OptionsView.NewItemRowPosition = NewItemRowPosition.None;
-            gvwEditable.OptionsBehavior.Editable = false;
-            gvwEditable.OptionsBehavior.ReadOnly = true;
+            
+            //Set to editable as a quick fix under time constraint. App should be discontinued soon as well. Note Created 2019-11-11
+            gvwEditable.OptionsBehavior.Editable = true;
+            gvwEditable.OptionsBehavior.ReadOnly = false;
             bsiRecordsCount.Caption = "RECORDS : " + gridControl.DefaultView.DataRowCount;
             gvwEditable.Focus();
         }
@@ -165,8 +168,8 @@ namespace WorkdayAutomationAegis
             }
             gvwEditable.BestFitColumns();
             gvwEditable.OptionsView.NewItemRowPosition = NewItemRowPosition.None;
-            gvwEditable.OptionsBehavior.Editable = false;
-            gvwEditable.OptionsBehavior.ReadOnly = true;
+            gvwEditable.OptionsBehavior.Editable = true;
+            gvwEditable.OptionsBehavior.ReadOnly = false;
             bsiRecordsCount.Caption = "RECORDS : " + gridControl.DefaultView.DataRowCount;
             gvwEditable.Focus();
         }
@@ -781,16 +784,21 @@ namespace WorkdayAutomationAegis
 
         private void ExecuteSQLQuery(string sqlStatement)
         {
-            using (SqlConnection sqlConn = new SqlConnection(GetSQLConnString()))
+            try
             {
-                sqlConn.Open();
-                using (SqlCommand cmd = new SqlCommand(sqlStatement, sqlConn))
+                using (SqlConnection sqlConn = new SqlConnection(GetSQLConnString()))
                 {
-                    cmd.CommandTimeout = 3000;
-                    cmd.ExecuteNonQuery();
+                    sqlConn.Open();
+                    using (SqlCommand cmd = new SqlCommand(sqlStatement, sqlConn))
+                    {
+                        cmd.CommandTimeout = 3000;
+                        cmd.ExecuteNonQuery();
+                    }
+                    sqlConn.Close();
                 }
-                sqlConn.Close();
             }
+            catch (Exception ex)
+            { MessageBox.Show("Failed to run SQL Query: " + sqlStatement + ". " + ex.Source + " - " + ex.Message); }
         }
 
         public DataTable SQLQueryToDataTable(string sqlStatement)
@@ -1083,8 +1091,8 @@ namespace WorkdayAutomationAegis
         private void bbiMoveAllowToQueue_ItemClick(object sender, ItemClickEventArgs e)
         {
             string otpSrcToQueueQuery = "";
-            string otpInsertString = "INSERT INTO AI.FinancialQueue(StatusCode,DateCreated,LastChanged";
-            string otpSelectString = "SELECT 'New' [StatusCode],GETDATE() [DateCreated],GETDATE() [LastChanged]";
+            string otpInsertString = "INSERT INTO AI.FinancialQueue(StatusCode,DateCreated,LastChanged,EventDescription";
+            string otpSelectString = "SELECT 'New' [StatusCode],GETDATE() [DateCreated],GETDATE() [LastChanged],ISNULL((SELECT TOP 1 m.CatalogName FROM AI.CatalogMapping m WHERE WageTypeCode = m.SourceValue AND m.CatalogType = 'Payslip Batch'),'No Mapping Found') [EventDescription]";
 
             DataTable dt = SQLQueryToDataTable("SELECT * FROM AI.QueueMapping");
             foreach (DataRow dr in dt.Rows)
@@ -1112,13 +1120,13 @@ namespace WorkdayAutomationAegis
                         otpInsertString = otpInsertString + "," + tgtField;
                         switch (mapType)
                         {
-                            case "Direct": otpSelectString = otpSelectString + "," + leftLenText + leftConvertText + srcField + rightConvertText + rightLenText + " [" + tgtField + "]"; break;
-                            case "Catalog": otpSelectString = otpSelectString + "," + leftConvertText + "(SELECT TOP 1 m.TargetValue FROM AI.CatalogMapping m WHERE " + srcField + " = m.SourceValue AND m.CatalogType = 'Payslip Batch')" + rightConvertText + " [" + tgtField + "]"; break;
-                            case "DefaultValue": otpSelectString = otpSelectString + "," + defaultVal + " [" + tgtField + "]"; break;
-                            case "DefaultValueIfNull": otpSelectString = otpSelectString + "," + leftConvertText + ",ISNULL(" + srcField + "," + defaultVal + ")" + rightConvertText + " [" + tgtField + "]"; break;
-                            case "SQLStatement": otpSelectString = otpSelectString + "," + sqlStatement + " [" + tgtField + "]"; break;
-                            case "CatalogStatement": otpSelectString = otpSelectString + "," + catStatement + " [" + tgtField + "]"; break;
-                            default: otpSelectString = otpSelectString + "," + leftLenText + leftConvertText + srcField + rightConvertText + rightLenText + " [" + tgtField + "]"; break;
+                            case "Direct": otpSelectString = otpSelectString + ",ISNULL(" + leftLenText + leftConvertText + srcField + rightConvertText + rightLenText + ",WageTypeCode) [" + tgtField + "]"; break;
+                            case "Catalog": otpSelectString = otpSelectString + ",ISNULL(" + leftConvertText + "(SELECT TOP 1 m.TargetValue FROM AI.CatalogMapping m WHERE " + srcField + " = m.SourceValue AND m.CatalogType = 'Payslip Batch')" + rightConvertText + ",WageTypeCode) [" + tgtField + "]"; break;
+                            case "DefaultValue": otpSelectString = otpSelectString + ",ISNULL(" + defaultVal + ",WageTypeCode) [" + tgtField + "]"; break;
+                            case "DefaultValueIfNull": otpSelectString = otpSelectString + ",ISNULL(" + leftConvertText + ",ISNULL(" + srcField + "," + defaultVal + ")" + rightConvertText + ",WageTypeCode) [" + tgtField + "]"; break;
+                            case "SQLStatement": otpSelectString = otpSelectString + ",ISNULL(" + sqlStatement + ",WageTypeCode) [" + tgtField + "]"; break;
+                            case "CatalogStatement": otpSelectString = otpSelectString + ",ISNULL(" + catStatement + ",WageTypeCode) [" + tgtField + "]"; break;
+                            default: otpSelectString = otpSelectString + ",ISNULL(" + leftLenText + leftConvertText + srcField + rightConvertText + rightLenText + ",WageTypeCode) [" + tgtField + "]"; break;
                         }
                         break;
                 }
@@ -1214,16 +1222,16 @@ namespace WorkdayAutomationAegis
         {
             ExecuteSQLQuery("EXEC [AI].[ProcessEmployeeQueue]");
 
-            //XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
-            //focusGridToReadView(xpCol);
+            XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
+            focusGridToReadView(xpCol);
         }
 
         private void bbiProcessFinancials_ItemClick(object sender, ItemClickEventArgs e)
         {
             ExecuteSQLQuery("EXEC [AI].[ProcessFinancialQueue]");
 
-            //XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.FinancialQueue", typeof(AIFinancialQueue));
-            //focusGridToReadView(xpCol);
+            XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.FinancialQueue", typeof(AIFinancialQueue));
+            focusGridToReadView(xpCol);
         }
 
         private void BbiMoveLveTransToBalQueue_ItemClick(object sender, ItemClickEventArgs e)
@@ -1235,8 +1243,8 @@ namespace WorkdayAutomationAegis
         {
             ExecuteSQLQuery("EXEC [AI].[ProcessLeaveQueue]");
 
-            //XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.LeaveBalanceQueue", typeof(AILeaveBalanceQueue));
-            //focusGridToReadView(xpCol);
+            XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.LeaveBalanceQueue", typeof(AILeaveBalanceQueue));
+            focusGridToReadView(xpCol);
         }
 
 
@@ -1421,33 +1429,34 @@ namespace WorkdayAutomationAegis
 
         private void bbiEmployeeRunAll_ItemClick(object sender, ItemClickEventArgs e)
         {
-            try { bbiImportCSVEmployee_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { bbiMoveEmployeeToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { bbiValidateEmployeeQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //Changed layout to have a validate, and then process only, instead of run all.
+            //try { bbiImportCSVEmployee_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { bbiMoveEmployeeToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { bbiValidateEmployeeQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiProcessEmployee_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { BbiEmpIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { BbiEmpIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             MessageBox.Show("Process Finished" + Environment.NewLine + "Successful records will be available for processing in Sage", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BbiAllAndOTPRunAll_ItemClick_1(object sender, ItemClickEventArgs e)
         {
-            try { bbiImportCSVAllAndOTP_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { bbiMoveAllowToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { bbiImportCSVAllAndOTP_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { bbiMoveAllowToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiProcessFinancials_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { BbiPayslipIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { BbiPayslipIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             MessageBox.Show("Process Finished" + Environment.NewLine + "Successful records will be available for processing in Sage", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BbiAbsenceRunAll_ItemClick_1(object sender, ItemClickEventArgs e)
         {
-            try { bbiImportCSVAbsences_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { BbiValidateLveBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { bbiImportCSVAbsences_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during new file import", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { BbiValidateLveBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             try { bbiProcessLeave_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving batch to Sage", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
-            try { BbiLeaveIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+            //try { BbiLeaveIssues_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure displaying Error Records", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
             MessageBox.Show("Process Finished" + Environment.NewLine + "Successful records will be available for processing in Sage", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1499,30 +1508,22 @@ namespace WorkdayAutomationAegis
             try
             {
                 XPCollection xpCol = dynamicXPCollection(ConnectionString, "AI.EmployeeQueue", typeof(AIEmployeeQueue));
-                focusGridToReadView(xpCol);
-
-                int i = 0;
-                while (gvwEditable.VisibleColumns.Count() > 0)
-                {
-                    gvwEditable.Columns[i].Visible = false;
-                    i = i + 1;
-                }
-
-                gvwEditable.Columns.ColumnByFieldName("DateCreated").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("QueueComment").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("EmployeeCode").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("EventDescription").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("ErrorCode").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("ErrorMessage").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("StatusMessage").Visible = true;
-                gvwEditable.Columns.ColumnByFieldName("StatusCode").Visible = true;
+                focusGridToEditableView(xpCol);
 
                 gvwEditable.Columns.ColumnByFieldName("StatusCode").Group();
                 gvwEditable.Columns.ColumnByFieldName("StatusMessage").Group();
+                gvwEditable.Columns.ColumnByFieldName("ErrorMessage").Group();
                 gvwEditable.Columns.ColumnByFieldName("StatusCode").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
                 gvwEditable.Columns.ColumnByFieldName("StatusMessage").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
                 gvwEditable.Columns.ColumnByFieldName("ErrorMessage").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
                 gvwEditable.Columns.ColumnByFieldName("EmployeeCode").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+                gvwEditable.Columns.ColumnByFieldName("FirstName").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+                gvwEditable.Columns.ColumnByFieldName("LastName").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+
+                gvwEditable.ActiveFilter.Add(gvwEditable.Columns["StatusCode"],
+                                    new ColumnFilterInfo("[StatusCode] != 'N'", ""));
+                gvwEditable.RefreshData();
+
             }
             catch (Exception myException)
             {
@@ -1546,19 +1547,28 @@ namespace WorkdayAutomationAegis
 
                 gvwEditable.Columns.ColumnByFieldName("DateCreated").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("QueueComment").Visible = true;
+                gvwEditable.Columns.ColumnByFieldName("CountryCodeIndicator").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("EmployeeCode").Visible = true;
+                gvwEditable.Columns.ColumnByFieldName("WageTypeCode").Visible = true;
+                gvwEditable.Columns.ColumnByFieldName("OneTimePayment").Visible = true;
+                gvwEditable.Columns.ColumnByFieldName("Amount").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("EventDescription").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("ErrorCode").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("ErrorMessage").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("StatusMessage").Visible = true;
                 gvwEditable.Columns.ColumnByFieldName("StatusCode").Visible = true;
 
+                
                 gvwEditable.Columns.ColumnByFieldName("StatusCode").Group();
                 gvwEditable.Columns.ColumnByFieldName("StatusMessage").Group();
                 gvwEditable.Columns.ColumnByFieldName("StatusCode").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
                 gvwEditable.Columns.ColumnByFieldName("StatusMessage").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
                 gvwEditable.Columns.ColumnByFieldName("ErrorMessage").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+                gvwEditable.Columns.ColumnByFieldName("CountryCodeIndicator").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
                 gvwEditable.Columns.ColumnByFieldName("EmployeeCode").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+                gvwEditable.Columns.ColumnByFieldName("WageTypeCode").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+                gvwEditable.Columns.ColumnByFieldName("OneTimePayment").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
+                gvwEditable.Columns.ColumnByFieldName("Amount").SortOrder = DevExpress.Data.ColumnSortOrder.Ascending;
             }
             catch (Exception myException)
             {
@@ -1875,25 +1885,17 @@ namespace WorkdayAutomationAegis
         {
             try
             {
-                ExecuteSQLQuery("SELECT * INTO AI.AbsenceSourceArchive FROM AI.AbsenceSource");
-                ExecuteSQLQuery("SELECT * INTO AI.AbsenceSourceHistoryArchive FROM AI.AbsenceSourceHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.AllowanceAndOTPSourceArchive FROM AI.AllowanceAndOTPSource");
-                ExecuteSQLQuery("SELECT * INTO AI.AllowanceAndOTPSourceHistoryArchive FROM AI.AllowanceAndOTPSourceHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.EmployeeQueueArchive FROM AI.EmployeeQueue");
-                ExecuteSQLQuery("SELECT * INTO AI.EmployeeQueueHistoryArchive FROM AI.EmployeeQueueHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSourceArchive FROM AI.EmployeeSource");
-                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSourceHistoryArchive FROM AI.EmployeeSourceHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSubQueueArchive FROM AI.EmployeeSubQueue");
-                ExecuteSQLQuery("SELECT * INTO AI.EmployeeSubQueueHistoryArchive FROM AI.EmployeeSubQueueHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.FinancialBatchHistoryArchive FROM AI.FinancialBatchHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.FinancialQueueArchive FROM AI.FinancialQueue");
-                ExecuteSQLQuery("SELECT * INTO AI.FinancialQueueHistoryArchive FROM AI.FinancialQueueHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.LeaveBalanceQueueArchive FROM AI.LeaveBalanceQueue");
-                ExecuteSQLQuery("SELECT * INTO AI.LeaveBalanceQueueHistoryArchive FROM AI.LeaveBalanceQueueHistory");
-                ExecuteSQLQuery("SELECT * INTO AI.LeaveTransactionQueueArchive FROM AI.LeaveTransactionQueue");
-                ExecuteSQLQuery("SELECT * INTO AI.LeaveTransactionQueueHistoryArchive FROM AI.LeaveTransactionQueueHistory");
+                string[] tblNames = { "AI.EmployeeSource", "AI.AllowanceAndOTPSource", "AI.AbsenceSource"
+                                    , "AI.EmployeeQueue", "AI.EmployeeSubQueue", "AI.FinancialQueue", "AI.LeaveTransactionQueue", "AI.LeaveBalanceQueue"
+                                    };
 
-                MessageBox.Show("Records Archived");
+                foreach (string tblName in tblNames)
+                {
+                    ExecuteSQLQuery("EXEC [AI].[ArchiveTableData] @TableName = '" + tblName + "'");
+                    ExecuteSQLQuery("EXEC [AI].[ArchiveTableData] @TableName = '" + tblName + "History'");
+                }
+
+                MessageBox.Show("History Data Archived.");
             }
             catch (Exception ex)
             { MessageBox.Show(ex.Message); }
@@ -1947,6 +1949,69 @@ namespace WorkdayAutomationAegis
                     }
             catch (Exception ex) { MessageBox.Show("Error: " + ex.Source + " - " + ex.Message); }
             MessageBox.Show("Process Completed", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void bbiRefreshMappings_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                ExecuteSQLQuery(File.ReadAllText(@".\SQLScripts\Setup\1_Tables\QueueMapping.sql"));
+                ExecuteSQLQuery(File.ReadAllText(@".\SQLScripts\Setup\1_Tables\CatalogMapping.sql"));
+                ExecuteSQLQuery(File.ReadAllText(@".\SQLScripts\Setup\3_FixedData\QueueMapping.sql"));
+                ExecuteSQLQuery(File.ReadAllText(@".\SQLScripts\Setup\3_FixedData\CatalogMapping.sql"));
+            }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Source + " - " + ex.Message); }
+            MessageBox.Show("Process Completed", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void bbiClearSystemBatches_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                ExecuteSQLQuery("EXEC AI.ClearHistorySystemBatches");
+            }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Source + " - " + ex.Message); }
+            MessageBox.Show("Sage 300 History Batches Cleared", "Batch Clearing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void bbiDupUnpaidLveReversal_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+            ExecuteSQLQuery(@"
+            INSERT INTO AI.AbsenceSource (CountryCodeIndicator,EmployeeCode,LeaveID,LeaveTypeID,LeaveAction,FromDate,ToDate,UnitsTaken,Unit
+                ,SourceFileName)
+                SELECT c.TaxCountryCode [CountryCodeIndicator]
+                	,e.EmployeeCode
+                	,'UNPAID' [LeaveID]
+                	,'UNPAID' [LeaveTypeID]
+                	,'DELETE' [LeaveAction]
+                	,'2019-11-30' [FromDate]
+                	,'2019-11-30' [ToDate]
+                	,ISNULL(el.Adjustment,0) * -1 [ReversalAmount] --UnitsTaken
+                	,'DAYS' [Unit]
+                	,'20191118 : Bulk Reversal of PAID adjustment duplicated to UNPAID between Sep19 and Nov19.' [SourceFileName]
+                FROM Leave.EmployeeLeave el
+                	INNER JOIN Employee.EmployeePayPeriod epp ON epp.EmployeePayPeriodID = el.EmployeePayPeriodID
+                	INNER JOIN Company.PayPeriodGen pp ON pp.PayPeriodGenID = epp.PayPeriodGenID AND pp.CalendarYear = '2019' AND pp.CalendarMonth >= 9
+                	INNER JOIN Employee.Employee e ON e.EmployeeID = epp.EmployeeID
+                	INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
+                	INNER JOIN Leave.LeaveDef ld ON ld.LeaveDefID = el.LeaveDefID AND ld.Code IN ('UNPAID')
+                WHERE Adjustment IS NOT NULL
+                	AND e.EmployeeCode IN ('16027','16029','169','18032','19025','230011','230021','230061'
+                ,'230142','240001','240002','240005','2571','2601','2790','230103')        
+            ");
+
+                try { bbiMoveAbsencesToQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+                try { BbiMoveLveTransToBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure moving source data to queue", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+                try { BbiValidateLveBalQueue_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure during queue validation", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+                try { ExecuteSQLQuery("EXEC AI.ValidateBatchTemplates"); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure to refresh batch templates", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+                try { bbiProcessLeave_ItemClick(sender, e); } catch (Exception ex) { MessageBox.Show(ex.Source + " - " + ex.Message, "Failure processing correction batch.", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning); }
+                MessageBox.Show("Process Finished" + Environment.NewLine + "Correction Batch Completed", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.Source + " - " + ex.Message, "Error Processing SQL Query"); }
         }
     }
 }

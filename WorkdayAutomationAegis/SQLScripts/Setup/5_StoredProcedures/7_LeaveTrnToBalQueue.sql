@@ -1,9 +1,29 @@
 CREATE PROCEDURE AI.LeaveTransactionToBalanceQueue
 AS
 
+--Reset Future Transactions
+BEGIN TRAN
+	UPDATE AI.LeaveTransactionQueue
+	SET StatusCode = 'New'
+		,StatusMessage = NULL
+	WHERE StatusCode = 'Future'
+COMMIT
+
+--Mark Future Transactions based only on From Date greater than current computer month.
+--20191202: This has been done only to reduce the amount of future transactions, and not as a resolution to the entire problem. A mail was sent to Kotie explaining that this should be handled from Workday, and that this has only be inserted in the interim to assist.
+BEGIN TRAN 
+	UPDATE AI.LeaveTransactionQueue
+	SET StatusCode = 'Future'
+		,StatusMessage = 'Transaction set to future for processing to occur in a later month'
+	WHERE CAST(YEAR(FromDate) as varchar) + RIGHT('00'+CAST(MONTH(FromDate) as varchar),2) > 
+		CAST(YEAR((SELECT TOP 1 EndDate FROM Company.CompanyRuleLivePeriod WHERE [Status] = 'A')) as varchar) + RIGHT('00'+CAST(MONTH((SELECT TOP 1 EndDate FROM Company.CompanyRuleLivePeriod WHERE [Status] = 'A')) as varchar),2)
+COMMIT
+
+BEGIN TRY
+BEGIN TRAN
+
 INSERT INTO AI.LeaveBalanceQueueHistory SELECT * FROM AI.LeaveBalanceQueue WHERE StatusCode IN ('New','Success')
 DELETE FROM AI.LeaveBalanceQueue WHERE StatusCode IN ('New','Success')
-
 
 INSERT INTO AI.LeaveTransactionQueueHistory SELECT * FROM AI.LeaveTransactionQueue WHERE StatusCode IN ('Moved')
 DELETE FROM AI.LeaveTransactionQueue WHERE StatusCode IN ('Moved')
@@ -21,11 +41,13 @@ FROM (SELECT EmployeeCode
 		+ STUFF((SELECT ' |' + REPLACE(LeaveCode,'TIME_OFF_ENTRY-','') + '('+CONVERT(varchar,FromDate,112)+')'+'['+UnitsTaken+' '+Unit+']' AS [text()]
 			FROM AI.LeaveTransactionQueue tq
 			WHERE tq.EmployeeCode = q.EmployeeCode AND tq.LeaveTypeCode = q.LeaveTypeCode
+				AND tq.StatusCode <> 'Future'
 			FOR XML PATH('')
 			),1,1,''
 			) [LeaveCode]
 	,SUM(CONVERT(decimal(18,4),UnitsTaken)) TotalUnits
 FROM AI.LeaveTransactionQueue q
+WHERE StatusCode <> 'Future'
 GROUP BY EmployeeCode
 	,LeaveTypeCode
 	,LeaveCode
@@ -189,3 +211,8 @@ DELETE FROM ##LeaveTypesPerEmployee WHERE EmployeeCode = @EmployeeCode AND Leave
 UPDATE AI.LeaveTransactionQueue SET StatusCode = 'Moved' WHERE StatusCode = 'New'
 
 END
+
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+

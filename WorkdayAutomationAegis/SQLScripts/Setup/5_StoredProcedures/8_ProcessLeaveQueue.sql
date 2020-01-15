@@ -1,14 +1,21 @@
 CREATE PROCEDURE [AI].[ProcessLeaveQueue]
 AS
 
+BEGIN TRY
+BEGIN TRAN
+
 --Mark Non Annual/Unpaid as Ignored.
+BEGIN TRY
 BEGIN TRANSACTION
 UPDATE AI.LeaveBalanceQueue 
 SET StatusCode = 'Ignore', StatusMessage = 'Non-Annual/Unpaid Leave Type Excluded from automation', EventCode = 'Ignored', EventDescription = 'Non-Annual/Unpaid Leave Type Excluded from automation' 
 FROM AI.LeaveBalanceQueue q
 	INNER JOIN AI.CatalogMapping c ON c.TargetField = q.LeaveTypeCode
 WHERE CatalogName IN ('Non-Annual/Unpaid Leave')
-COMMIT
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+
 
 --Remove previously run successful records
 INSERT INTO AI.LeaveBalanceQueueHistory SELECT * FROM AI.LeaveBalanceQueue WHERE StatusCode IN ('Success','Ignore')
@@ -48,3 +55,7 @@ FROM AI.LeaveBalanceQueue q
 
 INSERT INTO AI.AbsenceSourceHistory SELECT * FROM AI.AbsenceSource
 DELETE FROM AI.AbsenceSource
+
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH

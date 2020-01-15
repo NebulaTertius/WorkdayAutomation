@@ -1,10 +1,27 @@
 CREATE PROCEDURE [AI].[EmployeeBatchValidations] @QueueFilter varchar(MAX) = ''
 AS
+BEGIN TRY BEGIN TRANSACTION
+	INSERT INTO AI.EmployeeSourceHistory SELECT * FROM AI.EmployeeSource
+	DELETE FROM AI.EmployeeSource
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
-BEGIN TRANSACTION
+
+BEGIN TRY BEGIN TRANSACTION
+	INSERT INTO AI.EmployeeQueueHistory SELECT * FROM AI.EmployeeQueue WHERE EventCode = 'I' OR StatusCode = 'Exclude'
+	DELETE FROM AI.EmployeeQueue WHERE EventCode = 'I' OR StatusCode = 'Exclude'
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+
+BEGIN TRY BEGIN TRANSACTION
 UPDATE AI.EmployeeQueue SET EventCode = 'Exclude', EventDescription = 'Record manually excluded from automation run' WHERE StatusCode = 'Exclude'
-COMMIT
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
+BEGIN TRY BEGIN TRAN
 --Create a CASH run per company if none exist
 IF EXISTS (SELECT c.CompanyID FROM Company.Company c LEFT JOIN Payroll.PaymentRunDef prd ON prd.CompanyID = c.CompanyID AND prd.PaymentTypeID = 1 WHERE prd.CompanyID IS NULL)
 BEGIN
@@ -48,8 +65,15 @@ UPDATE AI.EmployeeQueue SET TaxStartDate = CONVERT(datetime,'1900-01-01') WHERE 
 UPDATE AI.EmployeeQueue SET TaxStartDate = CONVERT(datetime,'2079-06-06') WHERE ISNULL(TaxStartDate,CONVERT(datetime,'2079-06-06')) > CONVERT(datetime,'2079-06-06')
 
 
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+
+
 --Change Master Queue table with a find and replace (Current value is AI.EmployeeQueue)
 --If the THROW statement does not work with your applicaton, this can be changed to select the error details based on each field required, or by using the RAISE_ERROR statement
+
+
 
 --Update fields that have the Word NULL or blank as a value, to be changed to the value NULL(Empty).
 --This is done for consistency across the validations, as well as easier readibility of the code
@@ -64,18 +88,12 @@ BEGIN TRY
 		AND system_type_id IN (35,99,167,175,231,239);
 		SELECT @sql = N'UPDATE AI.EmployeeQueue SET '+LEFT(@sql, LEN(@sql)-1)+';';
 		EXEC sp_executesql @sql;
-	COMMIT TRANSACTION 
-END TRY 
-BEGIN CATCH 
-	THROW 
-	IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION 
-	IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
-END CATCH
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Set any NULL(Blank) StatusCodes to N to indicate this as a New record where a default constraint was not applied or it was dropped.
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'N', StatusMessage = NULL WHERE StatusCode IS NULL OR StatusCode IN ('On-Hold','Error') COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = NULL, EventDescription = NULL, WarningCode = NULL, WarningMessage = NULL, ErrorCode = NULL, ErrorMessage = NULL COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'N', StatusMessage = NULL WHERE StatusCode IS NULL OR StatusCode IN ('On-Hold','Error') IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = NULL, EventDescription = NULL, WarningCode = NULL, WarningMessage = NULL, ErrorCode = NULL, ErrorMessage = NULL IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 --Apply customer specific defaults or data transformations when inserting to the Queue.
@@ -84,10 +102,10 @@ BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = NULL, EventD
 
 
 
---BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET CompanyCode = 'DOS' WHERE StatusCode = 'N' AND CompanyCode = 'Osi' COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
---BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET RacialGroup = 'A' WHERE StatusCode = 'N' AND RacialGroup = 'N' COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
---BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PeriodInMonth = 'L' WHERE StatusCode = 'N' AND PeriodInMonth = 'N' COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
---BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET TaxStatusCode = 'ST' WHERE StatusCode = 'N' AND TaxStatusCode = 'S' COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+--BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET CompanyCode = 'DOS' WHERE StatusCode = 'N' AND CompanyCode = 'Osi' IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+--BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET RacialGroup = 'A' WHERE StatusCode = 'N' AND RacialGroup = 'N' IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+--BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PeriodInMonth = 'L' WHERE StatusCode = 'N' AND PeriodInMonth = 'N' IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+--BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET TaxStatusCode = 'ST' WHERE StatusCode = 'N' AND TaxStatusCode = 'S' IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -98,19 +116,19 @@ BEGIN --(Only starts processes if there are new records in the master queue)
 
 --Determine the event type of the new record. (This can be a risk if the SP is running more than once a day).
 --New
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'N', EventDescription = 'New Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode NOT IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'N', EventDescription = 'New Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode NOT IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --New & Stop
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'X', EventDescription = 'New With Stop Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode NOT IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND q.TerminationDate IS NOT NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'X', EventDescription = 'New With Stop Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode NOT IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND q.TerminationDate IS NOT NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Update
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'U', EventDescription = 'Update Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'U', EventDescription = 'Update Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Stop
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'S', EventDescription = 'Stop Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.TerminationDate IS NOT NULL AND q.EmployeeCode IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'S', EventDescription = 'Stop Event' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.TerminationDate IS NOT NULL AND q.EmployeeCode IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode) AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Temporary Stop
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'T', EventDescription = 'Temporary Stop Event'  WHERE StatusCode = 'N' AND UIFStatusCode IN ('MAT','MATERNITY') AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'T', EventDescription = 'Temporary Stop Event'  WHERE StatusCode = 'N' AND UIFStatusCode IN ('MAT','MATERNITY') AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
@@ -124,6 +142,18 @@ UPDATE AI.EmployeeQueue SET ForeignIncome = CASE WHEN ForeignIncome = 'TRUE' THE
 UPDATE AI.EmployeeQueue SET UseWork = CASE WHEN UseWork = 'TRUE' THEN 1 ELSE 0 END				WHERE EventCode IN ('N','X') AND UseWork IS NOT NULL
 UPDATE AI.EmployeeQueue SET UsePhysical1 = CASE WHEN UsePhysical1 = 'TRUE' THEN 1 ELSE 0 END	WHERE EventCode IN ('N','X') AND UsePhysical1 IS NOT NULL
 UPDATE AI.EmployeeQueue SET UsePostal2 = CASE WHEN UsePostal2 = 'TRUE' THEN 1 ELSE 0 END		WHERE EventCode IN ('N','X') AND UsePostal2 IS NOT NULL
+
+
+--Clear default values for Update Events
+UPDATE AI.EmployeeQueue
+SET LanguageTypeCode = NULL
+	,NatureOfContractCode = NULL
+	,PeriodInMonth = NULL
+	,CalendarMonth = NULL
+	,UIFStatusCode = NULL
+	,TaxStatusCode = NULL
+WHERE EventCode NOT IN ('N','X')
+
 
 
 --Update termination reason for update events, if employee is already terminated in the system and no reason has been supplied from source
@@ -151,38 +181,38 @@ END
 --Already being supplied
 
 --Company Rule Code. Default for new records
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET CompanyRuleCode = (SELECT TOP 1 cr.CompanyRuleCode FROM Company.CompanyRuleLivePeriod cr INNER JOIN Company.Company c ON c.CompanyID = cr.CompanyID WHERE c.CompanyCode = q.CompanyCode ORDER BY StartDate DESC) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND q.CompanyRuleCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET CompanyRuleCode = (SELECT TOP 1 cr.CompanyRuleCode FROM Company.CompanyRuleLivePeriod cr INNER JOIN Company.Company c ON c.CompanyID = cr.CompanyID WHERE c.CompanyCode = q.CompanyCode ORDER BY StartDate DESC) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND q.CompanyRuleCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Company Rule Code. Latest linking for existing records
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET CompanyRuleCode = cr.CompanyRuleCode FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Company.CompanyRule cr ON cr.CompanyRuleID = er.CompanyRuleID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.CompanyRuleCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET CompanyRuleCode = cr.CompanyRuleCode FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Company.CompanyRule cr ON cr.CompanyRuleID = er.CompanyRuleID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.CompanyRuleCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Payment Run Def
 --Existing employees link
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PaymentRunDefCode = pmt.Code FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Payroll.PayslipDef pd ON pd.EmployeeRuleID = er.EmployeeRuleID AND pd.PayRunDefID IN (SELECT PayRunDefID FROM Company.PayRunDef WHERE MainPayRunDef = 1) INNER JOIN Payroll.PaymentRunDef pmt ON pmt.PaymentRunDefID = pd.PaymentRunDefID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.PaymentRunDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PaymentRunDefCode = pmt.Code FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Payroll.PayslipDef pd ON pd.EmployeeRuleID = er.EmployeeRuleID AND pd.PayRunDefID IN (SELECT PayRunDefID FROM Company.PayRunDef WHERE MainPayRunDef = 1) INNER JOIN Payroll.PaymentRunDef pmt ON pmt.PaymentRunDefID = pd.PaymentRunDefID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.PaymentRunDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Default for records with banking details
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PaymentRunDefCode = (SELECT TOP 1 Code FROM Payroll.PaymentRunDef prd INNER JOIN Company.Company c ON c.CompanyID = prd.CompanyID WHERE c.CompanyCode = q.CompanyCode AND prd.PaymentTypeID IN (3,4)) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND q.PaymentRunDefCode IS NULL AND q.AccountNo IS NOT NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PaymentRunDefCode = (SELECT TOP 1 Code FROM Payroll.PaymentRunDef prd INNER JOIN Company.Company c ON c.CompanyID = prd.CompanyID WHERE c.CompanyCode = q.CompanyCode AND prd.PaymentTypeID IN (3,4)) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND q.PaymentRunDefCode IS NULL AND q.AccountNo IS NOT NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Default for records without banking details
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PaymentRunDefCode = (SELECT TOP 1 Code FROM Payroll.PaymentRunDef prd INNER JOIN Company.Company c ON c.CompanyID = prd.CompanyID WHERE prd.PaymentTypeID = 1 AND c.CompanyCode = q.CompanyCode), AccountHolderRelationship = NULL, AccountName = NULL, BankCode = NULL, BankDescription = NULL, AccountTypeCode = NULL, AccountNo = NULL, BankBranchCode = NULL, BankBranchDescription = NULL, Ccy = NULL FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND (q.PaymentRunDefCode IS NULL OR q.PaymentRunDefCode = 'CASH') AND q.AccountNo IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET PaymentRunDefCode = (SELECT TOP 1 Code FROM Payroll.PaymentRunDef prd INNER JOIN Company.Company c ON c.CompanyID = prd.CompanyID WHERE prd.PaymentTypeID = 1 AND c.CompanyCode = q.CompanyCode), AccountHolderRelationship = NULL, AccountName = NULL, BankCode = NULL, BankDescription = NULL, AccountTypeCode = NULL, AccountNo = NULL, BankBranchCode = NULL, BankBranchDescription = NULL, Ccy = NULL FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND (q.PaymentRunDefCode IS NULL OR q.PaymentRunDefCode = 'CASH') AND q.AccountNo IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Remuneration Earn Def
 --Remuneration Earn Def. Latest linking for existing records
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET RemunerationEarnDefCode = ed.DefCode FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Payroll.PayslipDef pd ON pd.EmployeeRuleID = er.EmployeeRuleID AND pd.PayRunDefID IN (SELECT PayRunDefID FROM Company.PayRunDef WHERE MainPayRunDef = 1) INNER JOIN Payroll.EarningDef ed ON ed.EarningDefID = pd.RemunerationEarnDefID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.RemunerationEarnDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET RemunerationEarnDefCode = ed.DefCode FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Payroll.PayslipDef pd ON pd.EmployeeRuleID = er.EmployeeRuleID AND pd.PayRunDefID IN (SELECT PayRunDefID FROM Company.PayRunDef WHERE MainPayRunDef = 1) INNER JOIN Payroll.EarningDef ed ON ed.EarningDefID = pd.RemunerationEarnDefID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.RemunerationEarnDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Remuneration Earn Def default for new records
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET RemunerationEarnDefCode = (SELECT TOP 1 DefCode FROM Payroll.EarningDef ed INNER JOIN Company.Company c ON c.CompanyID = ed.CompanyID WHERE ed.EarningTypeID = 1 AND c.CompanyCode = q.CompanyCode ORDER BY ed.EarningDefID) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND RemunerationEarnDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET RemunerationEarnDefCode = (SELECT TOP 1 DefCode FROM Payroll.EarningDef ed INNER JOIN Company.Company c ON c.CompanyID = ed.CompanyID WHERE ed.EarningTypeID = 1 AND c.CompanyCode = q.CompanyCode ORDER BY ed.EarningDefID) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND RemunerationEarnDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Leave Policy
 --Leave Policy. Latest linking for existing records
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET LeavePolicyCode = lp.Code FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Leave.EmployeeLeavePolicy elp ON elp.EmployeeRuleID = er.EmployeeRuleID INNER JOIN Leave.LeavePolicy lp ON lp.LeavePolicyID = elp.LeavePolicyID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.LeavePolicyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET LeavePolicyCode = lp.Code FROM AI.EmployeeQueue q INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY emr.EmployeeCode, emr.CompanyID ORDER BY TerminationDate, DateEngaged DESC) RwNo, emr.* FROM Employee.Employee emr) em WHERE em.RwNo = 1) e ON e.EmployeeCode = q.EmployeeCode INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID INNER JOIN Leave.EmployeeLeavePolicy elp ON elp.EmployeeRuleID = er.EmployeeRuleID INNER JOIN Leave.LeavePolicy lp ON lp.LeavePolicyID = elp.LeavePolicyID WHERE StatusCode = 'N' AND EventCode IN ('U','S','T') AND q.LeavePolicyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Leave Policy Default for New Records
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET LeavePolicyCode = (SELECT TOP 1 Code FROM Leave.LeavePolicy lp INNER JOIN Company.Company c ON c.CompanyID = lp.CompanyID WHERE c.CompanyCode = q.CompanyCode ORDER BY lp.LeavePolicyID) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND q.LeavePolicyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET LeavePolicyCode = (SELECT TOP 1 Code FROM Leave.LeavePolicy lp INNER JOIN Company.Company c ON c.CompanyID = lp.CompanyID WHERE c.CompanyCode = q.CompanyCode ORDER BY lp.LeavePolicyID) FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND EventCode IN ('N','X') AND q.LeavePolicyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
@@ -194,16 +224,16 @@ BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'M', StatusC
 FROM AI.EmployeeQueue q 
 	INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY DateEngaged DESC) [RwNumb], * FROM Employee.Employee) eq WHERE eq.RwNumb = 1) e ON e.EmployeeCode = q.EmployeeCode
 	INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
-WHERE StatusCode = 'N' AND e.TerminationDate IS NULL AND q.CompanyCode <> c.CompanyCode AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+WHERE StatusCode = 'N' AND e.TerminationDate IS NULL AND q.CompanyCode <> c.CompanyCode AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'M', StatusCode = 'On-Hold', ErrorCode = ISNULL(ErrorCode,'')+'MIR|', ErrorMessage = ISNULL(ErrorMessage,'')+'Hold: Manual Transfer Process Required for move from CompanyRule '+'('+cr.CompanyRuleCode+') to '+'('+q.CompanyRuleCode+')|', StatusMessage = 'Manual Intervention Required' 
 FROM AI.EmployeeQueue q 
 	INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY DateEngaged DESC) [RwNumb], e.*, er.CompanyRuleID FROM Employee.Employee e INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID) eq WHERE eq.RwNumb = 1) e ON e.EmployeeCode = q.EmployeeCode
 	INNER JOIN Company.CompanyRule cr ON cr.CompanyRuleID = e.CompanyRuleID
-WHERE StatusCode = 'N' AND e.TerminationDate IS NULL AND q.CompanyRuleCode <> cr.CompanyRuleCode AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+WHERE StatusCode = 'N' AND e.TerminationDate IS NULL AND q.CompanyRuleCode <> cr.CompanyRuleCode AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 --Reinstated
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'R', StatusCode = 'On-Hold', ErrorCode = ISNULL(ErrorCode,'')+'MIR|', ErrorMessage = ISNULL(ErrorMessage,'')+'Hold: Manual Reinstatment Process Required|', StatusMessage = 'Manual Intervention Required' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode AND e.TerminationDate IS NOT NULL) AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'R', StatusCode = 'On-Hold', ErrorCode = ISNULL(ErrorCode,'')+'MIR|', ErrorMessage = ISNULL(ErrorMessage,'')+'Hold: Manual Reinstatment Process Required|', StatusMessage = 'Manual Intervention Required' FROM AI.EmployeeQueue q WHERE StatusCode = 'N' AND q.EmployeeCode IN (SELECT e.EmployeeCode FROM Employee.Employee e INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID WHERE c.CompanyCode = q.CompanyCode AND e.TerminationDate IS NOT NULL) AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
@@ -214,17 +244,17 @@ BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET EventCode = 'R', StatusC
 --Validations based on the Event Types
 
 --Mandatory for all event types
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'EmployeeCode is Mandatory|' WHERE StatusCode NOT IN ('Success') AND ISNULL(EmployeeCode,'') = '' AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'EmployeeCode is Mandatory|' WHERE StatusCode NOT IN ('Success') AND ISNULL(EmployeeCode,'') = '' AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'Company is Mandatory|' WHERE StatusCode NOT IN ('Success') AND CompanyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'Company is Mandatory|' WHERE StatusCode NOT IN ('Success') AND CompanyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'CompanyRule is Mandatory|' WHERE StatusCode NOT IN ('Success') AND CompanyRuleCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'CompanyRule is Mandatory|' WHERE StatusCode NOT IN ('Success') AND CompanyRuleCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'PaymentRunDefCode is Mandatory|' WHERE StatusCode NOT IN ('Success') AND PaymentRunDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'PaymentRunDefCode is Mandatory|' WHERE StatusCode NOT IN ('Success') AND PaymentRunDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'RemunerationEarnDefCode is Mandatory|' WHERE StatusCode NOT IN ('Success') AND RemunerationEarnDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'RemunerationEarnDefCode is Mandatory|' WHERE StatusCode NOT IN ('Success') AND RemunerationEarnDefCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
-BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'LeavePolicy is Mandatory|' WHERE StatusCode NOT IN ('Success') AND LeavePolicyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter COMMIT TRANSACTION END TRY BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION END CATCH
+BEGIN TRY BEGIN TRANSACTION UPDATE AI.EmployeeQueue SET StatusCode = 'Error', StatusMessage = 'Missing Mandatory Field(s)', ErrorCode = 'MCF|', ErrorMessage = ISNULL(ErrorMessage,'')+'LeavePolicy is Mandatory|' WHERE StatusCode NOT IN ('Success') AND LeavePolicyCode IS NULL AND ISNULL(QueueFilter,'') = @QueueFilter IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --New Event Validations (Using Dynamic SQL methods)
@@ -450,10 +480,9 @@ WHERE EventCode IN ('N','X') AND StatusCode = 'N' AND
 	OR TaxStartDate IS NULL 
 	OR TaxCalculation IS NULL)
 	AND ISNULL(QueueFilter,'') = @QueueFilter 
-COMMIT TRANSACTION 
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
 END TRY 
-BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
-END CATCH
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
@@ -499,10 +528,9 @@ WHERE StatusCode = 'N' AND
 	OR (TaxStatusCode NOT IN (SELECT Code FROM Employee.TaxStatus WHERE [Status] = 'A'))
 	OR (TaxCalculation NOT IN ('A','N','G'))) 
 	AND ISNULL(QueueFilter,'') = @QueueFilter
-COMMIT TRANSACTION 
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
 END TRY 
-BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
-END CATCH
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Bad Data validations
@@ -528,10 +556,9 @@ WHERE StatusCode = 'N' AND
 	OR (TerminationDate IS NOT NULL AND TerminationReasonCode IS NULL) 
 	OR (TerminationReasonCode IS NOT NULL AND TerminationDate IS NULL)) 
 	AND ISNULL(QueueFilter,'') = @QueueFilter	
-COMMIT TRANSACTION 
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
 END TRY 
-BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
-END CATCH
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 
@@ -564,10 +591,9 @@ UPDATE AI.EmployeeQueue SET StatusMessage = ISNULL(StatusMessage,'') + 'Possible
 	WHERE e.EmployeeCode IS NOT NULL
 		AND q.EventCode IN ('N','X')
 		AND ISNULL(QueueFilter,'') = @QueueFilter
-COMMIT TRANSACTION 
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
 END TRY 
-BEGIN CATCH THROW IF (XACT_STATE()) = -1 ROLLBACK TRANSACTION IF (XACT_STATE()) = 1 COMMIT TRANSACTION 
-END CATCH
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
 
 --Other validations

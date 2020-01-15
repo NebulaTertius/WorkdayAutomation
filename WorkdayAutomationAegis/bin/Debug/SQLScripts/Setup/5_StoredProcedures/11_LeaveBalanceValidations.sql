@@ -1,6 +1,7 @@
 CREATE PROCEDURE AI.LeaveBalanceValidations
 AS
 
+BEGIN TRY BEGIN TRANSACTION
 --Validations on Leave Balance Queue
 --Employee has a history terminated status
 UPDATE AI.LeaveBalanceQueue 
@@ -23,3 +24,5 @@ FROM AI.LeaveBalanceQueue q
 WHERE q.UnitOverride < 0
 	AND StatusCode = 'New'
 
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH

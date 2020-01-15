@@ -10,3 +10,5 @@ IF OBJECT_ID('AI.ProcessLeaveQueue', 'P') IS NOT NULL DROP PROCEDURE AI.ProcessL
 IF OBJECT_ID('AI.AutoCreateHierarchy', 'P') IS NOT NULL DROP PROCEDURE AI.AutoCreateHierarchy
 IF OBJECT_ID('AI.LeaveBalanceValidations', 'P') IS NOT NULL DROP PROCEDURE AI.LeaveBalanceValidations
 IF OBJECT_ID('AI.RevertUserDefinedBatch', 'P') IS NOT NULL DROP PROCEDURE AI.RevertUserDefinedBatch
+IF OBJECT_ID('AI.ArchiveTableData', 'P') IS NOT NULL DROP PROCEDURE AI.ArchiveTableData
+IF OBJECT_ID('AI.ClearHistorySystemBatches', 'P') IS NOT NULL DROP PROCEDURE AI.ClearHistorySystemBatches

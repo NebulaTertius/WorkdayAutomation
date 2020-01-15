@@ -1,6 +1,8 @@
 CREATE PROCEDURE AI.RefreshValidationWarnings
 AS
 
+BEGIN TRY
+BEGIN TRAN
 
 --##########################
 --Company Rule Month Different to computer date
@@ -159,6 +161,26 @@ BEGIN
 	FROM AI.CatalogMapping cm 
 		LEFT JOIN (SELECT c.TaxCountryCode, d.DefCode FROM Payroll.EarningDef d INNER JOIN Company.Company c ON c.CompanyID = d.CompanyID) d ON CASE ISNULL(cm.CatalogLocale,''All'') WHEN ''All'' THEN d.TaxCountryCode ELSE cm.CatalogLocale END = d.TaxCountryCode AND cm.TargetValue = d.DefCode
 	WHERE CatalogType = ''Payslip Batch''
+		AND CatalogName = ''Earning''
+		AND d.DefCode IS NULL
+	ORDER BY CatalogLocale, TargetValue
+	'
+	EXEC sp_executesql @Sql
+
+END
+
+--Additional Lines
+
+BEGIN
+	SET @Sql = N'
+	INSERT INTO AI.ValidationWarnings (ValidationDate,ValidationType,ValidationMessage,SourceLocation,CountryCode,EmployeeCode,FieldName,FieldValue,Comment)
+	SELECT DISTINCT GETDATE() [ValidationDate],''Additional Line Does Not Exist On Sage'' [ValidationType],''Create New Additional Line or Adjust Mapping'' [ValidationMessage]
+		,''Catalog: Additional'' [SourceLocation],CatalogLocale [CountryCode],NULL [EmployeeCode],TargetField [FieldName],TargetValue [FieldValue]
+		,''Update the catalog mapping or correct the source data if invalid.'' [Comment] 
+	FROM AI.CatalogMapping cm 
+		LEFT JOIN (SELECT c.TaxCountryCode, d.DefCode FROM Payroll.AdditionalDef d INNER JOIN Company.Company c ON c.CompanyID = d.CompanyID) d ON CASE ISNULL(cm.CatalogLocale,''All'') WHEN ''All'' THEN d.TaxCountryCode ELSE cm.CatalogLocale END = d.TaxCountryCode AND cm.TargetValue = d.DefCode
+	WHERE CatalogType = ''Payslip Batch''
+		AND CatalogName = ''Additional''
 		AND d.DefCode IS NULL
 	ORDER BY CatalogLocale, TargetValue
 	'
@@ -188,3 +210,7 @@ BEGIN
 	EXEC sp_executesql @Sql
 
 END
+
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH

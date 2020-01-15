@@ -121,6 +121,7 @@
             this.bsiStructures = new DevExpress.XtraBars.BarSubItem();
             this.bbiBuildAIStructures = new DevExpress.XtraBars.BarButtonItem();
             this.bbiRefreshSPs = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiRefreshMappings = new DevExpress.XtraBars.BarButtonItem();
             this.bbiQueueMapping = new DevExpress.XtraBars.BarButtonItem();
             this.bbiVal = new DevExpress.XtraBars.BarButtonItem();
             this.bsiValidateQueue = new DevExpress.XtraBars.BarSubItem();
@@ -139,17 +140,15 @@
             this.beiProgressBar = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemMarqueeProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemMarqueeProgressBar();
             this.bsiArchive = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem9 = new DevExpress.XtraBars.BarSubItem();
+            this.bbiArchiveAll = new DevExpress.XtraBars.BarButtonItem();
+            this.bbiClearSystemBatches = new DevExpress.XtraBars.BarButtonItem();
             this.bbiArchiveEmpErrors = new DevExpress.XtraBars.BarButtonItem();
             this.bbiArchiveEmpErrorAndOnHold = new DevExpress.XtraBars.BarButtonItem();
             this.bbiArchiveEmpAll = new DevExpress.XtraBars.BarButtonItem();
-            this.barSubItem10 = new DevExpress.XtraBars.BarSubItem();
             this.bbiArchivePayErrors = new DevExpress.XtraBars.BarButtonItem();
             this.bbiArchivePayAll = new DevExpress.XtraBars.BarButtonItem();
-            this.barSubItem11 = new DevExpress.XtraBars.BarSubItem();
             this.bbiArchiveLveErrors = new DevExpress.XtraBars.BarButtonItem();
             this.bbiArchiveLveAll = new DevExpress.XtraBars.BarButtonItem();
-            this.bbiArchiveAll = new DevExpress.XtraBars.BarButtonItem();
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
             this.bbiResetSelectedRows = new DevExpress.XtraBars.BarButtonItem();
             this.bbiRemoveSelectedRows = new DevExpress.XtraBars.BarButtonItem();
@@ -160,15 +159,18 @@
             this.bbiEmpValidationRun = new DevExpress.XtraBars.BarButtonItem();
             this.bbiAllAndOTPValidationRun = new DevExpress.XtraBars.BarButtonItem();
             this.bbiLveValidationRun = new DevExpress.XtraBars.BarButtonItem();
+            this.bsiCorrectionBatch = new DevExpress.XtraBars.BarSubItem();
+            this.bbiDupUnpaidLveReversal = new DevExpress.XtraBars.BarButtonItem();
             this.rpAutoRun = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.rpgRunAll = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpgReports = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpgHistory = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpIndividualSteps = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.rpgIndividualProcesses = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.rpgSpecificCases = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpgSetup = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.Structures = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpgTools = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -248,6 +250,7 @@
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
+            this.popupMenu2 = new DevExpress.XtraBars.PopupMenu(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.layoutView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvwEditable)).BeginInit();
@@ -308,6 +311,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.lciStringIdentifier)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu2)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutView1
@@ -326,7 +330,7 @@
             this.gridControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.gridControl.MenuManager = this.ribbonControl;
             this.gridControl.Name = "gridControl";
-            this.gridControl.Size = new System.Drawing.Size(1241, 477);
+            this.gridControl.Size = new System.Drawing.Size(1241, 469);
             this.gridControl.TabIndex = 2;
             this.gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvwEditable,
@@ -458,9 +462,6 @@
             this.bbiMoveLveTransToBalQueue,
             this.beiProgressBar,
             this.bsiArchive,
-            this.barSubItem9,
-            this.barSubItem10,
-            this.barSubItem11,
             this.bbiArchiveEmpErrors,
             this.bbiArchiveEmpErrorAndOnHold,
             this.bbiArchiveEmpAll,
@@ -480,10 +481,14 @@
             this.bbiEmpValidationRun,
             this.bbiAllAndOTPValidationRun,
             this.bbiLveValidationRun,
-            this.bbiRefreshSPs});
+            this.bbiRefreshSPs,
+            this.bbiRefreshMappings,
+            this.bbiClearSystemBatches,
+            this.bsiCorrectionBatch,
+            this.bbiDupUnpaidLveReversal});
             this.ribbonControl.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ribbonControl.MaxItemId = 207;
+            this.ribbonControl.MaxItemId = 212;
             this.ribbonControl.Name = "ribbonControl";
             this.ribbonControl.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpAutoRun,
@@ -499,7 +504,7 @@
             this.repositoryItemMarqueeProgressBar1});
             this.ribbonControl.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl.Size = new System.Drawing.Size(1241, 178);
+            this.ribbonControl.Size = new System.Drawing.Size(1241, 193);
             this.ribbonControl.StatusBar = this.ribbonStatusBar;
             this.ribbonControl.ToolbarLocation = DevExpress.XtraBars.Ribbon.RibbonQuickAccessToolbarLocation.Hidden;
             // 
@@ -875,7 +880,7 @@
             // 
             // bsiRunAllProcesses
             // 
-            this.bsiRunAllProcesses.Caption = "Run Automation";
+            this.bsiRunAllProcesses.Caption = "Process to Sage";
             this.bsiRunAllProcesses.Id = 101;
             this.bsiRunAllProcesses.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiRunAllProcesses.ImageOptions.Image")));
             this.bsiRunAllProcesses.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiRunAllProcesses.ImageOptions.LargeImage")));
@@ -1163,7 +1168,8 @@
             this.bsiStructures.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiStructures.ImageOptions.LargeImage")));
             this.bsiStructures.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiBuildAIStructures),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRefreshSPs)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRefreshSPs),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiRefreshMappings)});
             this.bsiStructures.Name = "bsiStructures";
             // 
             // bbiBuildAIStructures
@@ -1179,6 +1185,13 @@
             this.bbiRefreshSPs.Id = 206;
             this.bbiRefreshSPs.Name = "bbiRefreshSPs";
             this.bbiRefreshSPs.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiRefreshSPs_ItemClick);
+            // 
+            // bbiRefreshMappings
+            // 
+            this.bbiRefreshMappings.Caption = "Refresh Mapping Tables";
+            this.bbiRefreshMappings.Id = 207;
+            this.bbiRefreshMappings.Name = "bbiRefreshMappings";
+            this.bbiRefreshMappings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiRefreshMappings_ItemClick);
             // 
             // bbiQueueMapping
             // 
@@ -1320,21 +1333,23 @@
             this.bsiArchive.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.Image")));
             this.bsiArchive.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiArchive.ImageOptions.LargeImage")));
             this.bsiArchive.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem9),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem10),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem11),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveAll)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveAll),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiClearSystemBatches)});
             this.bsiArchive.Name = "bsiArchive";
             // 
-            // barSubItem9
+            // bbiArchiveAll
             // 
-            this.barSubItem9.Caption = "Employee";
-            this.barSubItem9.Id = 181;
-            this.barSubItem9.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrors),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpErrorAndOnHold),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveEmpAll)});
-            this.barSubItem9.Name = "barSubItem9";
+            this.bbiArchiveAll.Caption = "Current Data";
+            this.bbiArchiveAll.Id = 201;
+            this.bbiArchiveAll.Name = "bbiArchiveAll";
+            this.bbiArchiveAll.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiArchiveAll_ItemClick);
+            // 
+            // bbiClearSystemBatches
+            // 
+            this.bbiClearSystemBatches.Caption = "Clear History System Batches";
+            this.bbiClearSystemBatches.Id = 208;
+            this.bbiClearSystemBatches.Name = "bbiClearSystemBatches";
+            this.bbiClearSystemBatches.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiClearSystemBatches_ItemClick);
             // 
             // bbiArchiveEmpErrors
             // 
@@ -1354,15 +1369,6 @@
             this.bbiArchiveEmpAll.Id = 187;
             this.bbiArchiveEmpAll.Name = "bbiArchiveEmpAll";
             // 
-            // barSubItem10
-            // 
-            this.barSubItem10.Caption = "Payslip";
-            this.barSubItem10.Id = 183;
-            this.barSubItem10.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayErrors),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchivePayAll)});
-            this.barSubItem10.Name = "barSubItem10";
-            // 
             // bbiArchivePayErrors
             // 
             this.bbiArchivePayErrors.Caption = "Errors";
@@ -1375,15 +1381,6 @@
             this.bbiArchivePayAll.Id = 189;
             this.bbiArchivePayAll.Name = "bbiArchivePayAll";
             // 
-            // barSubItem11
-            // 
-            this.barSubItem11.Caption = "Leave";
-            this.barSubItem11.Id = 184;
-            this.barSubItem11.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveErrors),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbiArchiveLveAll)});
-            this.barSubItem11.Name = "barSubItem11";
-            // 
             // bbiArchiveLveErrors
             // 
             this.bbiArchiveLveErrors.Caption = "Errors";
@@ -1395,13 +1392,6 @@
             this.bbiArchiveLveAll.Caption = "All";
             this.bbiArchiveLveAll.Id = 191;
             this.bbiArchiveLveAll.Name = "bbiArchiveLveAll";
-            // 
-            // bbiArchiveAll
-            // 
-            this.bbiArchiveAll.Caption = "All";
-            this.bbiArchiveAll.Id = 201;
-            this.bbiArchiveAll.Name = "bbiArchiveAll";
-            this.bbiArchiveAll.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiArchiveAll_ItemClick);
             // 
             // skinRibbonGalleryBarItem1
             // 
@@ -1455,7 +1445,7 @@
             // 
             // bsiRunValidationOnly
             // 
-            this.bsiRunValidationOnly.Caption = "Run Validation Only";
+            this.bsiRunValidationOnly.Caption = "Run Validation";
             this.bsiRunValidationOnly.Id = 202;
             this.bsiRunValidationOnly.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiRunValidationOnly.ImageOptions.Image")));
             this.bsiRunValidationOnly.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiRunValidationOnly.ImageOptions.LargeImage")));
@@ -1464,7 +1454,6 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiAllAndOTPValidationRun),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbiLveValidationRun)});
             this.bsiRunValidationOnly.Name = "bsiRunValidationOnly";
-            this.bsiRunValidationOnly.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             // 
             // bbiEmpValidationRun
             // 
@@ -1487,12 +1476,29 @@
             this.bbiLveValidationRun.Name = "bbiLveValidationRun";
             this.bbiLveValidationRun.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiLveValidationRun_ItemClick);
             // 
+            // bsiCorrectionBatch
+            // 
+            this.bsiCorrectionBatch.Caption = "Correction Batches";
+            this.bsiCorrectionBatch.Id = 210;
+            this.bsiCorrectionBatch.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsiCorrectionBatch.ImageOptions.Image")));
+            this.bsiCorrectionBatch.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsiCorrectionBatch.ImageOptions.LargeImage")));
+            this.bsiCorrectionBatch.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbiDupUnpaidLveReversal)});
+            this.bsiCorrectionBatch.Name = "bsiCorrectionBatch";
+            this.bsiCorrectionBatch.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            // 
+            // bbiDupUnpaidLveReversal
+            // 
+            this.bbiDupUnpaidLveReversal.Caption = "Duplicate Unpaid Leave Reversal";
+            this.bbiDupUnpaidLveReversal.Id = 211;
+            this.bbiDupUnpaidLveReversal.Name = "bbiDupUnpaidLveReversal";
+            this.bbiDupUnpaidLveReversal.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbiDupUnpaidLveReversal_ItemClick);
+            // 
             // rpAutoRun
             // 
             this.rpAutoRun.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.rpgRunAll,
             this.rpgReports,
-            this.ribbonPageGroup3,
             this.rpgHistory});
             this.rpAutoRun.Name = "rpAutoRun";
             this.rpAutoRun.Text = "Main Menu";
@@ -1512,22 +1518,18 @@
             this.rpgReports.Name = "rpgReports";
             this.rpgReports.Text = "Reports";
             // 
-            // ribbonPageGroup3
-            // 
-            this.ribbonPageGroup3.ItemLinks.Add(this.bbiCatalogMapping);
-            this.ribbonPageGroup3.Name = "ribbonPageGroup3";
-            this.ribbonPageGroup3.Text = "Mapping";
-            // 
             // rpgHistory
             // 
             this.rpgHistory.ItemLinks.Add(this.bsiViewData);
+            this.rpgHistory.ItemLinks.Add(this.bsiArchive);
             this.rpgHistory.Name = "rpgHistory";
             this.rpgHistory.Text = "History";
             // 
             // rpIndividualSteps
             // 
             this.rpIndividualSteps.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.rpgIndividualProcesses});
+            this.rpgIndividualProcesses,
+            this.rpgSpecificCases});
             this.rpIndividualSteps.Name = "rpIndividualSteps";
             this.rpIndividualSteps.Text = "Individual Steps";
             // 
@@ -1538,14 +1540,21 @@
             this.rpgIndividualProcesses.ItemLinks.Add(this.bsiValidateQueue);
             this.rpgIndividualProcesses.ItemLinks.Add(this.bsiProcessQueue);
             this.rpgIndividualProcesses.ItemLinks.Add(this.bsiUpdateTracker);
-            this.rpgIndividualProcesses.ItemLinks.Add(this.bsiArchive);
             this.rpgIndividualProcesses.Name = "rpgIndividualProcesses";
             this.rpgIndividualProcesses.Text = "Individual Process Steps";
+            // 
+            // rpgSpecificCases
+            // 
+            this.rpgSpecificCases.ItemLinks.Add(this.bsiCorrectionBatch);
+            this.rpgSpecificCases.ItemLinks.Add(this.bsiRevertBatches);
+            this.rpgSpecificCases.Name = "rpgSpecificCases";
+            this.rpgSpecificCases.Text = "Specific Cases";
             // 
             // rpgSetup
             // 
             this.rpgSetup.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup4,
+            this.ribbonPageGroup3,
             this.Structures});
             this.rpgSetup.Name = "rpgSetup";
             this.rpgSetup.Text = "Settings";
@@ -1556,13 +1565,18 @@
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             this.ribbonPageGroup4.Text = "Connections";
             // 
+            // ribbonPageGroup3
+            // 
+            this.ribbonPageGroup3.ItemLinks.Add(this.bbiCatalogMapping);
+            this.ribbonPageGroup3.ItemLinks.Add(this.bbiQueueMapping);
+            this.ribbonPageGroup3.Name = "ribbonPageGroup3";
+            this.ribbonPageGroup3.Text = "Mapping";
+            // 
             // Structures
             // 
             this.Structures.ItemLinks.Add(this.bsiStructures);
-            this.Structures.ItemLinks.Add(this.bbiQueueMapping);
             this.Structures.ItemLinks.Add(this.bbiSourceValueOverride);
             this.Structures.ItemLinks.Add(this.bsiCreateTables);
-            this.Structures.ItemLinks.Add(this.bsiRevertBatches);
             this.Structures.Name = "Structures";
             this.Structures.Text = "Structures";
             // 
@@ -1580,18 +1594,18 @@
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.AllowTextClipping = false;
+            this.ribbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
             this.ribbonPageGroup1.ItemLinks.Add(this.bbiCloseApp);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbiRefresh);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.ShowCaptionButton = false;
             this.ribbonPageGroup1.Text = "Tasks";
             // 
             // ribbonPageGroup2
             // 
             this.ribbonPageGroup2.AllowTextClipping = false;
+            this.ribbonPageGroup2.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
             this.ribbonPageGroup2.ItemLinks.Add(this.bbiPrintPreview);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
-            this.ribbonPageGroup2.ShowCaptionButton = false;
             this.ribbonPageGroup2.Text = "Print and Export";
             // 
             // rpgGridActions
@@ -1664,7 +1678,6 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemDuration1.DisabledStateText = null;
             this.repositoryItemDuration1.Name = "repositoryItemDuration1";
-            this.repositoryItemDuration1.NullValuePromptShowForEmptyValue = true;
             this.repositoryItemDuration1.ShowEmptyItem = true;
             this.repositoryItemDuration1.ValidateOnEnterKey = true;
             // 
@@ -1676,11 +1689,11 @@
             // 
             this.ribbonStatusBar.ItemLinks.Add(this.bsiRecordsCount);
             this.ribbonStatusBar.ItemLinks.Add(this.beiProgressBar);
-            this.ribbonStatusBar.Location = new System.Drawing.Point(0, 655);
+            this.ribbonStatusBar.Location = new System.Drawing.Point(0, 662);
             this.ribbonStatusBar.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ribbonStatusBar.Name = "ribbonStatusBar";
             this.ribbonStatusBar.Ribbon = this.ribbonControl;
-            this.ribbonStatusBar.Size = new System.Drawing.Size(1241, 37);
+            this.ribbonStatusBar.Size = new System.Drawing.Size(1241, 30);
             // 
             // gvwBlankEditableTemplate
             // 
@@ -1861,7 +1874,7 @@
             this.navFrame.Controls.Add(this.pgGridControl);
             this.navFrame.Controls.Add(this.navigationPage1);
             this.navFrame.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.navFrame.Location = new System.Drawing.Point(0, 178);
+            this.navFrame.Location = new System.Drawing.Point(0, 193);
             this.navFrame.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.navFrame.Name = "navFrame";
             this.navFrame.Pages.AddRange(new DevExpress.XtraBars.Navigation.NavigationPageBase[] {
@@ -1869,7 +1882,7 @@
             this.pgGridControl,
             this.navigationPage1});
             this.navFrame.SelectedPage = this.pgGridControl;
-            this.navFrame.Size = new System.Drawing.Size(1241, 477);
+            this.navFrame.Size = new System.Drawing.Size(1241, 469);
             this.navFrame.TabIndex = 4;
             this.navFrame.Text = "Home";
             this.navFrame.TransitionType = DevExpress.Utils.Animation.Transitions.Push;
@@ -1879,7 +1892,7 @@
             this.pgHome.Controls.Add(this.layoutControl1);
             this.pgHome.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pgHome.Name = "pgHome";
-            this.pgHome.Size = new System.Drawing.Size(1241, 477);
+            this.pgHome.Size = new System.Drawing.Size(1241, 469);
             // 
             // layoutControl1
             // 
@@ -1896,7 +1909,7 @@
             this.layoutControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.layoutControl1.Name = "layoutControl1";
             this.layoutControl1.Root = this.layoutControlGroup1;
-            this.layoutControl1.Size = new System.Drawing.Size(1241, 477);
+            this.layoutControl1.Size = new System.Drawing.Size(1241, 469);
             this.layoutControl1.TabIndex = 0;
             this.layoutControl1.Text = "layoutControl1";
             // 
@@ -1914,7 +1927,7 @@
             // 
             // teConnUsername
             // 
-            this.teConnUsername.Location = new System.Drawing.Point(90, 62);
+            this.teConnUsername.Location = new System.Drawing.Point(90, 66);
             this.teConnUsername.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.teConnUsername.MenuManager = this.ribbonControl;
             this.teConnUsername.Name = "teConnUsername";
@@ -1924,7 +1937,7 @@
             // 
             // teConnPassword
             // 
-            this.teConnPassword.Location = new System.Drawing.Point(90, 88);
+            this.teConnPassword.Location = new System.Drawing.Point(90, 92);
             this.teConnPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.teConnPassword.MenuManager = this.ribbonControl;
             this.teConnPassword.Name = "teConnPassword";
@@ -1940,14 +1953,14 @@
             this.cheADAuth.MenuManager = this.ribbonControl;
             this.cheADAuth.Name = "cheADAuth";
             this.cheADAuth.Properties.Caption = "Use AD Authentication";
-            this.cheADAuth.Size = new System.Drawing.Size(1217, 20);
+            this.cheADAuth.Size = new System.Drawing.Size(1217, 24);
             this.cheADAuth.StyleController = this.layoutControl1;
             this.cheADAuth.TabIndex = 7;
             this.cheADAuth.CheckedChanged += new System.EventHandler(this.cheADAuth_CheckedChanged);
             // 
             // sbConnTest
             // 
-            this.sbConnTest.Location = new System.Drawing.Point(12, 142);
+            this.sbConnTest.Location = new System.Drawing.Point(12, 145);
             this.sbConnTest.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.sbConnTest.Name = "sbConnTest";
             this.sbConnTest.Size = new System.Drawing.Size(1217, 27);
@@ -1958,7 +1971,7 @@
             // 
             // sbConnSave
             // 
-            this.sbConnSave.Location = new System.Drawing.Point(12, 173);
+            this.sbConnSave.Location = new System.Drawing.Point(12, 176);
             this.sbConnSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.sbConnSave.Name = "sbConnSave";
             this.sbConnSave.Size = new System.Drawing.Size(1217, 27);
@@ -1969,7 +1982,7 @@
             // 
             // sbConnCancel
             // 
-            this.sbConnCancel.Location = new System.Drawing.Point(12, 204);
+            this.sbConnCancel.Location = new System.Drawing.Point(12, 207);
             this.sbConnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.sbConnCancel.Name = "sbConnCancel";
             this.sbConnCancel.Size = new System.Drawing.Size(1217, 27);
@@ -1980,7 +1993,7 @@
             // 
             // teDatabase
             // 
-            this.teDatabase.Location = new System.Drawing.Point(90, 114);
+            this.teDatabase.Location = new System.Drawing.Point(90, 118);
             this.teDatabase.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.teDatabase.MenuManager = this.ribbonControl;
             this.teDatabase.Name = "teDatabase";
@@ -2003,7 +2016,7 @@
             this.layoutControlItem4,
             this.lciDatabase});
             this.layoutControlGroup1.Name = "layoutControlGroup1";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(1241, 477);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1241, 469);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // lciServerName
@@ -2018,7 +2031,7 @@
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.teConnUsername;
-            this.layoutControlItem2.Location = new System.Drawing.Point(0, 50);
+            this.layoutControlItem2.Location = new System.Drawing.Point(0, 54);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Size = new System.Drawing.Size(1221, 26);
             this.layoutControlItem2.Text = "Username";
@@ -2027,7 +2040,7 @@
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.teConnPassword;
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 76);
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 80);
             this.layoutControlItem3.Name = "layoutControlItem3";
             this.layoutControlItem3.Size = new System.Drawing.Size(1221, 26);
             this.layoutControlItem3.Text = "Password";
@@ -2036,7 +2049,7 @@
             // layoutControlItem5
             // 
             this.layoutControlItem5.Control = this.sbConnTest;
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 130);
+            this.layoutControlItem5.Location = new System.Drawing.Point(0, 133);
             this.layoutControlItem5.Name = "layoutControlItem5";
             this.layoutControlItem5.Size = new System.Drawing.Size(1221, 31);
             this.layoutControlItem5.TextSize = new System.Drawing.Size(0, 0);
@@ -2045,7 +2058,7 @@
             // layoutControlItem6
             // 
             this.layoutControlItem6.Control = this.sbConnSave;
-            this.layoutControlItem6.Location = new System.Drawing.Point(0, 161);
+            this.layoutControlItem6.Location = new System.Drawing.Point(0, 164);
             this.layoutControlItem6.Name = "layoutControlItem6";
             this.layoutControlItem6.Size = new System.Drawing.Size(1221, 31);
             this.layoutControlItem6.TextSize = new System.Drawing.Size(0, 0);
@@ -2054,32 +2067,32 @@
             // layoutControlItem7
             // 
             this.layoutControlItem7.Control = this.sbConnCancel;
-            this.layoutControlItem7.Location = new System.Drawing.Point(0, 192);
+            this.layoutControlItem7.Location = new System.Drawing.Point(0, 195);
             this.layoutControlItem7.Name = "layoutControlItem7";
-            this.layoutControlItem7.Size = new System.Drawing.Size(1221, 265);
+            this.layoutControlItem7.Size = new System.Drawing.Size(1221, 254);
             this.layoutControlItem7.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem7.TextVisible = false;
             // 
             // simpleSeparator1
             // 
             this.simpleSeparator1.AllowHotTrack = false;
-            this.simpleSeparator1.Location = new System.Drawing.Point(0, 128);
+            this.simpleSeparator1.Location = new System.Drawing.Point(0, 132);
             this.simpleSeparator1.Name = "simpleSeparator1";
-            this.simpleSeparator1.Size = new System.Drawing.Size(1221, 2);
+            this.simpleSeparator1.Size = new System.Drawing.Size(1221, 1);
             // 
             // layoutControlItem4
             // 
             this.layoutControlItem4.Control = this.cheADAuth;
             this.layoutControlItem4.Location = new System.Drawing.Point(0, 26);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(1221, 24);
+            this.layoutControlItem4.Size = new System.Drawing.Size(1221, 28);
             this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem4.TextVisible = false;
             // 
             // lciDatabase
             // 
             this.lciDatabase.Control = this.teDatabase;
-            this.lciDatabase.Location = new System.Drawing.Point(0, 102);
+            this.lciDatabase.Location = new System.Drawing.Point(0, 106);
             this.lciDatabase.Name = "lciDatabase";
             this.lciDatabase.Size = new System.Drawing.Size(1221, 26);
             this.lciDatabase.Text = "Database";
@@ -2090,14 +2103,14 @@
             this.pgGridControl.Controls.Add(this.gridControl);
             this.pgGridControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pgGridControl.Name = "pgGridControl";
-            this.pgGridControl.Size = new System.Drawing.Size(1241, 477);
+            this.pgGridControl.Size = new System.Drawing.Size(1241, 469);
             // 
             // navigationPage1
             // 
             this.navigationPage1.Controls.Add(this.layoutControl2);
             this.navigationPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.navigationPage1.Name = "navigationPage1";
-            this.navigationPage1.Size = new System.Drawing.Size(1241, 477);
+            this.navigationPage1.Size = new System.Drawing.Size(1241, 469);
             // 
             // layoutControl2
             // 
@@ -2114,7 +2127,7 @@
             this.layoutControl2.Name = "layoutControl2";
             this.layoutControl2.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(856, 253, 650, 400);
             this.layoutControl2.Root = this.layoutControlGroup2;
-            this.layoutControl2.Size = new System.Drawing.Size(1241, 477);
+            this.layoutControl2.Size = new System.Drawing.Size(1241, 469);
             this.layoutControl2.TabIndex = 0;
             this.layoutControl2.Text = "layoutControl2";
             // 
@@ -2138,7 +2151,7 @@
             this.ceFileDeletionOption.MenuManager = this.ribbonControl;
             this.ceFileDeletionOption.Name = "ceFileDeletionOption";
             this.ceFileDeletionOption.Properties.Caption = "Remove Source Files From Location After Successful Load";
-            this.ceFileDeletionOption.Size = new System.Drawing.Size(1217, 20);
+            this.ceFileDeletionOption.Size = new System.Drawing.Size(1217, 24);
             this.ceFileDeletionOption.StyleController = this.layoutControl2;
             this.ceFileDeletionOption.TabIndex = 5;
             this.ceFileDeletionOption.CheckedChanged += new System.EventHandler(this.ceFileDeletionOption_CheckedChanged);
@@ -2146,7 +2159,7 @@
             // teCompletedFolder
             // 
             this.teCompletedFolder.Enabled = false;
-            this.teCompletedFolder.Location = new System.Drawing.Point(167, 62);
+            this.teCompletedFolder.Location = new System.Drawing.Point(167, 66);
             this.teCompletedFolder.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.teCompletedFolder.MenuManager = this.ribbonControl;
             this.teCompletedFolder.Name = "teCompletedFolder";
@@ -2156,7 +2169,7 @@
             // 
             // sbSaveFileLocation
             // 
-            this.sbSaveFileLocation.Location = new System.Drawing.Point(12, 142);
+            this.sbSaveFileLocation.Location = new System.Drawing.Point(12, 145);
             this.sbSaveFileLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.sbSaveFileLocation.Name = "sbSaveFileLocation";
             this.sbSaveFileLocation.Size = new System.Drawing.Size(1217, 27);
@@ -2167,7 +2180,7 @@
             // 
             // sbClearSelections
             // 
-            this.sbClearSelections.Location = new System.Drawing.Point(12, 173);
+            this.sbClearSelections.Location = new System.Drawing.Point(12, 176);
             this.sbClearSelections.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.sbClearSelections.Name = "sbClearSelections";
             this.sbClearSelections.Size = new System.Drawing.Size(1217, 27);
@@ -2178,7 +2191,7 @@
             // 
             // teCSVStringQuoteIdentifier
             // 
-            this.teCSVStringQuoteIdentifier.Location = new System.Drawing.Point(167, 88);
+            this.teCSVStringQuoteIdentifier.Location = new System.Drawing.Point(167, 92);
             this.teCSVStringQuoteIdentifier.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.teCSVStringQuoteIdentifier.MenuManager = this.ribbonControl;
             this.teCSVStringQuoteIdentifier.Name = "teCSVStringQuoteIdentifier";
@@ -2188,7 +2201,7 @@
             // 
             // teCSVSeparator
             // 
-            this.teCSVSeparator.Location = new System.Drawing.Point(167, 114);
+            this.teCSVSeparator.Location = new System.Drawing.Point(167, 118);
             this.teCSVSeparator.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.teCSVSeparator.MenuManager = this.ribbonControl;
             this.teCSVSeparator.Name = "teCSVSeparator";
@@ -2211,16 +2224,16 @@
             this.lciStringIdentifier,
             this.layoutControlItem9});
             this.layoutControlGroup2.Name = "Root";
-            this.layoutControlGroup2.Size = new System.Drawing.Size(1241, 477);
+            this.layoutControlGroup2.Size = new System.Drawing.Size(1241, 469);
             this.layoutControlGroup2.TextVisible = false;
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
             this.emptySpaceItem1.CustomizationFormText = "emptySpaceItem1";
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 192);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 195);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(1221, 265);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(1221, 254);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // lciFileLocation
@@ -2237,14 +2250,14 @@
             this.layoutControlItem8.Control = this.ceFileDeletionOption;
             this.layoutControlItem8.Location = new System.Drawing.Point(0, 26);
             this.layoutControlItem8.Name = "layoutControlItem8";
-            this.layoutControlItem8.Size = new System.Drawing.Size(1221, 24);
+            this.layoutControlItem8.Size = new System.Drawing.Size(1221, 28);
             this.layoutControlItem8.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem8.TextVisible = false;
             // 
             // lciCompletedFolder
             // 
             this.lciCompletedFolder.Control = this.teCompletedFolder;
-            this.lciCompletedFolder.Location = new System.Drawing.Point(0, 50);
+            this.lciCompletedFolder.Location = new System.Drawing.Point(0, 54);
             this.lciCompletedFolder.Name = "lciCompletedFolder";
             this.lciCompletedFolder.Size = new System.Drawing.Size(1221, 26);
             this.lciCompletedFolder.Text = "Completed Folder Location";
@@ -2253,14 +2266,14 @@
             // simpleSeparator2
             // 
             this.simpleSeparator2.AllowHotTrack = false;
-            this.simpleSeparator2.Location = new System.Drawing.Point(0, 128);
+            this.simpleSeparator2.Location = new System.Drawing.Point(0, 132);
             this.simpleSeparator2.Name = "simpleSeparator2";
-            this.simpleSeparator2.Size = new System.Drawing.Size(1221, 2);
+            this.simpleSeparator2.Size = new System.Drawing.Size(1221, 1);
             // 
             // layoutControlItem10
             // 
             this.layoutControlItem10.Control = this.sbSaveFileLocation;
-            this.layoutControlItem10.Location = new System.Drawing.Point(0, 130);
+            this.layoutControlItem10.Location = new System.Drawing.Point(0, 133);
             this.layoutControlItem10.Name = "layoutControlItem10";
             this.layoutControlItem10.Size = new System.Drawing.Size(1221, 31);
             this.layoutControlItem10.TextSize = new System.Drawing.Size(0, 0);
@@ -2269,7 +2282,7 @@
             // layoutControlItem11
             // 
             this.layoutControlItem11.Control = this.sbClearSelections;
-            this.layoutControlItem11.Location = new System.Drawing.Point(0, 161);
+            this.layoutControlItem11.Location = new System.Drawing.Point(0, 164);
             this.layoutControlItem11.Name = "layoutControlItem11";
             this.layoutControlItem11.Size = new System.Drawing.Size(1221, 31);
             this.layoutControlItem11.TextSize = new System.Drawing.Size(0, 0);
@@ -2278,7 +2291,7 @@
             // lciStringIdentifier
             // 
             this.lciStringIdentifier.Control = this.teCSVStringQuoteIdentifier;
-            this.lciStringIdentifier.Location = new System.Drawing.Point(0, 76);
+            this.lciStringIdentifier.Location = new System.Drawing.Point(0, 80);
             this.lciStringIdentifier.Name = "lciStringIdentifier";
             this.lciStringIdentifier.Size = new System.Drawing.Size(1221, 26);
             this.lciStringIdentifier.Text = "CSV String Identifier";
@@ -2287,7 +2300,7 @@
             // layoutControlItem9
             // 
             this.layoutControlItem9.Control = this.teCSVSeparator;
-            this.layoutControlItem9.Location = new System.Drawing.Point(0, 102);
+            this.layoutControlItem9.Location = new System.Drawing.Point(0, 106);
             this.layoutControlItem9.Name = "layoutControlItem9";
             this.layoutControlItem9.Size = new System.Drawing.Size(1221, 26);
             this.layoutControlItem9.Text = "CSV Separator";
@@ -2303,6 +2316,11 @@
             this.workspaceManager1.TargetControl = this;
             this.workspaceManager1.TransitionType = pushTransition1;
             // 
+            // popupMenu2
+            // 
+            this.popupMenu2.Name = "popupMenu2";
+            this.popupMenu2.Ribbon = this.ribbonControl;
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -2311,7 +2329,7 @@
             this.Controls.Add(this.navFrame);
             this.Controls.Add(this.ribbonStatusBar);
             this.Controls.Add(this.ribbonControl);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.IconOptions.Icon = ((System.Drawing.Icon)(resources.GetObject("MainView.IconOptions.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainView";
             this.Ribbon = this.ribbonControl;
@@ -2376,6 +2394,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.lciStringIdentifier)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2573,14 +2592,11 @@
         private DevExpress.XtraBars.BarEditItem beiProgressBar;
         private DevExpress.XtraEditors.Repository.RepositoryItemMarqueeProgressBar repositoryItemMarqueeProgressBar1;
         private DevExpress.XtraBars.BarSubItem bsiArchive;
-        private DevExpress.XtraBars.BarSubItem barSubItem9;
         private DevExpress.XtraBars.BarButtonItem bbiArchiveEmpErrors;
         private DevExpress.XtraBars.BarButtonItem bbiArchiveEmpErrorAndOnHold;
         private DevExpress.XtraBars.BarButtonItem bbiArchiveEmpAll;
-        private DevExpress.XtraBars.BarSubItem barSubItem10;
         private DevExpress.XtraBars.BarButtonItem bbiArchivePayErrors;
         private DevExpress.XtraBars.BarButtonItem bbiArchivePayAll;
-        private DevExpress.XtraBars.BarSubItem barSubItem11;
         private DevExpress.XtraBars.BarButtonItem bbiArchiveLveErrors;
         private DevExpress.XtraBars.BarButtonItem bbiArchiveLveAll;
         private DevExpress.XtraBars.SkinRibbonGalleryBarItem skinRibbonGalleryBarItem1;
@@ -2599,5 +2615,11 @@
         private DevExpress.XtraBars.BarButtonItem bbiAllAndOTPValidationRun;
         private DevExpress.XtraBars.BarButtonItem bbiLveValidationRun;
         private DevExpress.XtraBars.BarButtonItem bbiRefreshSPs;
+        private DevExpress.XtraBars.BarButtonItem bbiRefreshMappings;
+        private DevExpress.XtraBars.BarButtonItem bbiClearSystemBatches;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgSpecificCases;
+        private DevExpress.XtraBars.BarSubItem bsiCorrectionBatch;
+        private DevExpress.XtraBars.BarButtonItem bbiDupUnpaidLveReversal;
+        private DevExpress.XtraBars.PopupMenu popupMenu2;
     }
 }

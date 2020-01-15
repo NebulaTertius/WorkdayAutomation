@@ -1,6 +1,9 @@
 CREATE PROCEDURE [AI].[ProcessFinancialQueue]
 AS
 
+BEGIN TRY
+BEGIN TRAN
+
 --Remove previously run successful records
 INSERT INTO AI.FinancialQueueHistory SELECT * FROM AI.FinancialQueue WHERE StatusCode = 'Success'
 DELETE FROM AI.FinancialQueue WHERE StatusCode = 'Success'
@@ -8,12 +11,13 @@ DELETE FROM AI.FinancialQueue WHERE StatusCode = 'Success'
 --Update previous failures to be reset and processed again
 UPDATE AI.FinancialQueue
 SET StatusCode = 'New', StatusMessage = NULL, ErrorCode = NULL, ErrorMessage = NULL
-WHERE StatusCode IN ('New','Failed')
+WHERE StatusCode IN ('New','Failed','Hold')
 
 DECLARE @UserDefinedBatchType AS AI.UserDefinedBatchType
 
+--Valid LineTypes: Earning, Deduction, CoContribution, FringeBenefit, Provision, Additional, PvtContribution, Leave
 INSERT INTO @UserDefinedBatchType (ProductCode,EmployeeCode,Company,CompanyRule,PayRun,BatchTemplateCode,LineType,BatchItemCode,BatchItemType,Value,StatusCode,StatusComment,LastChanged,UserID)
-SELECT 'PAY' [ProductCode],EmployeeCode,NULL [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_' + CASE WHEN OneTimePayment = 'false' THEN 'RECUR' ELSE 'OTP' END [BatchTemplateCode],'Earning' [LineType],ISNULL(WageTypeCode,'None') [BatchItemCode],'Amount' [BatchItemType],Amount [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
+SELECT 'PAY' [ProductCode],EmployeeCode,NULL [Company],NULL [CompanyRule],NULL [PayRun],'WORKDAY_' + CASE WHEN OneTimePayment = 'false' THEN 'RECUR' ELSE 'OTP' END [BatchTemplateCode],EventDescription [LineType], ISNULL(WageTypeCode,'None') [BatchItemCode], 'Amount' [BatchItemType],Amount [Value],'New' [StatusCode],QueueComment [StatusComment],GETDATE() [LastChanged],'AUTO' [UserID]
 FROM AI.FinancialQueue
 WHERE StatusCode = 'New'
 
@@ -34,3 +38,8 @@ FROM AI.FinancialQueue q
 
 INSERT INTO AI.AllowanceAndOTPSourceHistory SELECT * FROM AI.AllowanceAndOTPSource
 DELETE FROM AI.AllowanceAndOTPSource
+
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
+

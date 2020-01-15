@@ -1,6 +1,8 @@
 CREATE PROCEDURE [AI].[ProcessEmployeeQueue] @QueueFilter varchar(MAX) = ''
 AS
 
+BEGIN TRY
+BEGIN TRAN
 --Remove previously run successful records
 INSERT INTO AI.EmployeeQueueHistory SELECT * FROM AI.EmployeeQueue WHERE StatusCode IN ('Success','Exclude') AND ISNULL(QueueFilter,'') = @QueueFilter
 DELETE FROM AI.EmployeeQueue WHERE StatusCode IN ('Success','Exclude') AND ISNULL(QueueFilter,'') = @QueueFilter
@@ -303,7 +305,7 @@ WHERE StatusCode = 'N'
 INSERT INTO AI.EmployeeSubQueueHistory SELECT * FROM AI.EmployeeSubQueue
 DELETE FROM AI.EmployeeSubQueue
 
-INSERT INTO AI.EmployeeSourceHistory SELECT * FROM AI.EmployeeSource
-DELETE FROM AI.EmployeeSource
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
 
---Phase 2: create an output to show a type of audit of each field which has changed by comparing the final results of the processed to batch fields, to what is currently in the system to provide to administrators who want to see what changes will occur if the batch is processed.

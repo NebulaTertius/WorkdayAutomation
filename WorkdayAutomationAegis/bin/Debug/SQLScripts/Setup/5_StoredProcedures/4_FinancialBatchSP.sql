@@ -23,6 +23,9 @@ CREATE PROCEDURE [AI].[FinancialBatchSP]
 AS
 	SET NOCOUNT ON
 
+BEGIN TRY
+BEGIN TRAN
+
 IF EXISTS (SELECT * FROM (SELECT * FROM @UDB UNION ALL SELECT @ProductCode,@EmployeeCode,@FirstName,@LastName,@Company,@CompanyRule,@PayRun,@BatchTemplateCode,@LineType,@BatchItemCode,@BatchItemType,@Value,@StatusCode,@StatusComment,@LastChanged,@UserID) r WHERE r.ProductCode IS NOT NULL AND r.EmployeeCode IS NOT NULL AND r.BatchTemplateCode IS NOT NULL AND r.LineType IS NOT NULL AND r.BatchItemCode IS NOT NULL AND r.BatchItemType IS NOT NULL AND r.Value IS NOT NULL)
 BEGIN
 
@@ -83,13 +86,28 @@ ELSE
 				AND StatusCode = 'New'
 		END
 
-	IF EXISTS (SELECT * FROM AI.FinancialBatchHistory t LEFT JOIN Batch.BatchItem b ON LEFT(RIGHT(b.BatchHierarchy,(LEN(t.BatchItemCode) + LEN(t.BatchItemType) + 1)),(LEN(t.BatchItemType) + 1)) = t.BatchItemCode LEFT JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = b.BatchTemplateID AND bt.Code = t.BatchTemplateCode WHERE StatusCode = 'New' AND b.BatchHierarchy IS NULL)
+	IF EXISTS (SELECT * FROM AI.FinancialBatchHistory t LEFT JOIN Batch.BatchItem bi 
+		ON (REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE
+(REPLACE(bi.FieldDisplayName,'PayslipEarningLine : ',''),'PayslipDeductionLine : ',''),'PayslipCompanyContributionLine : ',''),'PayslipFringeBenefitLine : ',''),'PayslipProvisionsLine : ',''),'PayslipPvtContrLine : ',''),'PayslipAdditionalLine : ','')
+,'EmpEarningDef : ',''),'EmpDeductionDef : ',''),'EmpCompanyContributionDef : ',''),'EmpFringeBenefitDef : ',''),'EmpProvisionsDef : ',''),'EmpPvtContrDef : ',''),'EmpAdditionalDef : ','')
+,'EmployeeLeave : ',''),'EmployeeLeaveDef : ','')
+,' - Amount',''),' - Fixed',''),' - Balance',''),' - Units Capture',''),' - Unit',''),' - Adjustment',''),' - Note',''),' - Entitlement',''),' - Reference','')) = t.BatchItemCode 
+		LEFT JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID AND bt.Code = t.BatchTemplateCode WHERE StatusCode = 'New' AND bi.BatchHierarchy IS NULL)
 		BEGIN
 			UPDATE AI.FinancialBatchHistory
 			SET StatusCode = 'Failed'
 				,StatusComment = 'Failed: Batch Item Code does not yet exist'
-			WHERE FinancialBatchHistoryID IN (SELECT FinancialBatchHistoryID FROM AI.FinancialBatchHistory t LEFT JOIN Batch.BatchItem b ON LEFT(RIGHT(b.BatchHierarchy,(LEN(t.BatchItemCode) + LEN(t.BatchItemType) + 1)),(LEN(t.BatchItemCode))) = t.BatchItemCode LEFT JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = b.BatchTemplateID AND bt.Code = t.BatchTemplateCode WHERE StatusCode = 'New' AND b.BatchHierarchy IS NULL)
-				AND StatusCode = 'New'
+			WHERE FinancialBatchHistoryID IN 
+			(SELECT FinancialBatchHistoryID 
+				FROM AI.FinancialBatchHistory t 
+				LEFT JOIN Batch.BatchItem bi ON (REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE
+(REPLACE(bi.FieldDisplayName,'PayslipEarningLine : ',''),'PayslipDeductionLine : ',''),'PayslipCompanyContributionLine : ',''),'PayslipFringeBenefitLine : ',''),'PayslipProvisionsLine : ',''),'PayslipPvtContrLine : ',''),'PayslipAdditionalLine : ','')
+,'EmpEarningDef : ',''),'EmpDeductionDef : ',''),'EmpCompanyContributionDef : ',''),'EmpFringeBenefitDef : ',''),'EmpProvisionsDef : ',''),'EmpPvtContrDef : ',''),'EmpAdditionalDef : ','')
+,'EmployeeLeave : ',''),'EmployeeLeaveDef : ','')
+,' - Amount',''),' - Fixed',''),' - Balance',''),' - Units Capture',''),' - Unit',''),' - Adjustment',''),' - Note',''),' - Entitlement',''),' - Reference','')) = t.BatchItemCode 
+				LEFT JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID AND bt.Code = t.BatchTemplateCode 
+				WHERE StatusCode = 'New' AND bi.BatchHierarchy IS NULL)
+			AND StatusCode = 'New'
 		END
 
 	IF EXISTS (SELECT * FROM AI.FinancialBatchHistory t WHERE ISNULL(Value,'') = '')
@@ -286,14 +304,20 @@ ELSE
 			,GETDATE()
 			,t.ProductCode
 		FROM AI.FinancialBatchHistory t
-			INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY TerminationDate, DateEngaged DESC) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
-			INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
-			INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
-			INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleID = er.CompanyRuleID
-			INNER JOIN Company.PayRunDef pr ON pr.CompanyRuleID = cr.CompanyRuleID AND pr.Code =  ISNULL(t.PayRun,'MAIN')
-			INNER JOIN Batch.BatchTemplate bt ON bt.Code = t.BatchTemplateCode
-			INNER JOIN Batch.BatchItem bi ON bi.BatchTemplateID = bt.BatchTemplateID AND LEFT(RIGHT(bi.BatchHierarchy,(LEN(t.BatchItemCode) + LEN(t.BatchItemType) + 1)),(LEN(t.BatchItemCode))) = t.BatchItemCode
-			INNER JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode AND LEFT(bi.Comment,15) = c.CompanyCode)
+		INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER (PARTITION BY EmployeeCode ORDER BY TerminationDate, DateEngaged DESC) AS RwNumber ,* FROM Employee.Employee) e WHERE RwNumber = 1) e ON e.EmployeeCode = t.EmployeeCode
+		INNER JOIN Company.Company c ON c.CompanyID = e.CompanyID
+		INNER JOIN Employee.EmployeeRule er ON er.EmployeeID = e.EmployeeID
+		INNER JOIN Company.CompanyRuleLivePeriod cr ON cr.CompanyRuleID = er.CompanyRuleID
+		INNER JOIN Company.PayRunDef pr ON pr.CompanyRuleID = cr.CompanyRuleID AND pr.Code =  ISNULL(t.PayRun,'MAIN')
+		INNER JOIN Batch.BatchTemplate bt ON bt.Code = t.BatchTemplateCode
+		INNER JOIN Batch.BatchItem bi ON bi.BatchTemplateID = bt.BatchTemplateID 
+		--Specifically changed to REPLACE() after a bug was found duplicating records on 2019-11-18 (TVB)
+		AND (REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE
+(REPLACE(bi.FieldDisplayName,'PayslipEarningLine : ',''),'PayslipDeductionLine : ',''),'PayslipCompanyContributionLine : ',''),'PayslipFringeBenefitLine : ',''),'PayslipProvisionsLine : ',''),'PayslipPvtContrLine : ',''),'PayslipAdditionalLine : ','')
+,'EmpEarningDef : ',''),'EmpDeductionDef : ',''),'EmpCompanyContributionDef : ',''),'EmpFringeBenefitDef : ',''),'EmpProvisionsDef : ',''),'EmpPvtContrDef : ',''),'EmpAdditionalDef : ','')
+,'EmployeeLeave : ',''),'EmployeeLeaveDef : ','')
+,' - Amount',''),' - Fixed',''),' - Balance',''),' - Units Capture',''),' - Unit',''),' - Adjustment',''),' - Note',''),' - Entitlement',''),' - Reference','')) = t.BatchItemCode
+		INNER JOIN Batch.BatchEmployee be ON be.EmployeeCode = t.EmployeeCode AND be.BatchInstanceID IN (SELECT MAX(bi.BatchInstanceID) FROM Batch.BatchInstance bi INNER JOIN Batch.BatchTemplate bt ON bt.BatchTemplateID = bi.BatchTemplateID WHERE bi.ProcessingStatus = 'V' AND LEFT(bi.Code,3) = t.ProductCode AND bt.Code = t.BatchTemplateCode AND LEFT(bi.Comment,15) = c.CompanyCode)
 		WHERE t.StatusCode = 'New'
 	--END
 	
@@ -310,3 +334,7 @@ END
 	BEGIN
 	SELECT NULL AS ProductCode, NULL AS EmployeeCode, NULL AS FirstName, NULL AS LastName, NULL AS Company, NULL AS CompanyRule, NULL AS PayRun, NULL AS BatchTemplateCode, NULL AS LineType, NULL AS BatchItemCode, NULL AS BatchItemType, NULL AS Value, 'Failed' AS StatusCode, 'Failed: No parameters passed through' AS StatusComment, GETDATE() AS LastChanged, NULL AS UserID
 	END
+
+IF ((SELECT XACT_STATE()) = 1) COMMIT TRANSACTION 
+END TRY 
+BEGIN CATCH IF ((SELECT XACT_STATE()) = -1) ROLLBACK TRANSACTION END CATCH
